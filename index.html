@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Ishaan · Week Mon 9 Nov – Sun 15 Nov 2026 · study picker</title>
+<style>
+  :root {
+    --ink: #0f172a;
+    --muted: #64748b;
+    --line: #e2e8f0;
+    --paper: #f8fafc;
+    --card: #ffffff;
+    --ib: #2563eb;
+    --ib-bg: #dbeafe;
+    --sat: #d97706;
+    --sat-bg: #fef3c7;
+    --free: #059669;
+    --free-bg: #d1fae5;
+    --light: #0d9488;
+    --light-bg: #ccfbf1;
+    --locked: #7c3aed;
+    --locked-bg: #ede9fe;
+    --school: #64748b;
+    --school-bg: #f1f5f9;
+    --social: #db2777;
+    --social-bg: #fce7f3;
+    --ok: #059669;
+    --warn: #d97706;
+    --bad: #dc2626;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "SF Pro Text", "Segoe UI", system-ui, -apple-system, sans-serif;
+    color: var(--ink);
+    background: linear-gradient(165deg, #0f172a 0%, #1e3a5f 45%, #0f766e 100%);
+    min-height: 100vh;
+    padding: 20px 14px 56px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  header { color: #fff; margin-bottom: 16px; }
+  .eyebrow {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.22);
+    padding: 5px 11px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  header h1 {
+    font-size: clamp(1.45rem, 4.5vw, 2rem);
+    margin: 0 0 8px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  header .lead {
+    margin: 0 0 10px;
+    opacity: 0.9;
+    font-size: 0.98rem;
+    line-height: 1.5;
+    max-width: 40rem;
+  }
+  .notice {
+    background: rgba(251, 191, 36, 0.18);
+    border: 1px solid rgba(251, 191, 36, 0.45);
+    color: #fef3c7;
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    margin-top: 4px;
+  }
+  .notice strong { color: #fff; }
+  .card {
+    background: var(--paper);
+    border-radius: 18px;
+    box-shadow: 0 22px 44px -12px rgba(0,0,0,0.35);
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .howto {
+    padding: 14px 16px;
+    background: #fff;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.45;
+  }
+  .howto strong { color: var(--ink); }
+  .counters {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 14px 16px;
+    background: #fff;
+    border-bottom: 1px solid var(--line);
+  }
+  .counter {
+    border-radius: 12px;
+    padding: 12px 14px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+  }
+  .counter .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .counter .value {
+    font-size: 1.55rem;
+    font-weight: 750;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .counter .target {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .counter.ib .value { color: var(--ib); }
+  .counter.sat .value { color: var(--sat); }
+  .counter .status { font-size: 0.75rem; font-weight: 650; margin-top: 4px; }
+  .counter .status.ok { color: var(--ok); }
+  .counter .status.low { color: var(--warn); }
+  .counter .status.high { color: var(--bad); }
+  .extras {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    padding: 0 16px 12px;
+    background: #fff;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+  .extras span strong { color: var(--ink); }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    padding: 12px 16px;
+    background: #fff;
+    border-bottom: 1px solid var(--line);
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+  .dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .dot.ib { background: var(--ib); }
+  .dot.sat { background: var(--sat); }
+  .dot.free { background: var(--free); }
+  .dot.light { background: var(--light); }
+  .dot.locked { background: var(--locked); }
+  .dot.school { background: var(--school); }
+  .dot.social { background: var(--social); }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px 16px;
+    background: #fff;
+    border-bottom: 1px solid var(--line);
+  }
+  button {
+    appearance: none;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    font-weight: 650;
+    cursor: pointer;
+    font-family: inherit;
+    transition: transform 0.08s ease, opacity 0.15s;
+  }
+  button:active { transform: scale(0.97); }
+  .btn-primary {
+    background: var(--ink);
+    color: #fff;
+  }
+  .btn-secondary {
+    background: var(--paper);
+    color: var(--ink);
+    border: 1px solid var(--line);
+  }
+  .btn-primary:disabled { opacity: 0.55; cursor: default; }
+
+  .btn-sync {
+    background: #0f766e;
+    color: #fff;
+  }
+  .btn-sync:disabled { opacity: 0.55; cursor: default; }
+  .toast.warn { background: #fef3c7; color: #92400e; }
+  .sync-box {
+    display: none;
+    margin: 0 16px 12px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: #ecfdf5;
+    border: 1.5px solid #6ee7b7;
+    color: #065f46;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    font-weight: 550;
+  }
+  .sync-box.show { display: block; }
+  .sync-box strong { color: #064e3b; }
+
+  .toast {
+    display: none;
+    margin: 0 16px 12px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: #d1fae5;
+    color: #065f46;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  .toast.show { display: block; }
+  .days { padding: 8px 10px 14px; }
+  .day {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    margin: 8px 6px;
+    overflow: hidden;
+  }
+  .day-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 11px 14px 8px;
+    border-bottom: 1px solid var(--line);
+    background: #fafbfc;
+  }
+  .day-head h2 {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+  .day-head .sub {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .slots { padding: 8px; display: flex; flex-direction: column; gap: 8px; }
+  .slot-wrap {
+    border-radius: 12px;
+    border: 1.5px solid var(--line);
+    background: #fff;
+    overflow: hidden;
+  }
+  .slot-wrap.kind-ib { background: var(--ib-bg); border-color: #93c5fd; }
+  .slot-wrap.kind-sat { background: var(--sat-bg); border-color: #fcd34d; }
+  .slot-wrap.kind-free { background: var(--free-bg); border-color: #6ee7b7; }
+  .slot-wrap.kind-light { background: var(--light-bg); border-color: #5eead4; }
+  .slot-wrap.kind-locked { background: var(--locked-bg); border-color: #c4b5fd; opacity: 0.92; }
+  .slot-wrap.kind-school { background: var(--school-bg); border-color: #cbd5e1; opacity: 0.92; }
+  .slot-wrap.kind-social { background: var(--social-bg); border-color: #f9a8d4; opacity: 0.92; }
+  .slot {
+    display: grid;
+    grid-template-columns: 92px 1fr auto;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 12px;
+    border: none;
+    background: transparent;
+    text-align: left;
+    width: 100%;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: var(--ink);
+    min-height: 48px;
+  }
+  .slot .time {
+    font-variant-numeric: tabular-nums;
+    font-weight: 650;
+    font-size: 0.82rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .slot .name {
+    font-weight: 650;
+    line-height: 1.25;
+  }
+  .slot .note {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .slot .topic-line {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--ink);
+    opacity: 0.75;
+    margin-top: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 42vw;
+  }
+  .slot .badge {
+    font-size: 0.7rem;
+    font-weight: 750;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 4px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .slot-wrap.kind-ib .badge { background: var(--ib); color: #fff; }
+  .slot-wrap.kind-sat .badge { background: var(--sat); color: #fff; }
+  .slot-wrap.kind-free .badge { background: var(--free); color: #fff; }
+  .slot-wrap.kind-light .badge { background: var(--light); color: #fff; }
+  .slot-wrap.kind-locked .badge { background: var(--locked); color: #fff; }
+  .slot-wrap.kind-school .badge { background: var(--school); color: #fff; }
+  .slot.choosable { cursor: pointer; }
+  .slot.choosable:hover { filter: brightness(0.98); }
+  .slot.choosable:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: -2px;
+  }
+  .slot-meta {
+    padding: 0 12px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .meta-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    margin-bottom: 2px;
+  }
+  .subj-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .subj-chip {
+    appearance: none;
+    border: 1.5px solid rgba(15,23,42,0.15);
+    background: rgba(255,255,255,0.75);
+    color: var(--ink);
+    border-radius: 999px;
+    padding: 8px 12px;
+    font-size: 0.78rem;
+    font-weight: 650;
+    font-family: inherit;
+    cursor: pointer;
+    min-height: 36px;
+  }
+  .subj-chip.active {
+    background: var(--ink);
+    color: #fff;
+    border-color: var(--ink);
+  }
+  .slot-wrap.kind-ib .subj-chip.active { background: var(--ib); border-color: var(--ib); }
+  .slot-wrap.kind-sat .subj-chip.active { background: var(--sat); border-color: var(--sat); }
+  .topic-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .topic-select, .topic-other {
+    width: 100%;
+    font-family: inherit;
+    font-size: 0.88rem;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1.5px solid rgba(15,23,42,0.15);
+    background: rgba(255,255,255,0.9);
+    color: var(--ink);
+    min-height: 44px;
+  }
+  .topic-other { display: none; }
+  .topic-other.show { display: block; }
+  .hint {
+    padding: 4px 16px 14px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+  footer {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.78rem;
+    text-align: center;
+    margin-top: 8px;
+    line-height: 1.4;
+  }
+  @media (min-width: 640px) {
+    .counters { grid-template-columns: 1fr 1fr 1fr 1fr; }
+    .slot .topic-line { max-width: 280px; }
+  }
+  @media print {
+    body { background: #fff; padding: 0; color: #000; }
+    header { color: #000; }
+    header .eyebrow { background: #f1f5f9; border-color: #cbd5e1; color: #334155; }
+    .notice { background: #fffbeb; border-color: #f59e0b; color: #78350f; }
+    .notice strong { color: #000; }
+    .card { box-shadow: none; border: 1px solid #e2e8f0; break-inside: avoid; }
+    .actions, .toast, .sync-box, .howto, .slot-meta { display: none !important; }
+    footer { color: #64748b; }
+    .day { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">For Ishaan · from Dad · week 2026-11-09</div>
+    <h1>Week of Mon 9 Nov – Sun 15 Nov 2026 · pick your study slots</h1>
+    <p class="lead">
+      This page is for <strong>this week only</strong> (Mon 9 Nov – Sun 15 Nov 2026).
+      School, tutors and Friday social are locked from the live calendar.
+      Tap a Free block to cycle <strong>Free → IB → SAT → Light</strong>.
+      On IB or SAT, pick the <strong>subject / area</strong> and a <strong>topic</strong>.
+      Study opens from <strong>16:30</strong> Mon–Fri (Fri social 13:05–16:00 first).
+    </p>
+    <div class="notice">
+      <strong>Weekly refresh</strong> — rebuilt each Sunday from school + tutor calendars. Choices are stored per week, so a new week starts clean.
+      <br/><strong>Locks this week:</strong> school blocks · English / History / Maths tutors · Physics · Ghosh (Sat + Mon) · Fri social 13:05–16:00.
+      <br/><strong>Sync to calendar:</strong> tap <strong>Sync to calendar</strong> → paste/send to Dad’s Assistant. Old <em>DRAFT</em> study entries for this week are removed, then your picks are written as
+      <em>DRAFT · Study IB · …</em> / <em>DRAFT · SAT · …</em> / <em>DRAFT · Light</em>.
+    </div>
+  </header>
+
+  <div class="card">
+    <div class="howto">
+      <strong>How to use:</strong> locked blocks (school, social, tutors) stay put.
+      Open blocks start as <strong>Free</strong> — tap to make them Study IB, Study SAT, or Light.
+      For IB: choose a subject chip, then a topic (or <strong>Other / type…</strong>).
+      For SAT: choose Reading &amp; Writing, Math, or Full practice, then a topic.
+      Open study/free/light blocks are <strong>45&nbsp;minutes</strong> each (0.75&nbsp;h).
+      Aim for <strong>exactly 12&nbsp;h IB</strong> and <strong>exactly 3&nbsp;h SAT</strong>.
+      When ready, tap <strong>Sync to calendar</strong> (or Copy my choices) and send to Dad.
+    </div>
+
+    <div class="counters">
+      <div class="counter ib">
+        <div class="label">IB study</div>
+        <div class="value" id="ibHours">0.0h</div>
+        <div class="target">Target 12 h / week</div>
+        <div class="status" id="ibStatus"></div>
+      </div>
+      <div class="counter sat">
+        <div class="label">SAT study</div>
+        <div class="value" id="satHours">0.0h</div>
+        <div class="target">Target 3 h / week</div>
+        <div class="status" id="satStatus"></div>
+      </div>
+      <div class="counter">
+        <div class="label">Free</div>
+        <div class="value" id="freeHours" style="color:var(--free)">0.0h</div>
+        <div class="target">Open / unwind time</div>
+      </div>
+      <div class="counter">
+        <div class="label">Light</div>
+        <div class="value" id="lightHours" style="color:var(--light)">0.0h</div>
+        <div class="target">Light review / catch-up</div>
+      </div>
+    </div>
+    <div class="extras">
+      <span>Week: <strong id="weekRange">Mon 9 Nov – Sun 15 Nov 2026</strong></span>
+      <span>Hard stop: <strong>22:30</strong></span>
+      <span>Locked tutors: <strong id="lockedHours">—</strong></span>
+      <span>Study from: <strong>16:30</strong> · Fri social <strong>13:05–16:00</strong></span>
+    </div>
+
+    <div class="legend">
+      <span class="chip"><span class="dot ib"></span> Study IB</span>
+      <span class="chip"><span class="dot sat"></span> Study SAT</span>
+      <span class="chip"><span class="dot free"></span> Free</span>
+      <span class="chip"><span class="dot light"></span> Light</span>
+      <span class="chip"><span class="dot locked"></span> Tutor (locked)</span>
+      <span class="chip"><span class="dot school"></span> School (locked)</span>
+      <span class="chip"><span class="dot social"></span> Social (locked)</span>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn-sync" id="btnSync">Sync to calendar</button>
+      <button type="button" class="btn-primary" id="btnCopy">Copy my choices</button>
+      <button type="button" class="btn-secondary" id="btnReset">Reset week</button>
+      <button type="button" class="btn-secondary" id="btnPrint">Print / save PDF</button>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <div class="sync-box" id="syncBox" role="status" aria-live="polite"></div>
+
+    <div class="days" id="days"></div>
+    <p class="hint">
+      Locks come from General Timetable + school calendar for this week only — tutors are not invented.
+      Dinner is usually <strong>19:30–20:00</strong> (open slots avoid it). Hard stop <strong>22:30</strong>.
+      Bhavan and Dr&nbsp;OK one-offs are excluded. Sunday ritual rebuilds next week’s page from the live calendars.
+    </p>
+  </div>
+
+  <footer>
+    Dated week 2026-11-09 · locks from live calendar · Sync copies a request for Dad’s Assistant · works offline
+  </footer>
+</div>
+
+<script>
+
+const CONFIG = {"title":"Week of Mon 9 Nov – Sun 15 Nov 2026 · pick your study slots","weekStart":"2026-11-09","weekEnd":"2026-11-15","weekLabel":"Mon 9 Nov – Sun 15 Nov 2026","timezone":"Asia/Hong_Kong","hardStop":"22:30","targets":{"ibMin":12,"ibMax":12,"satMin":3,"satMax":3},"cycle":["free","ib","sat","light"],"labels":{"ib":"Study IB","sat":"Study SAT","free":"Free","light":"Light","locked":"Tutor","school":"School","social":"Social"},"exclusions":["Bhavan","Dr OK"],"days":[{"id":"mon-09","name":"Monday 9 Nov","date":"2026-11-09","dayShort":"Mon","slots":[{"id":"mon-09-o0","start":"06:00","end":"06:45","kind":"free","label":"Before school","locked":false},{"id":"mon-09-school","start":"08:00","end":"15:00","kind":"school","label":"School","note":"Home ~15:30 · study from 16:30","locked":true},{"id":"mon-09-o1","start":"16:30","end":"17:15","kind":"free","label":"After school","locked":false},{"id":"mon-09-o2","start":"17:35","end":"18:20","kind":"free","label":"After school","locked":false},{"id":"mon-09-o3","start":"18:40","end":"19:25","kind":"free","label":"Evening","locked":false},{"id":"mon-09-tutor-1930","start":"19:30","end":"20:30","kind":"locked","label":"Physics · Ghosh","note":"From calendar","locked":true,"satTutor":false,"sourceTitle":"Physics Ms Ghosh"}]},{"id":"tue-10","name":"Tuesday 10 Nov","date":"2026-11-10","dayShort":"Tue","slots":[{"id":"tue-10-o0","start":"06:00","end":"06:45","kind":"free","label":"Before school","locked":false},{"id":"tue-10-school","start":"08:00","end":"15:00","kind":"school","label":"School","note":"Home ~15:30 · study from 16:30","locked":true},{"id":"tue-10-o1","start":"16:30","end":"17:15","kind":"free","label":"After school","locked":false},{"id":"tue-10-o2","start":"17:35","end":"18:20","kind":"free","label":"After school","locked":false},{"id":"tue-10-o3","start":"18:40","end":"19:25","kind":"free","label":"Evening","locked":false},{"id":"tue-10-tutor-2000","start":"20:00","end":"21:00","kind":"locked","label":"English tutor","note":"From calendar","locked":true,"satTutor":false,"sourceTitle":"English Tutor"}]},{"id":"wed-11","name":"Wednesday 11 Nov","date":"2026-11-11","dayShort":"Wed","slots":[{"id":"wed-11-o0","start":"06:00","end":"06:45","kind":"free","label":"Before school","locked":false},{"id":"wed-11-school","start":"08:00","end":"15:00","kind":"school","label":"School","note":"Home ~15:30 · study from 16:30","locked":true},{"id":"wed-11-o1","start":"16:30","end":"17:15","kind":"free","label":"After school","locked":false},{"id":"wed-11-tutor-1800","start":"18:00","end":"19:00","kind":"locked","label":"History tutor","note":"From calendar","locked":true,"satTutor":false,"sourceTitle":"History Tutor"},{"id":"wed-11-tutor-2000","start":"20:00","end":"21:00","kind":"locked","label":"Maths tutor","note":"From calendar","locked":true,"satTutor":false,"sourceTitle":"Math Tutor"}]},{"id":"thu-12","name":"Thursday 12 Nov","date":"2026-11-12","dayShort":"Thu","slots":[{"id":"thu-12-o0","start":"06:00","end":"06:45","kind":"free","label":"Before school","locked":false},{"id":"thu-12-school","start":"08:00","end":"15:00","kind":"school","label":"School","note":"Home ~15:30 · study from 16:30","locked":true},{"id":"thu-12-o1","start":"16:30","end":"17:15","kind":"free","label":"After school","locked":false},{"id":"thu-12-o2","start":"17:35","end":"18:20","kind":"free","label":"After school","locked":false},{"id":"thu-12-o3","start":"18:40","end":"19:25","kind":"free","label":"Evening","locked":false},{"id":"thu-12-tutor-2000","start":"20:00","end":"21:00","kind":"locked","label":"Maths tutor","note":"From calendar","locked":true,"satTutor":false,"sourceTitle":"Math Tutor"}]},{"id":"fri-13","name":"Friday 13 Nov","date":"2026-11-13","dayShort":"Fri","slots":[{"id":"fri-13-o0","start":"06:00","end":"06:45","kind":"free","label":"Before school","locked":false},{"id":"fri-13-school","start":"08:00","end":"13:05","kind":"school","label":"School","note":"Ends 13:05 · social until 16:00 · study from 16:30","locked":true},{"id":"fri-13-social","start":"13:05","end":"16:00","kind":"social","label":"Social time","note":"Protected — study from 16:30","locked":true},{"id":"fri-13-o1","start":"16:30","end":"17:15","kind":"free","label":"After school","locked":false},{"id":"fri-13-o2","start":"17:35","end":"18:20","kind":"free","label":"After school","locked":false},{"id":"fri-13-o3","start":"18:40","end":"19:25","kind":"free","label":"Evening","locked":false}]},{"id":"sat-14","name":"Saturday 14 Nov","date":"2026-11-14","dayShort":"Sat","slots":[{"id":"sat-14-o0","start":"06:00","end":"06:45","kind":"free","label":"Early morning","locked":false},{"id":"sat-14-o1","start":"09:00","end":"09:45","kind":"free","label":"Morning","locked":false},{"id":"sat-14-tutor-1030","start":"10:30","end":"11:30","kind":"locked","label":"Physics · Ghosh","note":"From calendar","locked":true,"satTutor":false,"sourceTitle":"Physics Ms Ghosh"},{"id":"sat-14-o2","start":"11:45","end":"12:30","kind":"free","label":"Morning","locked":false},{"id":"sat-14-o3","start":"13:00","end":"13:45","kind":"free","label":"Afternoon","locked":false},{"id":"sat-14-o4","start":"14:10","end":"14:55","kind":"free","label":"Afternoon","locked":false},{"id":"sat-14-o5","start":"15:20","end":"16:05","kind":"free","label":"Afternoon","locked":false},{"id":"sat-14-o6","start":"16:30","end":"17:15","kind":"free","label":"Late afternoon","locked":false},{"id":"sat-14-o7","start":"17:35","end":"18:20","kind":"free","label":"Late afternoon","locked":false},{"id":"sat-14-o8","start":"18:40","end":"19:25","kind":"free","label":"Evening","locked":false},{"id":"sat-14-o9","start":"20:10","end":"20:55","kind":"free","label":"Evening","locked":false},{"id":"sat-14-o10","start":"21:15","end":"22:00","kind":"free","label":"Late evening","locked":false}]},{"id":"sun-15","name":"Sunday 15 Nov","date":"2026-11-15","dayShort":"Sun","slots":[{"id":"sun-15-o0","start":"06:00","end":"06:45","kind":"free","label":"Early morning","locked":false},{"id":"sun-15-o1","start":"09:00","end":"09:45","kind":"free","label":"Morning","locked":false},{"id":"sun-15-o2","start":"10:00","end":"10:45","kind":"free","label":"Morning","locked":false},{"id":"sun-15-o3","start":"11:45","end":"12:30","kind":"free","label":"Morning","locked":false},{"id":"sun-15-o4","start":"13:00","end":"13:45","kind":"free","label":"Afternoon","locked":false},{"id":"sun-15-o5","start":"14:10","end":"14:55","kind":"free","label":"Afternoon","locked":false},{"id":"sun-15-o6","start":"15:20","end":"16:05","kind":"free","label":"Afternoon","locked":false},{"id":"sun-15-o7","start":"16:30","end":"17:15","kind":"free","label":"Late afternoon","locked":false},{"id":"sun-15-o8","start":"17:35","end":"18:20","kind":"free","label":"Late afternoon","locked":false},{"id":"sun-15-o9","start":"18:40","end":"19:25","kind":"free","label":"Evening","locked":false},{"id":"sun-15-o10","start":"20:10","end":"20:55","kind":"free","label":"Evening","locked":false},{"id":"sun-15-o11","start":"21:15","end":"22:00","kind":"free","label":"Late evening","locked":false}]}]};
+
+const TOPIC_BANK = {"ibSubjects":["English A Lit","Maths AA","Physics","Spanish B","Music","History","ToK","Thrive"],"ibTopics":{"English A Lit":[{"code":"","topic":"Area — Readers, writers and texts","kind":"Area"},{"code":"","topic":"Area — Time and space","kind":"Area"},{"code":"","topic":"Area — Intertextuality: connecting texts","kind":"Area"},{"code":"","topic":"Y12 this term* — The World’s Wife (Carol Ann Duffy) — start Duffy SL/HL","kind":"Content"},{"code":"","topic":"Y12 this term* — Persepolis (Marjane Satrapi)","kind":"Content"},{"code":"","topic":"Y12 this term* — Like Water for Chocolate (Laura Esquivel)","kind":"Content"},{"code":"","topic":"Y12 list (not starred this-term) — The Things They Carried (Tim O’Brien)","kind":"Content"},{"code":"","topic":"Term outcome — minimum 2× Paper 1 practices","kind":"Term outcome"},{"code":"","topic":"Term outcome — mini IA (5 min)","kind":"Term outcome"},{"code":"","topic":"Term outcome — full IA (10 min oral)","kind":"Term outcome"},{"code":"Assessment","topic":"Assessment SL — Paper 1 Guided literary analysis (1 h 15; 35%; one passage)","kind":"Assessment"},{"code":"Assessment","topic":"Assessment SL — Paper 2 Comparative essay (35%)","kind":"Assessment"},{"code":"Assessment","topic":"Assessment SL — Individual oral (30%)","kind":"Assessment"}],"Maths AA":[{"code":"SL 1.1","topic":"SL 1.1 — Operations with numbers in form a × 10^k","kind":"Content"},{"code":"SL 1.2","topic":"SL 1.2 — Arithmetic sequences and series","kind":"Content"},{"code":"SL 1.3","topic":"SL 1.3 — Geometric sequences and series","kind":"Content"},{"code":"SL 1.4","topic":"SL 1.4 — Financial applications of geometric sequences and series","kind":"Content"},{"code":"SL 1.5","topic":"SL 1.5 — Laws of exponents (integer); introduction to logarithms","kind":"Content"},{"code":"SL 1.6","topic":"SL 1.6 — Simple deductive proof (LHS to RHS)","kind":"Content"},{"code":"SL 1.7","topic":"SL 1.7 — Rational exponents; laws of logarithms; change of base","kind":"Content"},{"code":"SL 1.8","topic":"SL 1.8 — Sum of infinite convergent geometric sequences","kind":"Content"},{"code":"SL 1.9","topic":"SL 1.9 — The binomial theorem (n ∈ ℕ)","kind":"Content"},{"code":"AHL 1.10","topic":"AHL 1.10 — Counting principles; binomial theorem (fractional/negative indices)","kind":"Content"},{"code":"AHL 1.11","topic":"AHL 1.11 — Partial fractions","kind":"Content"},{"code":"AHL 1.12","topic":"AHL 1.12 — Complex numbers; the complex plane","kind":"Content"},{"code":"AHL 1.13","topic":"AHL 1.13 — Modulus–argument (polar) form","kind":"Content"},{"code":"AHL 1.14","topic":"AHL 1.14 — Complex conjugate roots; De Moivre’s theorem","kind":"Content"},{"code":"AHL 1.15","topic":"AHL 1.15 — Proof by induction; proof by contradiction","kind":"Content"},{"code":"AHL 1.16","topic":"AHL 1.16 — Systems of linear equations (≤3); matrices / row reduction","kind":"Content"},{"code":"SL 2.1","topic":"SL 2.1 — Equation of a straight line; parallel and perpendicular gradients","kind":"Content"},{"code":"SL 2.2","topic":"SL 2.2 — Concept of a function; domain, range and graph","kind":"Content"},{"code":"SL 2.3","topic":"SL 2.3 — The graph of a function y = f(x)","kind":"Content"},{"code":"SL 2.4","topic":"SL 2.4 — Key features of graphs","kind":"Content"},{"code":"SL 2.5","topic":"SL 2.5 — Composite functions; inverse function","kind":"Content"},{"code":"SL 2.6","topic":"SL 2.6 — The quadratic function f(x) = ax² + bx + c","kind":"Content"},{"code":"SL 2.7","topic":"SL 2.7 — Quadratic equations and inequalities","kind":"Content"},{"code":"SL 2.8","topic":"SL 2.8 — Reciprocal and rational functions","kind":"Content"},{"code":"SL 2.9","topic":"SL 2.9 — Exponential and logarithmic functions and graphs","kind":"Content"},{"code":"SL 2.10","topic":"SL 2.10 — Solving equations graphically and analytically","kind":"Content"},{"code":"SL 2.11","topic":"SL 2.11 — Transformations of graphs","kind":"Content"},{"code":"AHL 2.12","topic":"AHL 2.12 — Polynomial functions; factor and remainder theorems","kind":"Content"},{"code":"AHL 2.13","topic":"AHL 2.13 — Further rational functions","kind":"Content"},{"code":"AHL 2.14","topic":"AHL 2.14 — Odd and even functions; periodic functions","kind":"Content"},{"code":"AHL 2.15","topic":"AHL 2.15 — Inequalities g(x) ≥ f(x)","kind":"Content"},{"code":"AHL 2.16","topic":"AHL 2.16 — Modulus graphs; modulus equations and inequalities","kind":"Content"},{"code":"SL 3.1","topic":"SL 3.1 — Distance and midpoint in three-dimensional space","kind":"Content"},{"code":"SL 3.2","topic":"SL 3.2 — Sine/cosine/tangent ratios; sine and cosine rules; area of a triangle","kind":"Content"},{"code":"SL 3.3","topic":"SL 3.3 — Applications of right and non-right-angled trigonometry","kind":"Content"},{"code":"SL 3.4","topic":"SL 3.4 — Radian measure; arc length; sector area","kind":"Content"},{"code":"SL 3.5","topic":"SL 3.5 — Unit-circle definitions of cos θ, sin θ, tan θ","kind":"Content"},{"code":"SL 3.6","topic":"SL 3.6 — Pythagorean identity; double-angle identities for sine and cosine","kind":"Content"},{"code":"SL 3.7","topic":"SL 3.7 — Circular functions and their graphs","kind":"Content"},{"code":"SL 3.8","topic":"SL 3.8 — Solving trigonometric equations in a finite interval","kind":"Content"},{"code":"AHL 3.9","topic":"AHL 3.9 — Reciprocal trigonometric ratios; inverse trig functions","kind":"Content"},{"code":"AHL 3.10","topic":"AHL 3.10 — Compound angle identities","kind":"Content"},{"code":"AHL 3.11","topic":"AHL 3.11 — Symmetry relationships of trigonometric functions","kind":"Content"},{"code":"AHL 3.12","topic":"AHL 3.12 — Vectors; position and displacement vectors","kind":"Content"},{"code":"AHL 3.13","topic":"AHL 3.13 — Scalar (dot) product","kind":"Content"},{"code":"AHL 3.14","topic":"AHL 3.14 — Vector equation of a line","kind":"Content"},{"code":"AHL 3.15","topic":"AHL 3.15 — Coincident, parallel, intersecting and skew lines","kind":"Content"},{"code":"AHL 3.16","topic":"AHL 3.16 — Vector (cross) product","kind":"Content"},{"code":"AHL 3.17","topic":"AHL 3.17 — Vector and Cartesian equations of a plane","kind":"Content"},{"code":"AHL 3.18","topic":"AHL 3.18 — Intersections of lines and planes; angles between them","kind":"Content"},{"code":"SL 4.1","topic":"SL 4.1 — Population, sample; discrete and continuous data","kind":"Content"},{"code":"SL 4.2","topic":"SL 4.2 — Presentation of data; histograms; cumulative frequency","kind":"Content"},{"code":"SL 4.3","topic":"SL 4.3 — Measures of central tendency and dispersion","kind":"Content"},{"code":"SL 4.4","topic":"SL 4.4 — Linear correlation of bivariate data; Pearson’s r","kind":"Content"},{"code":"SL 4.5","topic":"SL 4.5 — Probability concepts; sample space; complementary events","kind":"Content"},{"code":"SL 4.6","topic":"SL 4.6 — Venn/tree/sample-space diagrams; combined events","kind":"Content"},{"code":"SL 4.7","topic":"SL 4.7 — Discrete random variables; expected value","kind":"Content"},{"code":"SL 4.8","topic":"SL 4.8 — Binomial distribution","kind":"Content"},{"code":"SL 4.9","topic":"SL 4.9 — The normal distribution and curve","kind":"Content"},{"code":"SL 4.10","topic":"SL 4.10 — Regression line of x on y","kind":"Content"},{"code":"SL 4.11","topic":"SL 4.11 — Conditional probability; independent events (formal)","kind":"Content"},{"code":"SL 4.12","topic":"SL 4.12 — Standardization of normal variables (z-values)","kind":"Content"},{"code":"AHL 4.13","topic":"AHL 4.13 — Bayes’ theorem (maximum of three events)","kind":"Content"},{"code":"AHL 4.14","topic":"AHL 4.14 — Variance of a discrete RV; continuous RVs and probability density functions","kind":"Content"},{"code":"SL 5.1","topic":"SL 5.1 — Introduction to the concept of a limit","kind":"Content"},{"code":"SL 5.2","topic":"SL 5.2 — Increasing and decreasing functions","kind":"Content"},{"code":"SL 5.3","topic":"SL 5.3 — Derivative of f(x) = axⁿ","kind":"Content"},{"code":"SL 5.4","topic":"SL 5.4 — Tangents and normals","kind":"Content"},{"code":"SL 5.5","topic":"SL 5.5 — Integration as anti-differentiation; definite integrals","kind":"Content"},{"code":"SL 5.6","topic":"SL 5.6 — Derivatives of xⁿ (n ∈ ℚ), sin x, cos x, eˣ, ln x; chain/product/quotient rules","kind":"Content"},{"code":"SL 5.7","topic":"SL 5.7 — The second derivative","kind":"Content"},{"code":"SL 5.8","topic":"SL 5.8 — Local maxima and minima; optimisation; points of inflexion","kind":"Content"},{"code":"SL 5.9","topic":"SL 5.9 — Kinematic problems (displacement, velocity, acceleration)","kind":"Content"},{"code":"SL 5.10","topic":"SL 5.10 — Indefinite integrals of standard functions","kind":"Content"},{"code":"SL 5.11","topic":"SL 5.11 — Definite integrals; area under a curve","kind":"Content"},{"code":"AHL 5.12","topic":"AHL 5.12 — Continuity and differentiability; derivative from first principles","kind":"Content"},{"code":"AHL 5.13","topic":"AHL 5.13 — Evaluation of limits; l’Hôpital’s rule","kind":"Content"},{"code":"AHL 5.14","topic":"AHL 5.14 — Implicit differentiation; related rates; optimisation","kind":"Content"},{"code":"AHL 5.15","topic":"AHL 5.15 — Further derivatives (tan, sec, cosec, cot, aˣ, logₐ, inverse trig)","kind":"Content"},{"code":"AHL 5.16","topic":"AHL 5.16 — Integration by substitution and by parts","kind":"Content"},{"code":"AHL 5.17","topic":"AHL 5.17 — Area between curve and y-axis; volumes of revolution","kind":"Content"},{"code":"AHL 5.18","topic":"AHL 5.18 — First-order differential equations; Euler’s method; variables separable","kind":"Content"},{"code":"AHL 5.19","topic":"AHL 5.19 — Maclaurin series","kind":"Content"},{"code":"Assessment","topic":"Assessment HL — Paper 1 (2 h, no technology, 30%)","kind":"Assessment"},{"code":"Assessment","topic":"Assessment HL — Paper 2 (2 h, technology, 30%)","kind":"Assessment"},{"code":"Assessment","topic":"Assessment HL — Paper 3 (1 h 15, technology, 20%)","kind":"Assessment"},{"code":"Assessment","topic":"Assessment — Mathematical exploration (20%)","kind":"Assessment"}],"Physics":[{"code":"A.1","topic":"A.1 Kinematics (SL)","kind":"Content"},{"code":"A.2","topic":"A.2 Forces and momentum (SL)","kind":"Content"},{"code":"A.3","topic":"A.3 Work, energy and power (SL)","kind":"Content"},{"code":"B.1","topic":"B.1 Thermal energy transfers (SL)","kind":"Content"},{"code":"B.2","topic":"B.2 Greenhouse effect (SL)","kind":"Content"},{"code":"B.3","topic":"B.3 Gas laws (SL)","kind":"Content"},{"code":"B.5","topic":"B.5 Current and circuits (SL)","kind":"Content"},{"code":"C.1","topic":"C.1 Simple harmonic motion (SL + additional HL content marked •• in brief — SL studies core)","kind":"Content"},{"code":"C.2","topic":"C.2 Wave model (SL)","kind":"Content"},{"code":"C.3","topic":"C.3 Wave phenomena (SL + ••)","kind":"Content"},{"code":"C.4","topic":"C.4 Standing waves and resonance (SL)","kind":"Content"},{"code":"C.5","topic":"C.5 Doppler effect (SL + ••)","kind":"Content"},{"code":"D.1","topic":"D.1 Gravitational fields (SL + ••)","kind":"Content"},{"code":"D.2","topic":"D.2 Electric and magnetic fields (SL + ••)","kind":"Content"},{"code":"D.3","topic":"D.3 Motion in electromagnetic fields (SL)","kind":"Content"},{"code":"E.1","topic":"E.1 Structure of the atom (SL + ••)","kind":"Content"},{"code":"E.3","topic":"E.3 Radioactive decay (SL + ••)","kind":"Content"},{"code":"E.4","topic":"E.4 Fission (SL)","kind":"Content"},{"code":"E.5","topic":"E.5 Fusion and stars (SL)","kind":"Content"},{"code":"","topic":"Experimental programme — practical work + collaborative sciences project","kind":"Component"},{"code":"Assessment","topic":"IA — Scientific investigation (20%)","kind":"Assessment"}],"Spanish B":[{"code":"Theme","topic":"Theme — Identities (optional: lifestyles; health and well-being; beliefs and values; subcultures; language and identity)","kind":"Theme"},{"code":"Theme","topic":"Theme — Experiences (optional: leisure activities; holidays and travel; life stories; rites of passage; customs and traditions; migration)","kind":"Theme"},{"code":"Theme","topic":"Theme — Human ingenuity (optional: entertainment; artistic expressions; communication and media; technology; scientific innovation)","kind":"Theme"},{"code":"Theme","topic":"Theme — Social organization (optional: social relationships; community; social engagement; education; the working world; law and order)","kind":"Theme"},{"code":"Theme","topic":"Theme — Sharing the planet (optional: the environment; human rights; peace and conflict; equality; globalization; ethics; urban and rural environment)","kind":"Theme"},{"code":"Assessment","topic":"Assessment SL — Paper 1 writing (25%)","kind":"Assessment"},{"code":"Assessment","topic":"Assessment SL — Paper 2 listening + reading (50%)","kind":"Assessment"},{"code":"Assessment","topic":"Assessment SL — Individual oral (25%)","kind":"Assessment"}],"Music":[{"code":"","topic":"Area of inquiry — Music for sociocultural and political expression","kind":"Inquiry"},{"code":"","topic":"Area of inquiry — Music for listening and performance","kind":"Inquiry"},{"code":"","topic":"Area of inquiry — Music for dramatic impact, movement and entertainment","kind":"Inquiry"},{"code":"","topic":"Area of inquiry — Music technology in the electronic and digital age","kind":"Inquiry"},{"code":"","topic":"Component — Exploring music in context (external; HL 20%)","kind":"Component"},{"code":"","topic":"Component — Experimenting with music (internal; HL 20%)","kind":"Component"},{"code":"","topic":"Component — Presenting music (external; HL 30%)","kind":"Component"},{"code":"","topic":"Component — The contemporary music-maker / collaborative project (HL only, internal 30%)","kind":"Component"}],"History":[{"code":"P1","topic":"P1 Focused Study 3 — Political and economic transitions (official option title)","kind":"Content"},{"code":"P1","topic":"P1 case — Meiji Restoration / Meiji Japan 1853–1894","kind":"Content"},{"code":"P1","topic":"P1 case — Russian Federation 1985–1999 — TBC","kind":"Content"},{"code":"P2","topic":"P2 Thematic study — Authoritarian rule (from 1750 CE)","kind":"Theme"},{"code":"","topic":"HL Regional — The Americas; RS8 1880–1945 (Pearson naming)","kind":"Content"},{"code":"","topic":"HL Regional — RS9 The Americas during the Cold War 1945–1991","kind":"Content"},{"code":"RS9","topic":"RS9 inquiry — Impact of the Cold War under Truman and Eisenhower","kind":"Inquiry"},{"code":"RS9","topic":"RS9 inquiry — Cuban Revolution and its impact in the Americas","kind":"Inquiry"},{"code":"RS9","topic":"RS9 inquiry — Impact of the Cold War under Kennedy and Johnson","kind":"Inquiry"},{"code":"RS9","topic":"RS9 inquiry — Impact of US foreign policies in the Americas (1968–1988)","kind":"Inquiry"},{"code":"RS9","topic":"RS9 inquiry — Impact of the Cold War on Canada","kind":"Inquiry"},{"code":"RS9","topic":"RS9 inquiry — Impact of the Cold War on one country in Latin America","kind":"Inquiry"},{"code":"Assessment","topic":"Historical investigation (IA)","kind":"Assessment"}],"ToK":[{"code":"Theme","topic":"Core theme — Knowledge and the knower","kind":"Theme"},{"code":"Theme","topic":"Optional theme (menu) — Knowledge and technology — NOT confirmed as Island’s choice","kind":"Theme"},{"code":"Theme","topic":"Optional theme (menu) — Knowledge and language — NOT confirmed as Island’s choice","kind":"Theme"},{"code":"Theme","topic":"Optional theme (menu) — Knowledge and politics — NOT confirmed as Island’s choice","kind":"Theme"},{"code":"Theme","topic":"Optional theme (menu) — Knowledge and religion — NOT confirmed as Island’s choice","kind":"Theme"},{"code":"Theme","topic":"Optional theme (menu) — Knowledge and indigenous societies — NOT confirmed as Island’s choice","kind":"Theme"},{"code":"","topic":"AoK — History","kind":"Area"},{"code":"","topic":"AoK — The human sciences","kind":"Area"},{"code":"","topic":"AoK — The natural sciences","kind":"Area"},{"code":"","topic":"AoK — The arts","kind":"Area"},{"code":"","topic":"AoK — Mathematics","kind":"Area"},{"code":"Assessment","topic":"Assessment — ToK exhibition (internal, 1/3)","kind":"Assessment"},{"code":"Assessment","topic":"Assessment — ToK essay on a prescribed title (external, 2/3)","kind":"Assessment"}],"Thrive":[{"code":"","topic":"Island School pastoral / student support and wellbeing programme — not an IB examined subject","kind":"Pastoral"}]},"satAreas":["Reading & Writing","Math","Full practice"],"satTopics":{"Reading & Writing":[{"code":"RW","topic":"Reading & Writing — practice set","kind":"SAT"},{"code":"RW","topic":"Reading & Writing — vocab / craft","kind":"SAT"},{"code":"RW","topic":"Reading & Writing — timed section","kind":"SAT"}],"Math":[{"code":"M","topic":"Math — practice set","kind":"SAT"},{"code":"M","topic":"Math — weak-topic drill","kind":"SAT"},{"code":"M","topic":"Math — timed section","kind":"SAT"}],"Full practice":[{"code":"PT","topic":"Full practice test / review","kind":"SAT"}]}};
+
+const OTHER_VALUE = "__other__";
+const STORAGE_KEY = "ishaan-week-" + CONFIG.weekStart;
+
+const state = {};
+
+function parseHM(hm) {
+  const [h, m] = hm.split(":").map(Number);
+  return h * 60 + m;
+}
+function durationHours(start, end) {
+  return (parseHM(end) - parseHM(start)) / 60;
+}
+function formatHM(hm) { return hm; }
+function badgeText(kind) { return CONFIG.labels[kind] || kind; }
+
+function normalizePick(raw) {
+  if (raw == null) return { kind: "free" };
+  if (typeof raw === "string") {
+    const kind = CONFIG.cycle.includes(raw) ? raw : "free";
+    return { kind };
+  }
+  if (typeof raw === "object" && raw.kind) {
+    const kind = CONFIG.cycle.includes(raw.kind) ? raw.kind : "free";
+    const out = { kind };
+    if (kind === "ib") {
+      if (raw.subject) out.subject = String(raw.subject);
+      if (raw.topic) out.topic = String(raw.topic);
+    } else if (kind === "sat") {
+      if (raw.area) out.area = String(raw.area);
+      if (raw.topic) out.topic = String(raw.topic);
+    }
+    return out;
+  }
+  return { kind: "free" };
+}
+
+function getPick(id) { return state[id] || { kind: "free" }; }
+function setPick(id, pick) { state[id] = normalizePick(pick); }
+
+function cloneDefaults() {
+  const map = {};
+  CONFIG.days.forEach(day => {
+    day.slots.forEach(slot => {
+      if (!slot.locked && !slot.hidden) map[slot.id] = { kind: "free" };
+    });
+  });
+  return map;
+}
+
+function initState() {
+  const defaults = cloneDefaults();
+  Object.keys(state).forEach(k => delete state[k]);
+  Object.assign(state, defaults);
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const saved = JSON.parse(raw);
+      Object.keys(saved).forEach(id => {
+        if (id in state) state[id] = normalizePick(saved[id]);
+      });
+    }
+  } catch (e) { /* ignore */ }
+}
+
+function persistState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) { /* ignore */ }
+}
+
+function nextKind(current) {
+  const cycle = CONFIG.cycle;
+  const i = cycle.indexOf(current);
+  return cycle[(i + 1) % cycle.length];
+}
+
+function hoursFor(kind) {
+  let total = 0;
+  CONFIG.days.forEach(day => {
+    day.slots.forEach(slot => {
+      if (slot.hidden || slot.locked) return;
+      if (getPick(slot.id).kind === kind) total += durationHours(slot.start, slot.end);
+    });
+  });
+  return total;
+}
+
+function lockedTutorHours() {
+  let total = 0;
+  CONFIG.days.forEach(day => {
+    day.slots.forEach(slot => {
+      if (slot.hidden) return;
+      if (slot.kind === "locked") total += durationHours(slot.start, slot.end);
+    });
+  });
+  return total;
+}
+
+function fmtHours(n) {
+  return (Math.round(n * 10) / 10).toFixed(1) + "h";
+}
+
+function statusFor(hours, min, max) {
+  if (hours < min) return { cls: "low", text: "A bit under target" };
+  if (hours > max) return { cls: "high", text: "A bit over target" };
+  return { cls: "ok", text: "On target ✓" };
+}
+
+function updateCounters() {
+  const ib = hoursFor("ib");
+  const sat = hoursFor("sat");
+  document.getElementById("ibHours").textContent = fmtHours(ib);
+  document.getElementById("satHours").textContent = fmtHours(sat);
+  document.getElementById("freeHours").textContent = fmtHours(hoursFor("free"));
+  document.getElementById("lightHours").textContent = fmtHours(hoursFor("light"));
+  const ibS = statusFor(ib, CONFIG.targets.ibMin, CONFIG.targets.ibMax);
+  const satS = statusFor(sat, CONFIG.targets.satMin, CONFIG.targets.satMax);
+  const ibEl = document.getElementById("ibStatus");
+  const satEl = document.getElementById("satStatus");
+  ibEl.className = "status " + ibS.cls;
+  ibEl.textContent = ibS.text;
+  satEl.className = "status " + satS.cls;
+  satEl.textContent = satS.text;
+  document.getElementById("lockedHours").textContent = fmtHours(lockedTutorHours()) + " this week";
+}
+
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function truncate(s, n) {
+  s = String(s || "");
+  if (s.length <= n) return s;
+  return s.slice(0, n - 1) + "…";
+}
+
+function displayName(slot, pick) {
+  if (slot.locked) return slot.label || badgeText(slot.kind);
+  if (pick.kind === "ib" && pick.subject) return badgeText("ib") + " · " + pick.subject;
+  if (pick.kind === "sat" && pick.area) return badgeText("sat") + " · " + pick.area;
+  return slot.label || badgeText(pick.kind);
+}
+
+function topicsForIb(subject) {
+  return (TOPIC_BANK.ibTopics && TOPIC_BANK.ibTopics[subject]) || [];
+}
+function topicsForSat(area) {
+  return (TOPIC_BANK.satTopics && TOPIC_BANK.satTopics[area]) || [];
+}
+function isKnownTopic(list, topic) {
+  return list.some(t => t.topic === topic);
+}
+
+function renderTopicSelect(slotId, pick) {
+  let options = [];
+  let selected = pick.topic || "";
+  let usingOther = false;
+
+  if (pick.kind === "ib" && pick.subject) {
+    options = topicsForIb(pick.subject);
+  } else if (pick.kind === "sat" && pick.area) {
+    options = topicsForSat(pick.area);
+  } else {
+    return `<div class="topic-row"><div class="meta-label">Topic</div>
+      <select class="topic-select" data-role="topic" data-id="${escapeHtml(slotId)}" disabled>
+        <option value="">Pick subject / area first</option>
+      </select></div>`;
+  }
+
+  if (selected && !isKnownTopic(options, selected)) usingOther = true;
+
+  const optsHtml = [
+    `<option value="">Choose a topic…</option>`,
+    ...options.map(t => {
+      const sel = (!usingOther && selected === t.topic) ? " selected" : "";
+      return `<option value="${escapeHtml(t.topic)}"${sel}>${escapeHtml(t.topic)}</option>`;
+    }),
+    `<option value="${OTHER_VALUE}"${usingOther ? " selected" : ""}>Other / type…</option>`
+  ].join("");
+
+  const otherVal = usingOther ? selected : "";
+  const otherShow = usingOther ? " show" : "";
+
+  return `<div class="topic-row">
+    <div class="meta-label">Topic</div>
+    <select class="topic-select" data-role="topic" data-id="${escapeHtml(slotId)}">${optsHtml}</select>
+    <input type="text" class="topic-other${otherShow}" data-role="topic-other" data-id="${escapeHtml(slotId)}"
+      placeholder="Type your topic…" value="${escapeHtml(otherVal)}" maxlength="120" autocomplete="off"/>
+  </div>`;
+}
+
+function renderMeta(slot, pick) {
+  if (pick.kind !== "ib" && pick.kind !== "sat") return "";
+
+  if (pick.kind === "ib") {
+    const chips = TOPIC_BANK.ibSubjects.map(s => {
+      const active = pick.subject === s ? " active" : "";
+      return `<button type="button" class="subj-chip${active}" data-role="subject" data-id="${escapeHtml(slot.id)}" data-value="${escapeHtml(s)}">${escapeHtml(s)}</button>`;
+    }).join("");
+    return `<div class="slot-meta" data-meta="${escapeHtml(slot.id)}">
+      <div><div class="meta-label">Subject</div><div class="subj-chips">${chips}</div></div>
+      ${renderTopicSelect(slot.id, pick)}
+    </div>`;
+  }
+
+  const chips = TOPIC_BANK.satAreas.map(a => {
+    const active = pick.area === a ? " active" : "";
+    return `<button type="button" class="subj-chip${active}" data-role="area" data-id="${escapeHtml(slot.id)}" data-value="${escapeHtml(a)}">${escapeHtml(a)}</button>`;
+  }).join("");
+  return `<div class="slot-meta" data-meta="${escapeHtml(slot.id)}">
+    <div><div class="meta-label">SAT area</div><div class="subj-chips">${chips}</div></div>
+    ${renderTopicSelect(slot.id, pick)}
+  </div>`;
+}
+
+function renderSlot(slot) {
+  if (slot.hidden) return "";
+  const pick = slot.locked ? { kind: slot.kind } : getPick(slot.id);
+  const kind = pick.kind;
+  const choosable = !slot.locked;
+  const noteBits = [];
+  if (slot.note) noteBits.push(`<span class="note">${escapeHtml(slot.note)}</span>`);
+  if (!slot.locked && pick.topic) {
+    noteBits.push(`<span class="topic-line">${escapeHtml(truncate(pick.topic, 56))}</span>`);
+  }
+  const note = noteBits.join("");
+  const name = displayName(slot, pick);
+  const ariaExtra = pick.subject || pick.area || "";
+  const aria = choosable
+    ? `${slot.start}–${slot.end}, ${badgeText(kind)}${ariaExtra ? " · " + ariaExtra : ""}. Tap to change kind.`
+    : "";
+
+  const head = choosable
+    ? `<button type="button" class="slot choosable" data-id="${escapeHtml(slot.id)}" aria-label="${escapeHtml(aria)}">
+         <span class="time">${escapeHtml(formatHM(slot.start))}–${escapeHtml(formatHM(slot.end))}</span>
+         <span class="name">${escapeHtml(name)}${note}</span>
+         <span class="badge">${escapeHtml(badgeText(kind))}</span>
+       </button>`
+    : `<div class="slot" aria-disabled="true">
+         <span class="time">${escapeHtml(formatHM(slot.start))}–${escapeHtml(formatHM(slot.end))}</span>
+         <span class="name">${escapeHtml(name)}${note}</span>
+         <span class="badge">${escapeHtml(badgeText(kind))}</span>
+       </div>`;
+
+  const meta = choosable ? renderMeta(slot, pick) : "";
+  return `<div class="slot-wrap kind-${kind}">${head}${meta}</div>`;
+}
+
+function bindMetaHandlers(root) {
+  root.querySelectorAll("[data-role='subject']").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const id = btn.getAttribute("data-id");
+      const subject = btn.getAttribute("data-value");
+      const prev = getPick(id);
+      const next = { kind: "ib", subject };
+      if (prev.subject === subject && prev.topic) next.topic = prev.topic;
+      setPick(id, next);
+      persistState();
+      render();
+    });
+  });
+  root.querySelectorAll("[data-role='area']").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const id = btn.getAttribute("data-id");
+      const area = btn.getAttribute("data-value");
+      const prev = getPick(id);
+      const next = { kind: "sat", area };
+      if (prev.area === area && prev.topic) next.topic = prev.topic;
+      setPick(id, next);
+      persistState();
+      render();
+    });
+  });
+  root.querySelectorAll("[data-role='topic']").forEach(sel => {
+    sel.addEventListener("change", (e) => {
+      e.stopPropagation();
+      const id = sel.getAttribute("data-id");
+      const pick = { ...getPick(id) };
+      const val = sel.value;
+      const wrap = sel.closest(".slot-meta");
+      const other = wrap && wrap.querySelector("[data-role='topic-other']");
+      if (val === OTHER_VALUE) {
+        if (other) {
+          other.classList.add("show");
+          other.focus();
+          pick.topic = other.value.trim() || undefined;
+        }
+      } else {
+        if (other) {
+          other.classList.remove("show");
+          other.value = "";
+        }
+        if (val) pick.topic = val;
+        else delete pick.topic;
+      }
+      setPick(id, pick);
+      persistState();
+      render();
+    });
+    sel.addEventListener("click", e => e.stopPropagation());
+  });
+  root.querySelectorAll("[data-role='topic-other']").forEach(inp => {
+    inp.addEventListener("click", e => e.stopPropagation());
+    inp.addEventListener("input", () => {
+      const id = inp.getAttribute("data-id");
+      const pick = { ...getPick(id) };
+      const t = inp.value.trim();
+      if (t) pick.topic = t;
+      else delete pick.topic;
+      setPick(id, pick);
+      persistState();
+      const wrap = inp.closest(".slot-wrap");
+      if (wrap) {
+        let line = wrap.querySelector(".topic-line");
+        const nameEl = wrap.querySelector(".name");
+        if (t) {
+          if (!line && nameEl) {
+            line = document.createElement("span");
+            line.className = "topic-line";
+            nameEl.appendChild(line);
+          }
+          if (line) line.textContent = truncate(t, 56);
+        } else if (line) {
+          line.remove();
+        }
+      }
+    });
+  });
+}
+
+function render() {
+  const root = document.getElementById("days");
+  root.innerHTML = CONFIG.days.map(day => {
+    const visible = day.slots.filter(s => !s.hidden);
+    const choosableCount = visible.filter(s => !s.locked).length;
+    return `<section class="day" data-day="${day.id}">
+      <div class="day-head">
+        <h2>${escapeHtml(day.name)}</h2>
+        <span class="sub">${choosableCount} open block${choosableCount === 1 ? "" : "s"}</span>
+      </div>
+      <div class="slots">${visible.map(renderSlot).join("")}</div>
+    </section>`;
+  }).join("");
+
+  root.querySelectorAll(".slot.choosable").forEach(el => {
+    el.addEventListener("click", () => {
+      const id = el.getAttribute("data-id");
+      const prev = getPick(id);
+      const kind = nextKind(prev.kind);
+      const next = { kind };
+      if (kind === "ib" && prev.kind === "ib") {
+        if (prev.subject) next.subject = prev.subject;
+        if (prev.topic) next.topic = prev.topic;
+      }
+      if (kind === "sat" && prev.kind === "sat") {
+        if (prev.area) next.area = prev.area;
+        if (prev.topic) next.topic = prev.topic;
+      }
+      setPick(id, next);
+      persistState();
+      render();
+      updateCounters();
+    });
+  });
+  bindMetaHandlers(root);
+  updateCounters();
+}
+
+function kindExportLabel(kind) {
+  if (kind === "ib") return "IB";
+  if (kind === "sat") return "SAT";
+  if (kind === "light") return "Light";
+  if (kind === "free") return "Free";
+  if (kind === "locked") return "Tutor";
+  if (kind === "school") return "School";
+  if (kind === "social") return "Social";
+  return kind;
+}
+
+function buildChoicesJson(onlyNonFree) {
+  const rows = [];
+  CONFIG.days.forEach(day => {
+    day.slots.forEach(slot => {
+      if (slot.hidden || slot.locked) return;
+      const pick = getPick(slot.id);
+      if (onlyNonFree && pick.kind === "free") return;
+      const row = {
+        id: slot.id,
+        day: day.name,
+        date: day.date,
+        start: slot.start,
+        end: slot.end,
+        kind: pick.kind
+      };
+      if (pick.kind === "ib") {
+        if (pick.subject) row.subject = pick.subject;
+        if (pick.topic) row.topic = pick.topic;
+      } else if (pick.kind === "sat") {
+        if (pick.area) row.area = pick.area;
+        if (pick.topic) row.topic = pick.topic;
+      }
+      rows.push(row);
+    });
+  });
+  return rows;
+}
+
+function buildPlainText() {
+  const lines = [];
+  lines.push(`Ishaan week ${CONFIG.weekStart} · choices`);
+  lines.push(`Week: ${CONFIG.weekLabel}`);
+  lines.push(`Targets: IB ${CONFIG.targets.ibMin}h · SAT ${CONFIG.targets.satMin}h`);
+  lines.push(`Totals: IB ${fmtHours(hoursFor("ib"))} · SAT ${fmtHours(hoursFor("sat"))} · Free ${fmtHours(hoursFor("free"))} · Light ${fmtHours(hoursFor("light"))}`);
+  lines.push("");
+  CONFIG.days.forEach(day => {
+    lines.push(day.name);
+    day.slots.forEach(slot => {
+      if (slot.hidden) return;
+      if (slot.locked) {
+        lines.push(`- ${slot.start}–${slot.end} | ${kindExportLabel(slot.kind)} | ${slot.label} [locked]`);
+        return;
+      }
+      const pick = getPick(slot.id);
+      const parts = [`${slot.start}–${slot.end}`, kindExportLabel(pick.kind)];
+      if (pick.kind === "ib") {
+        parts.push(pick.subject || "(no subject)");
+        parts.push(pick.topic || "(no topic)");
+      } else if (pick.kind === "sat") {
+        parts.push(pick.area || "(no area)");
+        parts.push(pick.topic || "(no topic)");
+      }
+      lines.push("- " + parts.join(" | "));
+    });
+    lines.push("");
+  });
+  lines.push(`Excluded: ${CONFIG.exclusions.join(", ")}`);
+  lines.push("");
+  lines.push("CHOICES_JSON:" + JSON.stringify(buildChoicesJson(false)));
+  return lines.join("\n");
+}
+
+function buildSyncPayload() {
+  const rows = buildChoicesJson(true);
+  const lines = [];
+  lines.push("SYNC_WEEK " + CONFIG.weekStart);
+  lines.push("CHOICES_JSON:" + JSON.stringify(rows));
+  return lines.join("\n");
+}
+
+function targetWarning() {
+  const ib = hoursFor("ib");
+  const sat = hoursFor("sat");
+  const bits = [];
+  if (ib !== CONFIG.targets.ibMin) bits.push(`IB ${fmtHours(ib)} (target ${CONFIG.targets.ibMin}h)`);
+  if (sat !== CONFIG.targets.satMin) bits.push(`SAT ${fmtHours(sat)} (target ${CONFIG.targets.satMin}h)`);
+  return bits;
+}
+
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch (err) {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.left = "-9999px";
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try {
+      ok = document.execCommand("copy");
+    } catch (e2) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+}
+
+function showToast(msg, warn) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.toggle("warn", !!warn);
+  t.classList.add("show");
+  clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(() => t.classList.remove("show"), 3200);
+}
+
+function showSyncBox(html) {
+  const box = document.getElementById("syncBox");
+  box.innerHTML = html;
+  box.classList.add("show");
+}
+
+document.getElementById("btnCopy").addEventListener("click", async () => {
+  const text = buildPlainText();
+  const ok = await copyText(text);
+  if (ok) showToast("Copied — paste into a message to Dad.");
+  else {
+    showToast("Couldn’t copy automatically — long-press and copy.", true);
+    alert(text);
+  }
+});
+
+document.getElementById("btnSync").addEventListener("click", async () => {
+  const warns = targetWarning();
+  if (warns.length) {
+    const go = confirm(
+      "Hours are off target:\n• " + warns.join("\n• ") +
+      "\n\nSync anyway? (Assistant will still process the request.)"
+    );
+    if (!go) {
+      showToast("Sync cancelled — adjust IB/SAT hours first.", true);
+      return;
+    }
+  }
+  const payload = buildSyncPayload();
+  const ok = await copyText(payload);
+  if (ok) {
+    showToast("Synced request copied.");
+    showSyncBox(
+      "<strong>Synced request copied</strong> — send/paste to Dad’s Assistant to write General Timetable " +
+      "(old <em>DRAFT</em> study entries for this week will be removed).<br/>" +
+      "This page does <strong>not</strong> update the calendar by itself."
+    );
+  } else {
+    showToast("Couldn’t copy — showing payload.", true);
+    showSyncBox("<strong>Copy this and send to Dad’s Assistant:</strong><br/><pre style='white-space:pre-wrap;font-size:0.75rem;margin:8px 0 0'>" +
+      escapeHtml(payload) + "</pre>");
+    alert(payload);
+  }
+});
+
+document.getElementById("btnReset").addEventListener("click", () => {
+  if (!confirm("Reset all open slots for this week to Free?")) return;
+  const defaults = cloneDefaults();
+  Object.keys(state).forEach(k => delete state[k]);
+  Object.assign(state, defaults);
+  persistState();
+  document.getElementById("syncBox").classList.remove("show");
+  render();
+  showToast("Week reset — all open slots are Free.");
+});
+
+document.getElementById("btnPrint").addEventListener("click", () => {
+  window.print();
+});
+
+initState();
+render();
+
+window.WEEK_SLOT_CONFIG = CONFIG;
+window.WEEK_SLOT_STATE = state;
+window.TOPIC_BANK = TOPIC_BANK;
+
+</script>
+</body>
+</html>
