@@ -8,71 +8,6 @@
     "Exam-ready"
   ],
   "byTopicId": {
-    "english__41d06134f8": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "english__d33a6ee967": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "english__4b73221326": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "english__30a16454d5": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "english__8f7c936afc": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "english__a27e74314e": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "english__7c8404a8fd": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "english__837f2010c4": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "english__b8eb9ce1c2": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "english__8b4a116485": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "english__assessment__52853787f5": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "english__assessment__e0f4eb0b28": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "english__assessment__f05f75e153": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
     "maths-aa__sl-1-1__5c13d83738": {
       "status": "Not started",
       "lastTouched": null,
@@ -653,111 +588,6 @@
       "lastTouched": null,
       "notes": ""
     },
-    "music__f4619a501e": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "music__8dd53f47b2": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "music__42881604dc": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "music__c5d94e30c0": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "music__51b33d535d": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "music__b075e59e2f": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "music__a25d87763b": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "music__8f7185e1fd": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "history__p1__2ab25b5c09": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "history__p1__b6df638454": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "history__p1__b0ed49ea81": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "history__p2__797fd4d3b6": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "history__08ec6aa248": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "history__9acb0b2c81": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "history__rs9__4e37db33d9": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "history__rs9__e7e665515c": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "history__rs9__5e5527bee0": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "history__rs9__9e9423e8e6": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "history__rs9__f0d8d4623a": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "history__rs9__9e7b480e8e": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
-    "history__assessment__ff30a0c575": {
-      "status": "Not started",
-      "lastTouched": null,
-      "notes": ""
-    },
     "tok__theme__07472b3280": {
       "status": "Not started",
       "lastTouched": null,
@@ -829,5 +659,5 @@
       "notes": ""
     }
   },
-  "note": "Default progress from Excel (all Not started as of export). Browser localStorage overrides; Copy progress dumps this shape for Sync."
+  "note": "Progress for coverage subjects only (Maths AA, Physics, Spanish B, ToK, Thrive). EN/History/Music deferred."
 }

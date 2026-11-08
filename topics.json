@@ -13,152 +13,39 @@
       "Reviewed once",
       "Exam-ready"
     ],
-    "note": "Verified topics only — no invented curriculum. Gaps_TBC stay flagged.",
-    "exportedAt": "2026-11-08T19:22:40+08:00",
+    "note": "Verified topics only — no invented curriculum. English A Lit, History, and Music topic coverage deferred pending Ishaan (books / school pathway unknown); Week tab still offers those subject labels with Other / type… only. Gaps_TBC stay flagged for active subjects.",
+    "exportedAt": "2026-11-08T19:32:07+08:00",
     "source": "Ishaan_IB_study_topic_tracker.xlsx",
-    "totalTopics": 164
+    "totalTopics": 130,
+    "deferredSubjects": [
+      {
+        "id": "english",
+        "chooserLabel": "English A Lit",
+        "label": "English A Literature SL",
+        "reason": "Deferred pending Ishaan — books / school topics unknown"
+      },
+      {
+        "id": "music",
+        "chooserLabel": "Music",
+        "label": "Music HL",
+        "reason": "Deferred pending Ishaan — books / school topics unknown"
+      },
+      {
+        "id": "history",
+        "chooserLabel": "History",
+        "label": "History HL",
+        "reason": "Deferred pending Ishaan — books / school topics unknown"
+      }
+    ],
+    "coverageSubjects": [
+      "maths-aa",
+      "physics",
+      "spanish-b",
+      "tok",
+      "thrive"
+    ]
   },
   "subjects": [
-    {
-      "sheet": "English",
-      "id": "english",
-      "chooserLabel": "English A Lit",
-      "label": "English A Literature SL",
-      "level": "SL",
-      "total": 13,
-      "topics": [
-        {
-          "id": "english__41d06134f8",
-          "code": "",
-          "topic": "Area — Readers, writers and texts",
-          "kind": "Area",
-          "flag": null,
-          "notes": "IB brief FA 2021",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "english__d33a6ee967",
-          "code": "",
-          "topic": "Area — Time and space",
-          "kind": "Area",
-          "flag": null,
-          "notes": "IB brief FA 2021",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "english__4b73221326",
-          "code": "",
-          "topic": "Area — Intertextuality: connecting texts",
-          "kind": "Area",
-          "flag": null,
-          "notes": "IB brief FA 2021",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "english__30a16454d5",
-          "code": "",
-          "topic": "Y12 this term* — The World’s Wife (Carol Ann Duffy) — start Duffy SL/HL",
-          "kind": "Content",
-          "flag": null,
-          "notes": "Island School intro PPT 26 Oct 2026 | school PPT",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "english__8f7c936afc",
-          "code": "",
-          "topic": "Y12 this term* — Persepolis (Marjane Satrapi)",
-          "kind": "Content",
-          "flag": null,
-          "notes": "Island School intro PPT 26 Oct 2026 | school PPT",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "english__a27e74314e",
-          "code": "",
-          "topic": "Y12 this term* — Like Water for Chocolate (Laura Esquivel)",
-          "kind": "Content",
-          "flag": null,
-          "notes": "Island School intro PPT 26 Oct 2026 | school PPT",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "english__7c8404a8fd",
-          "code": "",
-          "topic": "Y12 list (not starred this-term) — The Things They Carried (Tim O’Brien)",
-          "kind": "Content",
-          "flag": null,
-          "notes": "Island School intro PPT 26 Oct 2026 | school PPT",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "english__837f2010c4",
-          "code": "",
-          "topic": "Term outcome — minimum 2× Paper 1 practices",
-          "kind": "Term outcome",
-          "flag": null,
-          "notes": "School PPT term outcomes | school PPT",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "english__b8eb9ce1c2",
-          "code": "",
-          "topic": "Term outcome — mini IA (5 min)",
-          "kind": "Term outcome",
-          "flag": null,
-          "notes": "School PPT term outcomes | school PPT",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "english__8b4a116485",
-          "code": "",
-          "topic": "Term outcome — full IA (10 min oral)",
-          "kind": "Term outcome",
-          "flag": null,
-          "notes": "School PPT term outcomes | school PPT",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "english__assessment__52853787f5",
-          "code": "Assessment",
-          "topic": "Assessment SL — Paper 1 Guided literary analysis (1 h 15; 35%; one passage)",
-          "kind": "Assessment",
-          "flag": null,
-          "notes": "IB brief / school deck",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "english__assessment__e0f4eb0b28",
-          "code": "Assessment",
-          "topic": "Assessment SL — Paper 2 Comparative essay (35%)",
-          "kind": "Assessment",
-          "flag": null,
-          "notes": "IB brief FA 2021",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "english__assessment__f05f75e153",
-          "code": "Assessment",
-          "topic": "Assessment SL — Individual oral (30%)",
-          "kind": "Assessment",
-          "flag": null,
-          "notes": "IB brief FA 2021",
-          "priority": null,
-          "excelStatus": "Not started"
-        }
-      ]
-    },
     {
       "sheet": "Maths AA",
       "id": "maths-aa",
@@ -1350,236 +1237,6 @@
       ]
     },
     {
-      "sheet": "Music",
-      "id": "music",
-      "chooserLabel": "Music",
-      "label": "Music HL",
-      "level": "HL",
-      "total": 8,
-      "topics": [
-        {
-          "id": "music__f4619a501e",
-          "code": "",
-          "topic": "Area of inquiry — Music for sociocultural and political expression",
-          "kind": "Inquiry",
-          "flag": null,
-          "notes": "Music brief FA 2022",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "music__8dd53f47b2",
-          "code": "",
-          "topic": "Area of inquiry — Music for listening and performance",
-          "kind": "Inquiry",
-          "flag": null,
-          "notes": "Music brief FA 2022",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "music__42881604dc",
-          "code": "",
-          "topic": "Area of inquiry — Music for dramatic impact, movement and entertainment",
-          "kind": "Inquiry",
-          "flag": null,
-          "notes": "Music brief FA 2022",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "music__c5d94e30c0",
-          "code": "",
-          "topic": "Area of inquiry — Music technology in the electronic and digital age",
-          "kind": "Inquiry",
-          "flag": null,
-          "notes": "Music brief FA 2022",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "music__51b33d535d",
-          "code": "",
-          "topic": "Component — Exploring music in context (external; HL 20%)",
-          "kind": "Component",
-          "flag": null,
-          "notes": "Music brief | Music brief FA 2022",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "music__b075e59e2f",
-          "code": "",
-          "topic": "Component — Experimenting with music (internal; HL 20%)",
-          "kind": "Component",
-          "flag": null,
-          "notes": "Music brief | Music brief FA 2022",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "music__a25d87763b",
-          "code": "",
-          "topic": "Component — Presenting music (external; HL 30%)",
-          "kind": "Component",
-          "flag": null,
-          "notes": "Music brief | Music brief FA 2022",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "music__8f7185e1fd",
-          "code": "",
-          "topic": "Component — The contemporary music-maker / collaborative project (HL only, internal 30%)",
-          "kind": "Component",
-          "flag": null,
-          "notes": "Music brief — HL only | Music brief FA 2022",
-          "priority": null,
-          "excelStatus": "Not started"
-        }
-      ]
-    },
-    {
-      "sheet": "History",
-      "id": "history",
-      "chooserLabel": "History",
-      "label": "History HL",
-      "level": "HL",
-      "total": 13,
-      "topics": [
-        {
-          "id": "history__p1__2ab25b5c09",
-          "code": "P1",
-          "topic": "P1 Focused Study 3 — Political and economic transitions (official option title)",
-          "kind": "Content",
-          "flag": null,
-          "notes": "IB History subject brief FA 2028 | IB brief FA 2028",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "history__p1__b6df638454",
-          "code": "P1",
-          "topic": "P1 case — Meiji Restoration / Meiji Japan 1853–1894",
-          "kind": "Content",
-          "flag": null,
-          "notes": "School Focused Study 3 notes | school notes",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "history__p1__b0ed49ea81",
-          "code": "P1",
-          "topic": "P1 case — Russian Federation 1985–1999 — TBC",
-          "kind": "Content",
-          "flag": "TBC",
-          "notes": "School notes list it; Vikram (26 Oct 2026) said Russia TBC | school notes",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "history__p2__797fd4d3b6",
-          "code": "P2",
-          "topic": "P2 Thematic study — Authoritarian rule (from 1750 CE)",
-          "kind": "Theme",
-          "flag": null,
-          "notes": "Official thematic title in IB History brief FA 2028 | IB brief FA 2028",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "history__08ec6aa248",
-          "code": "",
-          "topic": "HL Regional — The Americas; RS8 1880–1945 (Pearson naming)",
-          "kind": "Content",
-          "flag": null,
-          "notes": "Family/school route note; full IB guide titles login-walled | school notes",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "history__9acb0b2c81",
-          "code": "",
-          "topic": "HL Regional — RS9 The Americas during the Cold War 1945–1991",
-          "kind": "Content",
-          "flag": null,
-          "notes": "School Regional Study 9 notes + Pearson naming | school notes",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "history__rs9__4e37db33d9",
-          "code": "RS9",
-          "topic": "RS9 inquiry — Impact of the Cold War under Truman and Eisenhower",
-          "kind": "Inquiry",
-          "flag": null,
-          "notes": "School RS9 notes | school notes",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "history__rs9__e7e665515c",
-          "code": "RS9",
-          "topic": "RS9 inquiry — Cuban Revolution and its impact in the Americas",
-          "kind": "Inquiry",
-          "flag": null,
-          "notes": "School RS9 notes | school notes",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "history__rs9__5e5527bee0",
-          "code": "RS9",
-          "topic": "RS9 inquiry — Impact of the Cold War under Kennedy and Johnson",
-          "kind": "Inquiry",
-          "flag": null,
-          "notes": "School RS9 notes | school notes",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "history__rs9__9e9423e8e6",
-          "code": "RS9",
-          "topic": "RS9 inquiry — Impact of US foreign policies in the Americas (1968–1988)",
-          "kind": "Inquiry",
-          "flag": null,
-          "notes": "School RS9 notes | school notes",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "history__rs9__f0d8d4623a",
-          "code": "RS9",
-          "topic": "RS9 inquiry — Impact of the Cold War on Canada",
-          "kind": "Inquiry",
-          "flag": null,
-          "notes": "School RS9 notes | school notes",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "history__rs9__9e7b480e8e",
-          "code": "RS9",
-          "topic": "RS9 inquiry — Impact of the Cold War on one country in Latin America",
-          "kind": "Inquiry",
-          "flag": null,
-          "notes": "School RS9 notes | school notes",
-          "priority": null,
-          "excelStatus": "Not started"
-        },
-        {
-          "id": "history__assessment__ff30a0c575",
-          "code": "Assessment",
-          "topic": "Historical investigation (IA)",
-          "kind": "Assessment",
-          "flag": null,
-          "notes": "IB History brief FA 2028 | IB brief FA 2028",
-          "priority": null,
-          "excelStatus": "Not started"
-        }
-      ]
-    },
-    {
       "sheet": "ToK",
       "id": "tok",
       "chooserLabel": "ToK",
@@ -1742,14 +1399,9 @@
   ],
   "gaps": [
     {
-      "flag": "TBC",
-      "detail": "History — Russian Federation 1985–1999 as second P1 Focused Study 3 case is TBC (Vikram 26 Oct 2026), even though school Focused Study 3 notes name it",
-      "category": "TBC"
-    },
-    {
-      "flag": "Login-walled / school-unpublished detail",
-      "detail": "History — full IB guide complete regional titles are login-walled; RS8/RS9 use Pearson naming + school notes only",
-      "category": "Gap"
+      "flag": "Deferred",
+      "detail": "English A Lit, History, and Music — topic coverage deferred; will build with Ishaan (school books / pathways unknown). Subject chips remain on Week for labelling; topic lists empty (Other / type… only).",
+      "category": "Deferred"
     },
     {
       "flag": "Gap in public brief",
@@ -1757,29 +1409,9 @@
       "category": "Gap"
     },
     {
-      "flag": "School-unpublished",
-      "detail": "Music — no prescribed repertoire; Island School pathways/pieces not published — none invented here",
-      "category": "Gap"
-    },
-    {
       "flag": "Unknown",
       "detail": "ToK — which two of five optional themes Island teaches is UNKNOWN; all five listed as menu options only",
       "category": "Uncertain"
-    },
-    {
-      "flag": "Uncertain",
-      "detail": "English — Bluest Eye / Perfume named on PPT slide 13 — FLAG uncertain / may be parallel plan; NOT treated as confirmed Y12 list",
-      "category": "Uncertain"
-    },
-    {
-      "flag": "Excluded by design",
-      "detail": "English — HL-only texts (Blake; The Reader; The Road; Macbeth) excluded from Ishaan SL checklists",
-      "category": "Excluded"
-    },
-    {
-      "flag": "Caveat",
-      "detail": "Do not assume Island teaches only the History route beyond notes Vikram provided",
-      "category": "Caveat"
     }
   ],
   "sources": [
@@ -1889,6 +1521,23 @@
       "History": "history",
       "ToK": "tok",
       "Thrive": "thrive"
-    }
+    },
+    "coverageSubjectIds": [
+      "maths-aa",
+      "physics",
+      "spanish-b",
+      "tok",
+      "thrive"
+    ],
+    "deferredChooserLabels": [
+      "English A Lit",
+      "History",
+      "Music"
+    ],
+    "emptyTopicLists": [
+      "English A Lit",
+      "History",
+      "Music"
+    ]
   }
 }
