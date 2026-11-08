@@ -3020,7 +3020,6 @@ async function applyWeekConfig(weekCfg) {
     window.WEEK_SLOT_CONFIG = CONFIG;
   } catch (e) { /* ignore */ }
   await loadSharedPlan({ force: false, quiet: true });
-  await refreshSharedPlanMeta();
 }
 
 function updateWeekChrome() {
