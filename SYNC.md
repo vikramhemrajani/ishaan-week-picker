@@ -55,3 +55,26 @@ PUBLISH_HINT: Write choices/YYYY-MM-DD.json from SHARED_PLAN_JSON; append AUDIT_
 - **Copy progress** (Topics) — `SYNC_IB_PROGRESS` + `PROGRESS_JSON:…` (separate from calendar / shared plan).
 
 Live: https://vikramhemrajani.github.io/ishaan-week-picker/ · fallback https://ishaan-week-picker.deed.page/
+
+
+## Calendar locks (`locks/YYYY-MM-DD.json`)
+
+School, tutors (Ghosh / English / History / Maths), Fri social, and **SAT booked classes** are published as a fresh locks file — not only baked into `index.html`.
+
+### On every page load
+1. The Week tab fetches `locks/<weekStart>.json` (cache-busted).
+2. Locked blocks are rebuilt from that file (school collapsed per day; tutors; `sat_class` from the Study calendar).
+3. Open study slots that overlap a lock are removed; any remaining pick/lock overlap shows a **conflict** badge + list (SAT classes highlighted).
+
+### Sunday ritual / Send to calendar (Dad’s Assistant)
+Before or with each publish:
+1. Pull **General Timetable** + **Study** (SAT classes) for the week via Google Calendar.
+2. Write `locks/YYYY-MM-DD.json` (+ update `locks/latest.json`).
+3. Exclude Bhavan / Dr OK; ignore `DRAFT · …` study events.
+4. Commit/push GitHub Pages and republish deed.
+5. Then process Sync paste (choices + audit) as usual.
+
+Schema (per lock): `id`, `title`, `date`, `day`, `start`, `end`, `minutes`, `kind` (`school`|`tutor`|`social`|`sat_class`), `satTutor`, `source`, `sourceTitle`.  
+Top-level: `weekStart`, `weekEnd`, `timezone`, `fetchedAt`, `sources`, `exclusions`, `locks`.
+
+Helper notes: `scripts/REFRESH_LOCKS.md`.

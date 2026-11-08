@@ -369,40 +369,89 @@
   .dot.social { background: var(--social); }
   .actions {
     display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    padding: 8px 12px;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 12px;
     background: #fff;
     border-bottom: 1px solid var(--line);
+  }
+  .actions-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: stretch;
+  }
+  .actions-label {
+    font-size: 0.68rem;
+    font-weight: 750;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    margin: 0 0 2px;
+  }
+  .actions-help {
+    font-size: 0.72rem;
+    color: var(--muted);
+    line-height: 1.35;
+    margin: 0;
   }
   button {
     appearance: none;
     border: none;
-    border-radius: 9px;
-    padding: 8px 12px;
-    font-size: 0.84rem;
+    border-radius: 10px;
+    padding: 10px 14px;
+    min-height: 44px;
+    font-size: 0.86rem;
     font-weight: 650;
     cursor: pointer;
     font-family: inherit;
-    transition: transform 0.08s ease, opacity 0.15s;
+    line-height: 1.2;
+    transition: transform 0.08s ease, opacity 0.15s, background 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
   }
-  button:active { transform: scale(0.97); }
+  button:active:not(:disabled) { transform: scale(0.98); }
+  button:focus-visible {
+    outline: 2px solid var(--ib);
+    outline-offset: 2px;
+  }
+  button:disabled,
+  button[aria-disabled="true"] {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    filter: grayscale(0.15);
+  }
   .btn-primary {
     background: var(--ink);
     color: #fff;
   }
+  .btn-primary:hover:not(:disabled) { background: #1e293b; }
   .btn-secondary {
     background: var(--paper);
     color: var(--ink);
     border: 1px solid var(--line);
   }
-  .btn-primary:disabled { opacity: 0.55; cursor: default; }
+  .btn-secondary:hover:not(:disabled) { background: #e2e8f0; border-color: #cbd5e1; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--muted);
+    border: 1px dashed #cbd5e1;
+  }
+  .btn-ghost:hover:not(:disabled) { background: var(--paper); color: var(--ink); }
+  .btn-danger {
+    background: #fff;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+  }
+  .btn-danger:hover:not(:disabled) { background: #fef2f2; border-color: #fca5a5; }
 
   .btn-sync {
     background: #0f766e;
     color: #fff;
+    box-shadow: 0 6px 14px -8px rgba(15,118,110,0.7);
   }
-  .btn-sync:disabled { opacity: 0.55; cursor: default; }
+  .btn-sync:hover:not(:disabled) { background: #0d9488; }
+  .btn-sync:disabled { box-shadow: none; }
   .toast.warn { background: #fef3c7; color: #92400e; }
   .sync-box {
     display: none;
@@ -633,7 +682,7 @@
   .app-tabs button {
     flex: 1; border: 0; background: transparent;
     color: rgba(255,255,255,0.78); font: inherit; font-weight: 650;
-    font-size: 0.9rem; padding: 8px 10px; border-radius: 9px; cursor: pointer;
+    font-size: 0.9rem; padding: 10px 12px; min-height: 44px; border-radius: 9px; cursor: pointer;
   }
   .app-tabs button.active {
     background: #fff; color: var(--ink);
@@ -657,15 +706,23 @@
     width: 100%; border: 1px solid var(--line); border-radius: 10px;
     padding: 9px 11px; font: inherit; background: var(--paper);
   }
-  .topics-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+  .topics-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
   .topics-actions button {
-    border: 1px solid var(--line); background: #fff; border-radius: 999px;
-    padding: 8px 13px; font: inherit; font-size: 0.85rem; font-weight: 600;
+    border: 1px solid var(--line); background: #fff; border-radius: 10px;
+    padding: 10px 14px; min-height: 44px; font: inherit; font-size: 0.85rem; font-weight: 650;
     cursor: pointer; color: var(--ink);
   }
+  .topics-actions button:hover:not(:disabled) { background: var(--paper); }
   .topics-actions button.primary {
     background: var(--ib); border-color: var(--ib); color: #fff;
+    box-shadow: 0 6px 14px -8px rgba(37,99,235,0.55);
   }
+  .topics-actions button.primary:hover:not(:disabled) { background: #1d4ed8; }
+  .topics-actions button.danger {
+    color: #b91c1c; border-color: #fecaca; background: #fff;
+  }
+  .topics-actions button.danger:hover:not(:disabled) { background: #fef2f2; }
+  .topics-toolbar select, .topics-toolbar input[type="search"] { min-height: 44px; }
   .overview-grid {
     display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px 12px;
   }
@@ -796,15 +853,21 @@
   }
   .shared-plan strong { color: #064e3b; }
   .btn-shared {
-    background: #059669;
+    background: #ecfdf5;
+    color: #047857;
+    border: 1px solid #6ee7b7;
+  }
+  .btn-shared:hover:not(:disabled) { background: #d1fae5; }
+  .btn-shared:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  .btn-fill-due {
+    background: #7c3aed;
     color: #fff;
     border: none;
+    box-shadow: 0 6px 14px -8px rgba(124,58,237,0.55);
   }
-  .btn-shared:hover { filter: brightness(1.05); }
-  .btn-shared:disabled { opacity: 0.55; cursor: default; }
-
-  .btn-fill-due { background: #7c3aed; color: #fff; border: none; }
-  .btn-fill-due:hover { filter: brightness(1.05); }
+  .btn-fill-due:hover:not(:disabled) { background: #6d28d9; }
+  .btn-fill-due:disabled { box-shadow: none; }
 
   /* Dense dashboard layouts (desktop) */
 
@@ -837,12 +900,14 @@
   .due-suggest strong { color: #4c1d95; }
   .due-suggest .ds-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
   .due-suggest button {
-    background: #7c3aed; color: #fff; border: none; border-radius: 8px;
-    padding: 6px 10px; font-size: 0.78rem; font-weight: 650; cursor: pointer;
+    background: #7c3aed; color: #fff; border: none; border-radius: 10px;
+    padding: 10px 12px; min-height: 40px; font-size: 0.8rem; font-weight: 650; cursor: pointer;
   }
+  .due-suggest button:hover:not(:disabled) { background: #6d28d9; }
   .due-suggest button.secondary {
     background: #fff; color: #5b21b6; border: 1px solid #c4b5fd;
   }
+  .due-suggest button.secondary:hover:not(:disabled) { background: #f5f3ff; }
   .free-due-suggest {
     padding: 0 10px 8px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
   }
@@ -873,12 +938,12 @@
   }
   .week-nav .wn-arrows { display: flex; gap: 4px; }
   .week-nav button.wn-btn {
-    min-width: 36px; padding: 6px 10px; border-radius: 8px;
+    min-width: 44px; min-height: 44px; padding: 8px 12px; border-radius: 10px;
     background: var(--paper); color: var(--ink); border: 1px solid var(--line);
-    font-size: 1rem; font-weight: 700; line-height: 1;
+    font-size: 1.15rem; font-weight: 700; line-height: 1;
   }
-  .week-nav button.wn-btn:hover { background: #e2e8f0; }
-  .week-nav button.wn-btn:disabled { opacity: 0.4; cursor: default; }
+  .week-nav button.wn-btn:hover:not(:disabled) { background: #e2e8f0; }
+  .week-nav button.wn-btn:disabled { opacity: 0.4; cursor: not-allowed; }
   .week-nav .wn-centre { flex: 1; min-width: 180px; }
   .week-nav .wn-label {
     font-weight: 750; font-size: 0.95rem; letter-spacing: -0.01em; color: var(--ink);
@@ -902,9 +967,11 @@
     max-width: 100%;
   }
   .week-nav button.wn-this {
-    padding: 6px 10px; font-size: 0.78rem; border-radius: 8px;
+    padding: 10px 12px; min-height: 44px; font-size: 0.8rem; border-radius: 10px;
     background: var(--ib); color: #fff; border: none; font-weight: 650;
   }
+  .week-nav button.wn-this:hover:not(:disabled) { background: #1d4ed8; }
+  .week-nav select, .week-nav input[type="date"] { min-height: 44px; }
   @media (min-width: 1024px) {
     .week-shell > .week-nav { border-radius: 0; }
   }
@@ -925,6 +992,7 @@
     }
     .week-rail .density-pills { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .week-rail .bal-chips { gap: 4px; }
+    .week-rail .actions-row { flex-direction: column; }
     .week-rail .actions button { width: 100%; }
     .week-rail { overflow-x: hidden; }
     .week-shell > .howto { grid-column: 1 / -1; border-radius: 14px 14px 0 0; }
@@ -994,8 +1062,8 @@
   }
   .view-toggle .vt-btns button {
     appearance: none; border: 0; background: transparent; color: var(--muted);
-    font: inherit; font-size: 0.78rem; font-weight: 700; padding: 6px 12px;
-    border-radius: 8px; cursor: pointer; min-height: 32px;
+    font: inherit; font-size: 0.82rem; font-weight: 700; padding: 8px 14px;
+    border-radius: 8px; cursor: pointer; min-height: 40px;
   }
   .view-toggle .vt-btns button.active {
     background: var(--ink); color: #fff;
@@ -1228,6 +1296,44 @@
     .week-main .view-toggle { top: 48px; }
   }
 
+  /* Live locks + conflict UX */
+  .conflict-strip {
+    display: none; margin: 0 12px 8px; padding: 10px 12px; border-radius: 10px;
+    background: #fef2f2; border: 1px solid #fecaca; color: #991b1b;
+    font-size: 0.82rem; line-height: 1.4;
+  }
+  .conflict-strip.show { display: block; }
+  .conflict-strip h3 {
+    margin: 0 0 4px; font-size: 0.78rem; font-weight: 750;
+    text-transform: uppercase; letter-spacing: 0.04em; color: #b91c1c;
+  }
+  .conflict-strip ul { margin: 6px 0 0; padding-left: 1.1rem; }
+  .conflict-strip li { margin: 2px 0; }
+  .conflict-strip .cf-sat { font-weight: 750; color: #9a3412; }
+  .locks-meta {
+    font-size: 0.72rem; color: var(--muted); margin: 0 12px 8px; line-height: 1.35;
+  }
+  .locks-meta.live { color: #047857; }
+  .locks-meta.stale { color: #92400e; }
+  .slot-wrap.has-conflict {
+    box-shadow: 0 0 0 2px #ef4444, 0 6px 14px -8px rgba(220,38,38,0.45);
+    border-color: #fca5a5 !important;
+  }
+  .conflict-badge {
+    display: inline-block; margin-left: 6px; font-size: 0.62rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.04em; padding: 2px 6px;
+    border-radius: 999px; background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca;
+    vertical-align: middle;
+  }
+  .slot-wrap.kind-sat_class,
+  .slot-wrap.kind-locked.sat-class {
+    background: #fff7ed; border-color: #fdba74; border-left-color: #ea580c; opacity: 0.95;
+  }
+  .slot-wrap.kind-sat_class .badge,
+  .slot-wrap.kind-locked.sat-class .badge {
+    background: #ffedd5; color: #c2410c; border: 1px solid #fdba74;
+  }
+
 </style>
 </head>
 <body>
@@ -1246,9 +1352,9 @@
         <div class="notice-body">
 <strong>Weekly refresh</strong> — rebuilt each Sunday from school + tutor calendars. Choices are stored per week, so a new week starts clean.
       <br/><strong>Locks this week:</strong> school blocks · English / History / Maths tutors · Physics · Ghosh (Sat + Mon) · Fri social 13:05–16:00.
-      <br/><strong>Sync to calendar:</strong> tap <strong>Sync to calendar</strong> → paste/send to Dad’s Assistant. Old <em>DRAFT</em> study entries for this week are removed, then your picks are written as
+      <br/><strong>Send to calendar:</strong> tap <strong>Send to calendar</strong> → paste/send to Dad’s Assistant. Old <em>DRAFT</em> study entries for this week are removed, then your picks are written as
       <em>DRAFT · Study IB · …</em> / <em>DRAFT · SAT · …</em> / <em>DRAFT · Light</em>.
-      <br/><strong>Topics:</strong> progress saves on this device; use <strong>Copy progress</strong> on the Topics tab to Sync coverage with Dad’s Assistant.
+      <br/><strong>Topics:</strong> progress saves on this device; use <strong>Copy topic progress</strong> on the Topics tab to send coverage to Dad’s Assistant.
         </div>
       </details>
     </div>
@@ -1271,14 +1377,14 @@
       For SAT: choose Reading &amp; Writing, Math, or Full practice, then a topic.
       Open study/free/light blocks are <strong>45&nbsp;minutes</strong> each (0.75&nbsp;h).
       Aim for <strong>exactly 12&nbsp;h IB</strong> and <strong>exactly 3&nbsp;h SAT</strong>.
-      When ready, tap <strong>Sync to calendar</strong> (or Copy my choices) and send to Dad — that also republishes the shared plan for every browser.
+      When ready, tap <strong>Send to calendar</strong> and paste to Dad — that updates calendar drafts and the shared plan every browser can load. <strong>Copy plan text</strong> is optional for notes.
       </div>
     </details>
 
-    <div class="week-nav" role="navigation" aria-label="Week navigator">
+    <div class="week-nav" role="navigation" aria-label="Choose week">
       <div class="wn-arrows">
-        <button type="button" class="wn-btn" id="btnWeekPrev" aria-label="Previous week">‹</button>
-        <button type="button" class="wn-btn" id="btnWeekNext" aria-label="Next week">›</button>
+        <button type="button" class="wn-btn" id="btnWeekPrev" aria-label="Previous week" title="Previous week">‹</button>
+        <button type="button" class="wn-btn" id="btnWeekNext" aria-label="Next week" title="Next week">›</button>
       </div>
       <div class="wn-centre">
         <div class="wn-label" id="weekNavLabel">Mon 9 Nov – Sun 15 Nov 2026</div>
@@ -1287,11 +1393,12 @@
         </div>
       </div>
       <div class="wn-jump">
-        <label for="weekJumpSelect">Plan ahead</label>
-        <select id="weekJumpSelect" aria-label="Jump to week"></select>
-        <label for="weekJumpDate" class="sr-only">Or pick a Monday</label>
-        <input type="date" id="weekJumpDate" aria-label="Pick a date in the week"/>
-        <button type="button" class="wn-this" id="btnWeekPublished">Published week</button>
+        <label for="weekJumpSelect">Jump to week</label>
+        <select id="weekJumpSelect" aria-label="Jump to week" title="Pick another week to plan ahead"></select>
+        <label for="weekJumpDate" class="sr-only">Or pick any date in the week</label>
+        <input type="date" id="weekJumpDate" aria-label="Pick any date in the week" title="Jump to the week that contains this date"/>
+        <button type="button" class="wn-this" id="btnWeekPublished"
+          title="Go back to this week’s published calendar (school + tutor locks).">This week</button>
       </div>
     </div>
 
@@ -1359,7 +1466,8 @@
 
     <div class="legend">
       <span class="chip"><span class="dot ib"></span> IB</span>
-      <span class="chip"><span class="dot sat"></span> SAT</span>
+      <span class="chip"><span class="dot sat"></span> SAT study</span>
+      <span class="chip"><span class="dot" style="background:#ea580c"></span> SAT class (locked)</span>
       <span class="chip"><span class="dot free"></span> Free</span>
       <span class="chip"><span class="dot light"></span> Light</span>
       <span class="chip"><span class="dot locked"></span> Tutor</span>
@@ -1367,15 +1475,35 @@
       <span class="chip"><span class="dot social"></span> Social</span>
     </div>
 
-    <div class="actions">
-      <button type="button" class="btn-sync" id="btnSync">Sync to calendar</button>
-      <button type="button" class="btn-primary" id="btnCopy">Copy my choices</button>
-      <button type="button" class="btn-shared" id="btnLoadShared" title="Load the published shared plan for this week (overwrites picks stored in this browser). GitHub Pages cannot write from the browser — Sync asks Dad’s Assistant to republish choices/YYYY-MM-DD.json for everyone.">Reset to shared plan</button>
-      <button type="button" class="btn-secondary" id="btnReset">Reset week</button>
-      <button type="button" class="btn-fill-due" id="btnFillDue" title="Fill empty Free slots from Topics Due this week (Seen 3d · Reviewed 7d · Exam-ready 21d). Keeps existing IB/SAT/Light picks. Respects 12h IB and reserves room for 3h SAT.">Fill Free from Due</button>
-      <button type="button" class="btn-secondary" id="btnPrint">Print / save PDF</button>
+    <div class="actions" aria-label="Week actions">
+      <div>
+        <p class="actions-label">Main</p>
+        <div class="actions-row">
+          <button type="button" class="btn-sync" id="btnSync"
+            title="Copy this week’s plan for Dad’s Assistant. Updates the calendar drafts and the shared plan every browser can load."
+            aria-describedby="actionsHelpMain">Send to calendar</button>
+          <button type="button" class="btn-fill-due" id="btnFillDue"
+            title="Put Due topics into empty Free slots. Keeps IB/SAT/Light already set. Stays within 12h IB and leaves room for 3h SAT.">Fill free slots from Due</button>
+        </div>
+        <p class="actions-help" id="actionsHelpMain">Send to calendar is the one that shares the plan and updates drafts.</p>
+      </div>
+      <div>
+        <p class="actions-label">Also</p>
+        <div class="actions-row">
+          <button type="button" class="btn-shared" id="btnLoadShared"
+            title="Replace this browser’s picks with the published shared plan for this week.">Load shared plan</button>
+          <button type="button" class="btn-secondary" id="btnCopy"
+            title="Copy a plain-text summary of this week’s picks (handy for notes or WhatsApp).">Copy plan text</button>
+          <button type="button" class="btn-secondary" id="btnPrint"
+            title="Open the print dialog — choose Save as PDF if you want a file.">Print or PDF</button>
+          <button type="button" class="btn-danger" id="btnReset"
+            title="Clear only this browser’s picks for this week. Does not change the shared plan until you Send to calendar.">Clear my picks</button>
+        </div>
+      </div>
     </div>
     <div class="shared-plan missing" id="sharedPlanStatus" role="status" aria-live="polite">Checking shared plan…</div>
+    <p class="locks-meta" id="locksMeta" role="status">Checking calendar locks…</p>
+    <div class="conflict-strip" id="conflictStrip" role="status" aria-live="polite"></div>
     <div class="due-suggest" id="dueSuggest" role="status" aria-live="polite"></div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <div class="sync-box" id="syncBox" role="status" aria-live="polite"></div>
@@ -1383,21 +1511,23 @@
     </div><!-- /week-rail -->
 
     <div class="week-main">
-    <div class="view-toggle" role="group" aria-label="Calendar view">
+    <div class="view-toggle" role="group" aria-label="How to view the week">
       <div>
-        <div class="vt-label">Calendar view</div>
-        <div class="vt-hint" id="viewToggleHint">Agenda hides editors for a denser filled week</div>
+        <div class="vt-label">How to view</div>
+        <div class="vt-hint" id="viewToggleHint">Agenda is best for reading a filled week; Edit to change subjects and topics</div>
       </div>
       <div class="vt-btns">
-        <button type="button" id="btnViewAgenda" aria-pressed="false">Agenda</button>
-        <button type="button" id="btnViewEdit" class="active" aria-pressed="true">Edit</button>
+        <button type="button" id="btnViewAgenda" aria-pressed="false"
+          title="Compact list — hides subject and topic editors">Agenda</button>
+        <button type="button" id="btnViewEdit" class="active" aria-pressed="true"
+          title="Full editors under each study block">Edit slots</button>
       </div>
     </div>
     <div class="days" id="days"></div>
     </div><!-- /week-main -->
     <details class="reminders-note" id="remindersNote">
       <summary>Reminders</summary>
-      <p>Calendar alerts + iMessage coming once Messages is connected. Until then, use <strong>Sync to calendar</strong> so Dad’s Assistant can write General Timetable drafts (and phone reminders from there).</p>
+      <p>Calendar alerts + iMessage coming once Messages is connected. Until then, use <strong>Send to calendar</strong> so Dad’s Assistant can write General Timetable drafts (and phone reminders from there).</p>
     </details>
     <p class="hint" id="weekHint">
       Locks come from General Timetable + school calendar for this week only — tutors are not invented.
@@ -1416,7 +1546,7 @@
         <div class="howto-body">
         Verified syllabus rows only (no invented curriculum).
         Tap a status to cycle <em>Not started → Seen in class → Reviewed once → Exam-ready</em>.
-        Progress saves on this device; use <strong>Copy progress</strong> to Sync with Dad’s Assistant.
+        Progress saves on this device; use <strong>Copy topic progress</strong> to send coverage to Dad’s Assistant.
         Picking a matching IB topic in the Week tab auto-bumps it to at least <em>Reviewed once</em>. <strong>Due this week</strong> uses spaced revisits (Seen 3d · Reviewed 7d · Exam-ready 21d). English / History / Music coverage is deferred pending Ishaan.
         </div>
       </details>
@@ -1430,8 +1560,10 @@
           <input type="search" id="topicSearch" placeholder="Filter topics…" autocomplete="off"/>
         </div>
         <div class="topics-actions">
-          <button type="button" class="primary" id="btnCopyProgress">Copy progress</button>
-          <button type="button" id="btnResetProgress">Reset progress</button>
+          <button type="button" class="primary" id="btnCopyProgress"
+            title="Copy topic progress for Dad’s Assistant to save beyond this browser.">Copy topic progress</button>
+          <button type="button" class="danger" id="btnResetProgress"
+            title="Clear topic progress on this device only. Does not change the shared week plan.">Clear topic progress</button>
         </div>
       </div>
       <div class="due-strip" id="dueStrip">
@@ -1777,7 +1909,7 @@ function switchTab(which) {
         "Use the week navigator to plan ahead. Topics tab tracks syllabus coverage (verified rows only).";
     } else {
       lead.innerHTML = "<strong>Topic tracker</strong> — traffic-light overview and coverage map across verified IB topics. " +
-        "Progress lives in this browser; <strong>Copy progress</strong> to Sync with Dad’s Assistant.";
+        "Progress lives in this browser; <strong>Copy topic progress</strong> to send it to Dad’s Assistant.";
     }
   }
   if (!isWeek) renderTopicsPanel();
@@ -1825,7 +1957,7 @@ function badgeText(kind) { return CONFIG.labels[kind] || kind; }
 function shortBadge(kind) {
   const map = {
     ib: "IB", sat: "SAT", free: "Free", light: "Light",
-    locked: "Tutor", school: "School", social: "Social"
+    locked: "Tutor", school: "School", social: "Social", sat_class: "SAT class"
   };
   return map[kind] || badgeText(kind);
 }
@@ -2049,7 +2181,7 @@ function updateSharedPlanChrome() {
     : "";
   el.innerHTML = "Shared plan for <strong>" + escapeHtml(ws) + "</strong> last published <strong>" +
     escapeHtml(when) + "</strong>" + escapeHtml(hourBit) + src +
-    ". This browser keeps local edits until you Sync (Assistant republishes) or tap <strong>Reset to shared plan</strong>.";
+    ". This browser keeps local edits until you Send to calendar (Assistant republishes) or tap <strong>Load shared plan</strong>.";
   if (btn) btn.disabled = false;
 }
 
@@ -2103,7 +2235,7 @@ async function loadSharedPlan({ force = false, quiet = false } = {}) {
   updateSharedPlanChrome();
   if (ok) {
     render();
-    if (!quiet) showToast(force ? "Reset to shared plan." : "Loaded shared plan for this week.");
+    if (!quiet) showToast(force ? "Loaded shared plan (replaced local picks)." : "Loaded shared plan for this week.");
   } else if (force && !quiet) {
     showToast("Shared plan had no matching slots.", true);
   }
@@ -2644,8 +2776,8 @@ function applyCalView(view) {
   const hint = document.getElementById("viewToggleHint");
   if (hint) {
     hint.textContent = view === "agenda"
-      ? "Agenda — dense scan; switch to Edit to change subjects/topics"
-      : "Edit — tap blocks to cycle; pick subject & topic below each slot";
+      ? "Agenda — compact filled week; switch to Edit slots to change subjects and topics"
+      : "Edit slots — tap a block to cycle Free → IB → SAT → Light, then pick subject and topic";
   }
 }
 function bindCalViewToggle() {
@@ -2707,6 +2839,7 @@ function render() {
     });
   });
   updateCounters();
+  if (typeof updateConflictUI === "function") updateConflictUI();
 }
 
 function kindExportLabel(kind) {
@@ -2858,14 +2991,14 @@ document.getElementById("btnSync").addEventListener("click", async () => {
       "\n\nSync anyway? (Assistant will still process the request.)"
     );
     if (!go) {
-      showToast("Sync cancelled — adjust IB/SAT hours first.", true);
+      showToast("Send cancelled — adjust IB/SAT hours first.", true);
       return;
     }
   }
   const payload = buildSyncPayload();
   const ok = await copyText(payload);
   if (ok) {
-    showToast("Synced request copied.");
+    showToast("Calendar request copied — paste to Dad’s Assistant.");
     showSyncBox(
       "<strong>Synced request copied</strong> — send/paste to Dad’s Assistant to: (1) write General Timetable " +
       "(remove old <em>DRAFT</em> study for this week), and (2) <strong>republish the shared plan</strong> " +
@@ -2881,14 +3014,14 @@ document.getElementById("btnSync").addEventListener("click", async () => {
 });
 
 document.getElementById("btnReset").addEventListener("click", () => {
-  if (!confirm("Reset all open slots for this week to Free?")) return;
+  if (!confirm("Clear your picks for this week? Open slots go back to Free. Shared plan is unchanged until you Send to calendar.")) return;
   const defaults = cloneDefaults();
   Object.keys(state).forEach(k => delete state[k]);
   Object.assign(state, defaults);
   persistState();
   document.getElementById("syncBox").classList.remove("show");
   render();
-  showToast("Week reset — all open slots are Free.");
+  showToast("Picks cleared — open slots are Free again.");
   updateSharedPlanChrome();
 });
 
@@ -3201,13 +3334,13 @@ function updateDueSuggestBanner() {
   if (dueN > 0 && freeN > 0 && room >= 0.1) {
     const maxSlots = Math.floor(room / 0.75 + 1e-9);
     box.innerHTML =
-      "<strong>Free → Due</strong> — " + dueN + " topic" + (dueN === 1 ? "" : "s") +
-      " past revisit window, " + freeN + " Free slot" + (freeN === 1 ? "" : "s") +
+      "<strong>Free slots available</strong> — " + dueN + " topic" + (dueN === 1 ? "" : "s") +
+      " due for revisit, " + freeN + " free slot" + (freeN === 1 ? "" : "s") +
       " (" + fmtHours(freeH) + "). Can fill up to ~" + Math.min(freeN, Math.max(0, maxSlots)) +
-      " without touching IB/SAT/Light picks (keeps room for 3h SAT)." +
+      " without changing IB/SAT/Light already set (keeps room for 3h SAT)." +
       '<div class="ds-actions">' +
-      '<button type="button" id="btnFillDueBanner">Fill Free from Due</button>' +
-      '<button type="button" class="secondary" id="btnGotoTopicsDue">See Due on Topics</button>' +
+      '<button type="button" id="btnFillDueBanner" title="Fill empty Free slots from Due topics">Fill free slots from Due</button>' +
+      '<button type="button" class="secondary" id="btnGotoTopicsDue" title="Open the Topics tab at Due this week">See Due on Topics</button>' +
       '</div>';
     box.classList.add("show");
     document.getElementById("btnFillDueBanner")?.addEventListener("click", () => fillFreeWithDueRevisits());
@@ -3371,19 +3504,21 @@ async function applyWeekConfig(weekCfg) {
   try {
     window.WEEK_SLOT_CONFIG = CONFIG;
   } catch (e) { /* ignore */ }
+  await loadLiveLocks({ quiet: true });
   await loadSharedPlan({ force: false, quiet: true });
+  updateConflictUI();
 }
 
 function updateWeekChrome() {
   const label = CONFIG.weekLabel;
-  const live = CONFIG.locksSource === "calendar";
+  const live = CONFIG.locksSource === "calendar" || CONFIG.locksSource === "calendar-live";
   const navLabel = document.getElementById("weekNavLabel");
   if (navLabel) navLabel.textContent = label;
   const range = document.getElementById("weekRange");
   if (range) range.textContent = label;
   const badge = document.getElementById("weekNavBadge");
   if (badge) {
-    badge.textContent = live ? "Live calendar locks" : "Typical week template";
+    badge.textContent = CONFIG.locksSource === "calendar-live" ? "Live locks (refreshed)" : (live ? "Live calendar locks" : "Typical week template");
     badge.classList.toggle("live", live);
     badge.classList.toggle("typical", !live);
   }
@@ -3482,6 +3617,239 @@ function weekStartFromHash() {
   return null;
 }
 
+
+/** ===== Live calendar locks + conflict detection ===== */
+let LIVE_LOCKS = null; // { weekStart, fetchedAt, locks: [...] }
+
+function parseHMToMin(hm) {
+  const [h, m] = String(hm).split(":").map(Number);
+  return h * 60 + m;
+}
+function rangesOverlap(aStart, aEnd, bStart, bEnd) {
+  return parseHMToMin(aStart) < parseHMToMin(bEnd) && parseHMToMin(bStart) < parseHMToMin(aEnd);
+}
+function lockSlotKind(lock) {
+  if (lock.kind === "school") return "school";
+  if (lock.kind === "social") return "social";
+  if (lock.kind === "sat_class") return "sat_class";
+  return "locked"; // tutor
+}
+function lockLabel(lock) {
+  if (lock.kind === "school") return "School";
+  if (lock.kind === "social") return "Social time";
+  if (lock.kind === "sat_class") return lock.title || "SAT class";
+  const t = lock.title || lock.sourceTitle || "Tutor";
+  if (/ghosh/i.test(t)) return "Physics · Ghosh";
+  if (/english/i.test(t)) return "English tutor";
+  if (/history/i.test(t)) return "History tutor";
+  if (/math/i.test(t)) return "Maths tutor";
+  return t;
+}
+function locksUrlForWeek(weekStart) {
+  return "locks/" + encodeURIComponent(weekStart) + ".json?t=" + Date.now();
+}
+
+function applyLocksToConfig(locksDoc) {
+  if (!locksDoc || !Array.isArray(locksDoc.locks) || !CONFIG || !CONFIG.days) return { applied: 0 };
+  LIVE_LOCKS = locksDoc;
+  let applied = 0;
+  CONFIG.days.forEach(day => {
+    const dayLocks = locksDoc.locks.filter(L => L.date === day.date);
+    if (!dayLocks.length) return;
+    // Remove existing locked/school/social/sat_class slots — rebuild from live locks
+    const openSlots = day.slots.filter(s => !s.locked && s.kind !== "school" && s.kind !== "social" && s.kind !== "sat_class" && s.kind !== "locked");
+    const lockSlots = dayLocks.map(L => {
+      applied += 1;
+      const kind = lockSlotKind(L);
+      return {
+        id: day.id + "-lock-" + (L.id || (L.start + "-" + L.end)).replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 40),
+        start: L.start,
+        end: L.end,
+        kind,
+        label: lockLabel(L),
+        note: L.kind === "sat_class" ? "Booked SAT class · from Study calendar" : "From live calendar",
+        locked: true,
+        satTutor: !!L.satTutor || L.kind === "sat_class",
+        sourceTitle: L.sourceTitle || L.title,
+        lockKind: L.kind
+      };
+    });
+    // Drop open slots that fully overlap a lock (they are not free to plan)
+    const keptOpen = openSlots.filter(s => {
+      const hit = dayLocks.some(L => rangesOverlap(s.start, s.end, L.start, L.end));
+      return !hit;
+    });
+    const merged = [...keptOpen, ...lockSlots].sort((a, b) => parseHMToMin(a.start) - parseHMToMin(b.start));
+    day.slots = merged;
+  });
+  CONFIG.locksSource = "calendar-live";
+  CONFIG.locksFetchedAt = locksDoc.fetchedAt || null;
+  return { applied };
+}
+
+function findPickLockConflicts() {
+  const conflicts = [];
+  if (!LIVE_LOCKS || !LIVE_LOCKS.locks || !CONFIG) return conflicts;
+  CONFIG.days.forEach(day => {
+    const dayLocks = LIVE_LOCKS.locks.filter(L => L.date === day.date);
+    day.slots.forEach(slot => {
+      if (slot.hidden || slot.locked) return;
+      const pick = getPick(slot.id);
+      // Any planned use of a slot that overlaps a lock is a conflict
+      // (including Free that overlaps — user should see calendar took that time)
+      const hits = dayLocks.filter(L => rangesOverlap(slot.start, slot.end, L.start, L.end));
+      if (!hits.length) return;
+      // Only flag if pick is study-ish OR always flag overlap of open slot with lock
+      // Open slots that still exist after applyLocks shouldn't overlap — but shared plan
+      // may have restored picks on ids that were removed; also partial overlaps.
+      hits.forEach(L => {
+        conflicts.push({
+          day: day.name,
+          date: day.date,
+          slotId: slot.id,
+          slotStart: slot.start,
+          slotEnd: slot.end,
+          pickKind: pick.kind,
+          pickLabel: displayName(slot, pick),
+          lockTitle: lockLabel(L),
+          lockKind: L.kind,
+          lockStart: L.start,
+          lockEnd: L.end,
+          isSatClass: L.kind === "sat_class" || !!L.satTutor
+        });
+      });
+    });
+  });
+  // Also: picks stored for slot ids that no longer exist because lock ate them
+  if (state && state.picks) {
+    Object.keys(state.picks).forEach(id => {
+      const pick = state.picks[id];
+      if (!pick || pick.kind === "free") return;
+      let found = false;
+      CONFIG.days.forEach(day => {
+        if (day.slots.some(s => s.id === id && !s.locked)) found = true;
+      });
+      if (found) return;
+      // Orphaned pick — try match by time encoded in id like mon-09-o3
+      const m = id.match(/(\d{4}-\d{2}-\d{2}).*?(\d{2})(\d{2})/) || null;
+      // Fallback: scan locks for same day prefix
+      const day = CONFIG.days.find(d => id.startsWith(d.id));
+      if (!day) return;
+      // If pick kind is ib/sat/light and there is a sat_class that day overlapping typical evening — note orphan
+      const satLocks = LIVE_LOCKS.locks.filter(L => L.date === day.date && (L.kind === "sat_class" || L.kind === "tutor"));
+      if (!satLocks.length) return;
+      conflicts.push({
+        day: day.name,
+        date: day.date,
+        slotId: id,
+        slotStart: "?",
+        slotEnd: "?",
+        pickKind: pick.kind,
+        pickLabel: (pick.subject || pick.area || pick.kind),
+        lockTitle: satLocks.map(lockLabel).join(" / "),
+        lockKind: satLocks[0].kind,
+        lockStart: satLocks[0].start,
+        lockEnd: satLocks[0].end,
+        isSatClass: satLocks.some(L => L.kind === "sat_class"),
+        orphan: true
+      });
+    });
+  }
+  return conflicts;
+}
+
+function updateConflictUI() {
+  const box = document.getElementById("conflictStrip");
+  const meta = document.getElementById("locksMeta");
+  if (meta) {
+    if (LIVE_LOCKS && LIVE_LOCKS.fetchedAt) {
+      const when = LIVE_LOCKS.fetchedAt.replace("T", " ").replace(/\+08:00$/, " HKT");
+      const n = (LIVE_LOCKS.locks || []).length;
+      const satN = (LIVE_LOCKS.locks || []).filter(L => L.kind === "sat_class").length;
+      meta.className = "locks-meta live";
+      meta.innerHTML = "Calendar locks refreshed <strong>" + escapeHtml(when) + "</strong> · " +
+        n + " lock" + (n === 1 ? "" : "s") +
+        (satN ? (" · <strong>" + satN + " SAT class" + (satN === 1 ? "" : "es") + "</strong>") : "") +
+        " · from General Timetable + Study.";
+    } else if (CONFIG && CONFIG.locksSource === "typical") {
+      meta.className = "locks-meta stale";
+      meta.textContent = "Using typical-week template — live locks publish when Dad’s Assistant refreshes locks.json from the calendar.";
+    } else {
+      meta.className = "locks-meta";
+      meta.textContent = "Live locks not loaded yet — showing embedded snapshot.";
+    }
+  }
+  if (!box) return;
+  const conflicts = findPickLockConflicts();
+  // Mark slots in DOM
+  document.querySelectorAll(".slot-wrap.has-conflict").forEach(el => el.classList.remove("has-conflict"));
+  document.querySelectorAll(".conflict-badge").forEach(el => el.remove());
+  const bySlot = {};
+  conflicts.forEach(c => {
+    if (c.orphan) return;
+    bySlot[c.slotId] = c;
+  });
+  Object.keys(bySlot).forEach(id => {
+    const btn = document.querySelector('.slot.choosable[data-id="' + CSS.escape(id) + '"]');
+    const wrap = btn && btn.closest(".slot-wrap");
+    if (!wrap) return;
+    wrap.classList.add("has-conflict");
+    const name = wrap.querySelector(".name-main") || wrap.querySelector(".name");
+    if (name && !name.querySelector(".conflict-badge")) {
+      const b = document.createElement("span");
+      b.className = "conflict-badge";
+      b.textContent = bySlot[id].isSatClass ? "Conflicts with SAT class" : "Conflicts with calendar";
+      name.appendChild(b);
+    }
+  });
+  if (!conflicts.length) {
+    box.classList.remove("show");
+    box.innerHTML = "";
+    return;
+  }
+  const sat = conflicts.filter(c => c.isSatClass);
+  const rows = conflicts.slice(0, 12).map(c => {
+    const cls = c.isSatClass ? ' class="cf-sat"' : "";
+    const when = (c.slotStart !== "?" ? (c.slotStart + "–" + c.slotEnd) : "saved pick") +
+      " vs " + c.lockStart + "–" + c.lockEnd;
+    return "<li" + cls + "><strong>" + escapeHtml(c.day) + "</strong> · " +
+      escapeHtml(when) + " — your " + escapeHtml(String(c.pickKind).toUpperCase()) +
+      " pick clashes with <em>" + escapeHtml(c.lockTitle) + "</em>" +
+      (c.orphan ? " (slot removed by lock)" : "") + "</li>";
+  }).join("");
+  box.innerHTML = "<h3>Calendar conflicts (" + conflicts.length + ")</h3>" +
+    (sat.length ? "<p>Especially check <strong>SAT booked classes</strong> vs study picks.</p>" : "") +
+    "<ul>" + rows + "</ul>" +
+    "<p style=\"margin:6px 0 0\">Switch to <strong>Edit slots</strong>, clear or move those picks, then <strong>Send to calendar</strong>.</p>";
+  box.classList.add("show");
+}
+
+async function loadLiveLocks({ quiet = true } = {}) {
+  if (!CONFIG || !CONFIG.weekStart) return null;
+  const url = locksUrlForWeek(CONFIG.weekStart);
+  try {
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) {
+      if (!quiet) showToast("No live locks file for this week yet.", true);
+      LIVE_LOCKS = null;
+      updateConflictUI();
+      return null;
+    }
+    const doc = await res.json();
+    applyLocksToConfig(doc);
+    updateWeekChrome();
+    render();
+    updateConflictUI();
+    if (!quiet) showToast("Calendar locks loaded for " + CONFIG.weekStart);
+    return doc;
+  } catch (e) {
+    if (!quiet) showToast("Couldn’t load calendar locks.", true);
+    updateConflictUI();
+    return null;
+  }
+}
+
+
 wireWeekNav();
 (async function bootWeek() {
   const fromHash = weekStartFromHash();
@@ -3493,7 +3861,9 @@ wireWeekNav();
     initState();
     updateWeekChrome();
     render();
+    await loadLiveLocks({ quiet: true });
     await loadSharedPlan({ force: false, quiet: true });
+    updateConflictUI();
   }
 })();
 loadProgress();
@@ -3506,7 +3876,7 @@ document.getElementById("btnCopyProgress").addEventListener("click", async () =>
   const ok = await copyText(payload);
   const box = document.getElementById("progressSyncBox");
   if (ok) {
-    showToast("Progress copied — paste to Dad’s Assistant.");
+    showToast("Topic progress copied — paste to Dad’s Assistant.");
     box.innerHTML = "<strong>Progress copied</strong> — send/paste to Dad’s Assistant to persist beyond this browser.<br/><pre>" +
       escapeHtml(payload.slice(0, 1500)) + (payload.length > 1500 ? "…" : "") + "</pre>";
   } else {
@@ -3517,11 +3887,11 @@ document.getElementById("btnCopyProgress").addEventListener("click", async () =>
 });
 
 document.getElementById("btnResetProgress").addEventListener("click", () => {
-  if (!confirm("Reset all topic progress on this device to defaults (mostly Not started)?")) return;
+  if (!confirm("Clear all topic progress on this device? Statuses go back to Not started (or defaults).")) return;
   progressState = deepClone(PROGRESS_DEFAULT);
   saveProgress();
   renderTopicsPanel();
-  showToast("Topic progress reset on this device.");
+  showToast("Topic progress cleared on this device.");
 });
 
 (function bootTabs() {
@@ -3536,6 +3906,8 @@ window.PUBLISHED_CONFIG = PUBLISHED_CONFIG;
 window.buildWeekConfig = buildWeekConfig;
 window.goToWeek = goToWeek;
 window.loadSharedPlan = loadSharedPlan;
+window.loadLiveLocks = loadLiveLocks;
+window.LIVE_LOCKS = null;
 window.refreshSharedPlanMeta = refreshSharedPlanMeta;
 window.buildPublishBundle = buildPublishBundle;
 window.TOPIC_BANK = TOPIC_BANK;

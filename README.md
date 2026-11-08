@@ -18,3 +18,7 @@ Static site with **Week** and **Topics** tabs (British English). Live: https://v
 - **Exam countdown** — balance rail shows days to SAT **6 Mar 2027**, US applications (~Oct 2027), and typical IB May 2028, plus this week’s IB/SAT hours vs targets.
 - **Reminders** — collapsed note: calendar alerts + iMessage once Messages is connected; Sync remains the calendar path.
 - **Sync paste** — see `/workspace/ishaan-study/SYNC_PASTE.md` (and below): `SYNC_WEEK` + `CHOICES_JSON` for General Timetable DRAFT apply by Dad’s Assistant.
+
+## Live calendar locks
+
+See `locks/` and `SYNC.md` — page load fetches the latest tutor/school/SAT-class locks; conflicts with study picks are highlighted.
