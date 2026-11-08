@@ -81,9 +81,11 @@
     background: var(--paper);
     border-radius: 18px;
     box-shadow: 0 22px 44px -12px rgba(0,0,0,0.35);
-    overflow: hidden;
+    overflow: visible;
     margin-bottom: 14px;
   }
+  .card > .howto { border-radius: 18px 18px 0 0; }
+  .card > .hint { border-radius: 0 0 18px 18px; }
   .howto {
     padding: 14px 16px;
     background: #fff;
@@ -93,56 +95,232 @@
     line-height: 1.45;
   }
   .howto strong { color: var(--ink); }
-  .counters {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    padding: 14px 16px;
+  .balance {
+    padding: 14px 16px 12px;
     background: #fff;
     border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    box-shadow: 0 10px 18px -14px rgba(15,23,42,0.35);
   }
-  .counter {
+  .balance-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px 12px;
+    margin-bottom: 12px;
+  }
+  .balance-head h2 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 750;
+    letter-spacing: -0.01em;
+  }
+  .balance-head .week {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-weight: 550;
+  }
+  .bal-meters {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  @media (min-width: 560px) {
+    .bal-meters { grid-template-columns: 1fr 1fr; }
+    .bal-meter.stretch, .bal-meter.headroom { grid-column: span 1; }
+  }
+  @media (min-width: 720px) {
+    .bal-meters { grid-template-columns: 1.2fr 1.2fr 1fr 0.9fr; }
+  }
+  .bal-meter {
     border-radius: 12px;
-    padding: 12px 14px;
+    padding: 10px 12px;
     background: var(--paper);
     border: 1px solid var(--line);
   }
-  .counter .label {
+  .bal-meter.ib { border-color: #93c5fd; background: #eff6ff; }
+  .bal-meter.sat { border-color: #fcd34d; background: #fffbeb; }
+  .bal-meter.stretch { border-color: #cbd5e1; }
+  .bal-meter.headroom { border-color: #a7f3d0; background: #ecfdf5; }
+  .bal-meter-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .bal-label {
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--muted);
     font-weight: 700;
-    margin-bottom: 4px;
   }
-  .counter .value {
-    font-size: 1.55rem;
+  .bal-nums {
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .bal-nums strong {
+    font-size: 1.15rem;
+    font-weight: 750;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .bal-meter.ib .bal-nums strong { color: var(--ib); }
+  .bal-meter.sat .bal-nums strong { color: var(--sat); }
+  .bal-bar {
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(15,23,42,0.08);
+    overflow: hidden;
+  }
+  .bal-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    transition: width 0.2s ease, background 0.2s ease;
+    background: var(--ib);
+  }
+  .bal-meter.sat .bal-fill { background: var(--sat); }
+  .bal-meter.stretch .bal-fill { background: var(--ok); }
+  .bal-meter.stretch.amber .bal-fill { background: var(--warn); }
+  .bal-meter.stretch.red .bal-fill { background: var(--bad); }
+  .bal-meter .status {
+    font-size: 0.72rem;
+    font-weight: 650;
+    margin-top: 5px;
+  }
+  .bal-meter .status.ok { color: var(--ok); }
+  .bal-meter .status.low { color: var(--warn); }
+  .bal-meter .status.high { color: var(--bad); }
+  .bal-meter .status.amber { color: var(--warn); }
+  .bal-meter .status.red { color: var(--bad); }
+  .headroom-val {
+    font-size: 1.35rem;
     font-weight: 750;
     letter-spacing: -0.02em;
+    color: var(--free);
     line-height: 1.1;
   }
-  .counter .target {
-    font-size: 0.78rem;
+  .headroom-sub {
+    font-size: 0.72rem;
     color: var(--muted);
     margin-top: 4px;
+    line-height: 1.35;
   }
-  .counter.ib .value { color: var(--ib); }
-  .counter.sat .value { color: var(--sat); }
-  .counter .status { font-size: 0.75rem; font-weight: 650; margin-top: 4px; }
-  .counter .status.ok { color: var(--ok); }
-  .counter .status.low { color: var(--warn); }
-  .counter .status.high { color: var(--bad); }
-  .extras {
+  .bal-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .bal-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--muted);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 5px 10px;
+  }
+  .bal-chip strong { color: var(--ink); font-weight: 750; }
+  .bal-chip.free strong { color: var(--free); }
+  .bal-chip.light strong { color: var(--light); }
+  .density-block { margin-top: 12px; }
+  .density-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .density-pills {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 6px;
+  }
+  @media (max-width: 520px) {
+    .density-pills { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+  .day-pill {
+    border-radius: 10px;
+    border: 1.5px solid var(--line);
+    background: var(--paper);
+    padding: 7px 6px 8px;
+    text-align: center;
+    min-width: 0;
+  }
+  .day-pill .dname {
+    font-size: 0.68rem;
+    font-weight: 750;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+  .day-pill .dhours {
+    font-size: 0.78rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    margin-top: 2px;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+  .day-pill .dtag {
+    display: inline-block;
+    margin-top: 4px;
+    font-size: 0.62rem;
+    font-weight: 750;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 2px 6px;
+    border-radius: 999px;
+    background: #e2e8f0;
+    color: #475569;
+  }
+  .day-pill.loose { border-color: #6ee7b7; background: #ecfdf5; }
+  .day-pill.loose .dtag { background: #a7f3d0; color: #065f46; }
+  .day-pill.normal { border-color: #cbd5e1; }
+  .day-pill.normal .dtag { background: #e2e8f0; color: #334155; }
+  .day-pill.tight { border-color: #fcd34d; background: #fffbeb; }
+  .day-pill.tight .dtag { background: #fde68a; color: #92400e; }
+  .day-pill.over { border-color: #fca5a5; background: #fef2f2; box-shadow: inset 0 0 0 1px #fecaca; }
+  .day-pill.over .dtag { background: #fecaca; color: #991b1b; }
+  .subj-mix {
+    margin-top: 10px;
+    display: none;
+  }
+  .subj-mix.show { display: block; }
+  .subj-mix-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .subj-mix-pill {
+    font-size: 0.72rem;
+    font-weight: 650;
+    color: var(--ib);
+    background: var(--ib-bg);
+    border: 1px solid #93c5fd;
+    border-radius: 999px;
+    padding: 4px 9px;
+  }
+  .meta-row {
     display: flex;
     flex-wrap: wrap;
     gap: 8px 14px;
-    padding: 0 16px 12px;
-    background: #fff;
-    border-bottom: 1px solid var(--line);
-    font-size: 0.82rem;
+    margin-top: 10px;
+    font-size: 0.78rem;
     color: var(--muted);
   }
-  .extras span strong { color: var(--ink); }
+  .meta-row strong { color: var(--ink); }
   .legend {
     display: flex;
     flex-wrap: wrap;
@@ -413,7 +591,6 @@
     line-height: 1.4;
   }
   @media (min-width: 640px) {
-    .counters { grid-template-columns: 1fr 1fr 1fr 1fr; }
     .slot .topic-line { max-width: 280px; }
   }
   @media print {
@@ -460,35 +637,62 @@
       When ready, tap <strong>Sync to calendar</strong> (or Copy my choices) and send to Dad.
     </div>
 
-    <div class="counters">
-      <div class="counter ib">
-        <div class="label">IB study</div>
-        <div class="value" id="ibHours">0.0h</div>
-        <div class="target">Target 12 h / week</div>
-        <div class="status" id="ibStatus"></div>
+    <div class="balance" id="balancePanel" aria-live="polite">
+      <div class="balance-head">
+        <h2>Weekly balance</h2>
+        <span class="week" id="weekRange">Mon 9 Nov – Sun 15 Nov 2026</span>
       </div>
-      <div class="counter sat">
-        <div class="label">SAT study</div>
-        <div class="value" id="satHours">0.0h</div>
-        <div class="target">Target 3 h / week</div>
-        <div class="status" id="satStatus"></div>
+      <div class="bal-meters">
+        <div class="bal-meter ib">
+          <div class="bal-meter-top">
+            <span class="bal-label">IB study</span>
+            <span class="bal-nums"><strong id="ibHours">0.0h</strong> / 12h</span>
+          </div>
+          <div class="bal-bar" aria-hidden="true"><div class="bal-fill" id="ibFill"></div></div>
+          <div class="status" id="ibStatus"></div>
+        </div>
+        <div class="bal-meter sat">
+          <div class="bal-meter-top">
+            <span class="bal-label">SAT study</span>
+            <span class="bal-nums"><strong id="satHours">0.0h</strong> / 3h</span>
+          </div>
+          <div class="bal-bar" aria-hidden="true"><div class="bal-fill" id="satFill"></div></div>
+          <div class="status" id="satStatus"></div>
+        </div>
+        <div class="bal-meter stretch" id="stretchMeter">
+          <div class="bal-meter-top">
+            <span class="bal-label">Stretch</span>
+            <span class="bal-nums"><strong id="stretchPct">0%</strong> of open</span>
+          </div>
+          <div class="bal-bar" aria-hidden="true"><div class="bal-fill" id="stretchFill"></div></div>
+          <div class="status" id="stretchStatus">Green under 55% · amber ≥55% · red ≥70%</div>
+        </div>
+        <div class="bal-meter headroom">
+          <div class="bal-label">Headroom</div>
+          <div class="headroom-val" id="headroomHours">15.0h</div>
+          <div class="headroom-sub" id="headroomSub">Open capacity left after hitting 12h IB + 3h SAT</div>
+        </div>
       </div>
-      <div class="counter">
-        <div class="label">Free</div>
-        <div class="value" id="freeHours" style="color:var(--free)">0.0h</div>
-        <div class="target">Open / unwind time</div>
+      <div class="bal-chips">
+        <span class="bal-chip free">Free <strong id="freeHours">0.0h</strong></span>
+        <span class="bal-chip light">Light <strong id="lightHours">0.0h</strong></span>
+        <span class="bal-chip">Open capacity <strong id="openCapacity">—</strong></span>
+        <span class="bal-chip">Locked tutors <strong id="lockedHours">—</strong></span>
       </div>
-      <div class="counter">
-        <div class="label">Light</div>
-        <div class="value" id="lightHours" style="color:var(--light)">0.0h</div>
-        <div class="target">Light review / catch-up</div>
+      <div class="density-block">
+        <div class="density-label">Daily density · open vs planned IB+SAT</div>
+        <div class="density-pills" id="densityPills"></div>
+      </div>
+      <div class="subj-mix" id="subjMix">
+        <div class="density-label">IB subject mix</div>
+        <div class="subj-mix-row" id="subjMixRow"></div>
+      </div>
+      <div class="meta-row">
+        <span>Hard stop: <strong>22:30</strong></span>
+        <span>Study from: <strong>16:30</strong> · Fri social <strong>13:05–16:00</strong></span>
       </div>
     </div>
-    <div class="extras">
-      <span>Week: <strong id="weekRange">Mon 9 Nov – Sun 15 Nov 2026</strong></span>
-      <span>Hard stop: <strong>22:30</strong></span>
-      <span>Locked tutors: <strong id="lockedHours">—</strong></span>
-      <span>Study from: <strong>16:30</strong> · Fri social <strong>13:05–16:00</strong></span>
+
     </div>
 
     <div class="legend">
@@ -635,13 +839,106 @@ function statusFor(hours, min, max) {
   return { cls: "ok", text: "On target ✓" };
 }
 
+function openSlotsForDay(day) {
+  return day.slots.filter(s => !s.hidden && !s.locked);
+}
+
+function openCapacityHours() {
+  let total = 0;
+  CONFIG.days.forEach(day => {
+    openSlotsForDay(day).forEach(slot => {
+      total += durationHours(slot.start, slot.end);
+    });
+  });
+  return total;
+}
+
+function dayOpenHours(day) {
+  return openSlotsForDay(day).reduce((n, s) => n + durationHours(s.start, s.end), 0);
+}
+
+function dayPlannedStudyHours(day) {
+  let total = 0;
+  openSlotsForDay(day).forEach(slot => {
+    const k = getPick(slot.id).kind;
+    if (k === "ib" || k === "sat") total += durationHours(slot.start, slot.end);
+  });
+  return total;
+}
+
+function dayPlannedAllHours(day) {
+  let total = 0;
+  openSlotsForDay(day).forEach(slot => {
+    const k = getPick(slot.id).kind;
+    if (k === "ib" || k === "sat" || k === "light") total += durationHours(slot.start, slot.end);
+  });
+  return total;
+}
+
+function dayHasTutor(day) {
+  return day.slots.some(s => !s.hidden && s.kind === "locked");
+}
+
+function eveningStudyCount(day) {
+  let n = 0;
+  openSlotsForDay(day).forEach(slot => {
+    if (parseHM(slot.start) < 18 * 60) return;
+    const k = getPick(slot.id).kind;
+    if (k === "ib" || k === "sat" || k === "light") n += 1;
+  });
+  return n;
+}
+
+function densityClass(openH) {
+  if (openH <= 2) return "tight";
+  if (openH <= 4.5) return "normal";
+  return "loose";
+}
+
+function densityLabel(cls) {
+  if (cls === "tight") return "Tight";
+  if (cls === "loose") return "Loose";
+  return "Normal";
+}
+
+function barPct(hours, target) {
+  if (!target) return 0;
+  return Math.max(0, Math.min(100, (hours / target) * 100));
+}
+
+function subjectMixHours() {
+  const map = {};
+  CONFIG.days.forEach(day => {
+    openSlotsForDay(day).forEach(slot => {
+      const pick = getPick(slot.id);
+      if (pick.kind !== "ib" || !pick.subject) return;
+      map[pick.subject] = (map[pick.subject] || 0) + durationHours(slot.start, slot.end);
+    });
+  });
+  return Object.entries(map).sort((a, b) => b[1] - a[1]);
+}
+
 function updateCounters() {
   const ib = hoursFor("ib");
   const sat = hoursFor("sat");
+  const light = hoursFor("light");
+  const free = hoursFor("free");
+  const openCap = openCapacityHours();
+  const plannedLoad = ib + sat + light;
+  const stretch = openCap > 0 ? (plannedLoad / openCap) * 100 : 0;
+  const targetNeed = CONFIG.targets.ibMin + CONFIG.targets.satMin;
+  const headroom = Math.max(0, openCap - targetNeed);
+
   document.getElementById("ibHours").textContent = fmtHours(ib);
   document.getElementById("satHours").textContent = fmtHours(sat);
-  document.getElementById("freeHours").textContent = fmtHours(hoursFor("free"));
-  document.getElementById("lightHours").textContent = fmtHours(hoursFor("light"));
+  document.getElementById("freeHours").textContent = fmtHours(free);
+  document.getElementById("lightHours").textContent = fmtHours(light);
+  document.getElementById("openCapacity").textContent = fmtHours(openCap);
+  document.getElementById("lockedHours").textContent = fmtHours(lockedTutorHours());
+
+  document.getElementById("ibFill").style.width = barPct(ib, CONFIG.targets.ibMax) + "%";
+  document.getElementById("satFill").style.width = barPct(sat, CONFIG.targets.satMax) + "%";
+
   const ibS = statusFor(ib, CONFIG.targets.ibMin, CONFIG.targets.ibMax);
   const satS = statusFor(sat, CONFIG.targets.satMin, CONFIG.targets.satMax);
   const ibEl = document.getElementById("ibStatus");
@@ -650,7 +947,70 @@ function updateCounters() {
   ibEl.textContent = ibS.text;
   satEl.className = "status " + satS.cls;
   satEl.textContent = satS.text;
-  document.getElementById("lockedHours").textContent = fmtHours(lockedTutorHours()) + " this week";
+
+  const stretchEl = document.getElementById("stretchMeter");
+  const stretchPctEl = document.getElementById("stretchPct");
+  const stretchFill = document.getElementById("stretchFill");
+  const stretchStatus = document.getElementById("stretchStatus");
+  stretchPctEl.textContent = Math.round(stretch) + "%";
+  stretchFill.style.width = Math.max(0, Math.min(100, stretch)) + "%";
+  stretchEl.classList.remove("amber", "red");
+  let stretchCls = "ok";
+  let stretchText = "Comfortable load";
+  if (stretch >= 70) {
+    stretchEl.classList.add("red");
+    stretchCls = "red";
+    stretchText = "Overstretched — ease back";
+  } else if (stretch >= 55) {
+    stretchEl.classList.add("amber");
+    stretchCls = "amber";
+    stretchText = "Getting full — watch Wed / tutor nights";
+  }
+  stretchStatus.className = "status " + stretchCls;
+  stretchStatus.textContent = stretchText + " · " + fmtHours(plannedLoad) + " planned / " + fmtHours(openCap) + " open";
+
+  document.getElementById("headroomHours").textContent = fmtHours(headroom);
+  document.getElementById("headroomSub").textContent =
+    openCap.toFixed(2).replace(/\.00$/, "").replace(/(\.\d)0$/, "$1") +
+    "h open this week · after 12h IB + 3h SAT you still have " + fmtHours(headroom) + " spare";
+
+  const pills = document.getElementById("densityPills");
+  pills.innerHTML = CONFIG.days.map(day => {
+    const openH = dayOpenHours(day);
+    const planned = dayPlannedStudyHours(day);
+    const dens = densityClass(openH);
+    const tutorNight = dayHasTutor(day);
+    const eveN = eveningStudyCount(day);
+    const overByShare = openH > 0 && dayPlannedAllHours(day) / openH >= 0.7;
+    const overByEve = tutorNight && eveN >= 3;
+    const over = overByShare || overByEve;
+    const tag = over ? "Over" : densityLabel(dens);
+    const cls = over ? "over" : dens;
+    const title = escapeHtml(
+      day.name + " · open " + fmtHours(openH) +
+      " · planned IB+SAT " + fmtHours(planned) +
+      (tutorNight ? " · tutor night" : "") +
+      (overByEve ? " · 3+ evening study after tutor" : "")
+    );
+    return `<div class="day-pill ${cls}" title="${title}">
+      <div class="dname">${escapeHtml(day.dayShort || day.name.slice(0, 3))}</div>
+      <div class="dhours">${fmtHours(planned)}<span style="opacity:.55;font-weight:550">/${fmtHours(openH)}</span></div>
+      <span class="dtag">${tag}</span>
+    </div>`;
+  }).join("");
+
+  const mix = subjectMixHours();
+  const mixWrap = document.getElementById("subjMix");
+  const mixRow = document.getElementById("subjMixRow");
+  if (mix.length) {
+    mixWrap.classList.add("show");
+    mixRow.innerHTML = mix.map(([subj, hrs]) =>
+      `<span class="subj-mix-pill">${escapeHtml(subj)} · ${fmtHours(hrs)}</span>`
+    ).join("");
+  } else {
+    mixWrap.classList.remove("show");
+    mixRow.innerHTML = "";
+  }
 }
 
 function escapeHtml(s) {
