@@ -617,7 +617,7 @@
     .notice { background: #fffbeb; border-color: #f59e0b; color: #78350f; }
     .notice strong { color: #000; }
     .card { box-shadow: none; border: 1px solid #e2e8f0; break-inside: avoid; }
-    .actions, .toast, .sync-box, .howto, .slot-meta { display: none !important; }
+    .actions, .toast, .sync-box, .howto, .slot-meta, .view-toggle, .free-due-suggest { display: none !important; }
     footer { color: #64748b; }
     .day { break-inside: avoid; }
   }
@@ -978,6 +978,256 @@
   header .lead strong { font-weight: 700; }
   .sync-box, .toast { margin: 0 12px 8px; }
 
+
+  /* ===== Filled calendar / Week view polish ===== */
+  .view-toggle {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+    gap: 8px; padding: 8px 10px; background: #fff; border-bottom: 1px solid var(--line);
+  }
+  .view-toggle .vt-label {
+    font-size: 0.72rem; font-weight: 750; text-transform: uppercase;
+    letter-spacing: 0.05em; color: var(--muted);
+  }
+  .view-toggle .vt-btns {
+    display: inline-flex; gap: 2px; background: var(--paper);
+    border: 1px solid var(--line); border-radius: 10px; padding: 2px;
+  }
+  .view-toggle .vt-btns button {
+    appearance: none; border: 0; background: transparent; color: var(--muted);
+    font: inherit; font-size: 0.78rem; font-weight: 700; padding: 6px 12px;
+    border-radius: 8px; cursor: pointer; min-height: 32px;
+  }
+  .view-toggle .vt-btns button.active {
+    background: var(--ink); color: #fff;
+    box-shadow: 0 4px 10px -6px rgba(15,23,42,0.45);
+  }
+  .view-toggle .vt-hint {
+    font-size: 0.72rem; color: var(--muted); font-weight: 550;
+  }
+
+  .slot-wrap {
+    position: relative;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    border-left-width: 4px;
+    background: #fff;
+    overflow: hidden;
+    transition: box-shadow 0.12s ease, border-color 0.12s ease, opacity 0.12s ease;
+  }
+  .slot-wrap.kind-ib {
+    background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%);
+    border-color: #93c5fd; border-left-color: var(--ib);
+    box-shadow: 0 1px 0 rgba(37,99,235,0.08);
+  }
+  .slot-wrap.kind-sat {
+    background: linear-gradient(180deg, #fffbeb 0%, #fef3c7 100%);
+    border-color: #fcd34d; border-left-color: var(--sat);
+    box-shadow: 0 1px 0 rgba(217,119,6,0.08);
+  }
+  .slot-wrap.kind-free {
+    background: #f0fdf4;
+    border-color: #bbf7d0; border-left-color: var(--free);
+  }
+  .slot-wrap.kind-light {
+    background: #f0fdfa;
+    border-color: #99f6e4; border-left-color: var(--light);
+  }
+  .slot-wrap.kind-locked {
+    background: #faf5ff;
+    border-color: #e9d5ff; border-left-color: var(--locked);
+    opacity: 0.78;
+  }
+  .slot-wrap.kind-school {
+    background: #f8fafc;
+    border-color: #e2e8f0; border-left-color: #94a3b8;
+    opacity: 0.7;
+  }
+  .slot-wrap.kind-social {
+    background: #fdf2f8;
+    border-color: #fbcfe8; border-left-color: var(--social);
+    opacity: 0.78;
+  }
+  .slot-wrap.kind-ib, .slot-wrap.kind-sat {
+    opacity: 1;
+  }
+  .slot-wrap.kind-ib .slot .name,
+  .slot-wrap.kind-sat .slot .name { font-weight: 700; }
+
+  .slot {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 8px;
+    padding: 7px 10px;
+    border: none;
+    background: transparent;
+    text-align: left;
+    width: 100%;
+    font-family: inherit;
+    font-size: 0.84rem;
+    color: var(--ink);
+    min-height: 38px;
+  }
+  .slot .time {
+    font-variant-numeric: tabular-nums;
+    font-weight: 650;
+    font-size: 0.78rem;
+    color: #64748b;
+    white-space: nowrap;
+    letter-spacing: -0.01em;
+    padding-top: 2px;
+    font-feature-settings: "tnum" 1;
+  }
+  .slot .name {
+    font-weight: 650;
+    line-height: 1.25;
+    min-width: 0;
+    overflow: hidden;
+  }
+  .slot .name-main {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .slot .note {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--muted);
+    margin-top: 1px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .slot .topic-line {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 550;
+    color: #334155;
+    opacity: 0.9;
+    margin-top: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+  .slot .badge {
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 3px 7px;
+    border-radius: 999px;
+    white-space: nowrap;
+    line-height: 1.2;
+    align-self: start;
+    margin-top: 1px;
+  }
+  .slot-wrap.kind-ib .badge { background: var(--ib); color: #fff; }
+  .slot-wrap.kind-sat .badge { background: var(--sat); color: #fff; }
+  .slot-wrap.kind-free .badge { background: #ecfdf5; color: #047857; border: 1px solid #6ee7b7; }
+  .slot-wrap.kind-light .badge { background: #f0fdfa; color: #0f766e; border: 1px solid #5eead4; }
+  .slot-wrap.kind-locked .badge { background: #ede9fe; color: #6d28d9; border: 1px solid #c4b5fd; }
+  .slot-wrap.kind-school .badge { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+  .slot-wrap.kind-social .badge { background: #fce7f3; color: #be185d; border: 1px solid #f9a8d4; }
+
+  .slot-wrap.kind-school .slot,
+  .slot-wrap.kind-locked .slot,
+  .slot-wrap.kind-social .slot {
+    min-height: 32px;
+    padding: 5px 10px;
+  }
+  .slot-wrap.kind-school .slot .name-main,
+  .slot-wrap.kind-locked .slot .name-main,
+  .slot-wrap.kind-social .slot .name-main {
+    font-weight: 600;
+    color: #475569;
+  }
+
+  .day-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 12px 6px;
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, #fff, #f8fafc);
+  }
+  .day-head .day-title { min-width: 0; }
+  .day-head h2 {
+    margin: 0;
+    font-size: 0.92rem;
+    font-weight: 750;
+    letter-spacing: -0.01em;
+  }
+  .day-head .day-summary {
+    display: flex; flex-wrap: wrap; gap: 4px; justify-content: flex-end;
+    margin-top: 2px;
+  }
+  .day-head .ds-chip {
+    font-size: 0.62rem; font-weight: 750; text-transform: uppercase;
+    letter-spacing: 0.03em; padding: 2px 6px; border-radius: 999px;
+    background: #e2e8f0; color: #475569;
+  }
+  .day-head .ds-chip.ib { background: #dbeafe; color: #1d4ed8; }
+  .day-head .ds-chip.sat { background: #fef3c7; color: #b45309; }
+  .day-head .ds-chip.free { background: #d1fae5; color: #047857; }
+  .day-head .ds-chip.light { background: #ccfbf1; color: #0f766e; }
+  .day-head .ds-chip.tutor { background: #ede9fe; color: #6d28d9; }
+  .day-head .sub {
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-weight: 550;
+    white-space: nowrap;
+  }
+
+  .slots { padding: 6px; display: flex; flex-direction: column; gap: 4px; }
+
+  /* Agenda (compact scan) mode — filled weeks */
+  .days.view-agenda .slot-meta,
+  .days.view-agenda .free-due-suggest { display: none !important; }
+  .days.view-agenda .slot-wrap {
+    border-radius: 8px;
+  }
+  .days.view-agenda .slot {
+    grid-template-columns: 84px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 8px;
+    min-height: 30px;
+  }
+  .days.view-agenda .slot .time { font-size: 0.72rem; padding-top: 0; }
+  .days.view-agenda .slot .badge { font-size: 0.6rem; padding: 2px 6px; }
+  .days.view-agenda .slot-wrap.kind-school,
+  .days.view-agenda .slot-wrap.kind-locked,
+  .days.view-agenda .slot-wrap.kind-social {
+    opacity: 0.62;
+  }
+  .days.view-agenda .slot-wrap.kind-school .slot,
+  .days.view-agenda .slot-wrap.kind-locked .slot,
+  .days.view-agenda .slot-wrap.kind-social .slot {
+    min-height: 26px;
+    padding: 3px 8px;
+  }
+  .days.view-agenda .slot .note { display: none; }
+  .days.view-agenda .day-head { padding: 7px 10px 5px; }
+  .days.view-agenda .slots { gap: 3px; padding: 5px; }
+
+  @media (min-width: 640px) {
+    .slot .topic-line { max-width: none; }
+  }
+  @media (max-width: 520px) {
+    .slot { grid-template-columns: 76px minmax(0, 1fr) auto; gap: 5px; padding: 6px 8px; }
+    .slot .time { font-size: 0.7rem; }
+    .view-toggle .vt-hint { display: none; }
+  }
+
+  .week-main .view-toggle { position: sticky; top: 52px; z-index: 15; }
+  @media (max-width: 1023px) {
+    .week-main .view-toggle { top: 48px; }
+  }
+
 </style>
 </head>
 <body>
@@ -1108,13 +1358,13 @@
     </div>
 
     <div class="legend">
-      <span class="chip"><span class="dot ib"></span> Study IB</span>
-      <span class="chip"><span class="dot sat"></span> Study SAT</span>
+      <span class="chip"><span class="dot ib"></span> IB</span>
+      <span class="chip"><span class="dot sat"></span> SAT</span>
       <span class="chip"><span class="dot free"></span> Free</span>
       <span class="chip"><span class="dot light"></span> Light</span>
-      <span class="chip"><span class="dot locked"></span> Tutor (locked)</span>
-      <span class="chip"><span class="dot school"></span> School (locked)</span>
-      <span class="chip"><span class="dot social"></span> Social (locked)</span>
+      <span class="chip"><span class="dot locked"></span> Tutor</span>
+      <span class="chip"><span class="dot school"></span> School</span>
+      <span class="chip"><span class="dot social"></span> Social</span>
     </div>
 
     <div class="actions">
@@ -1133,6 +1383,16 @@
     </div><!-- /week-rail -->
 
     <div class="week-main">
+    <div class="view-toggle" role="group" aria-label="Calendar view">
+      <div>
+        <div class="vt-label">Calendar view</div>
+        <div class="vt-hint" id="viewToggleHint">Agenda hides editors for a denser filled week</div>
+      </div>
+      <div class="vt-btns">
+        <button type="button" id="btnViewAgenda" aria-pressed="false">Agenda</button>
+        <button type="button" id="btnViewEdit" class="active" aria-pressed="true">Edit</button>
+      </div>
+    </div>
     <div class="days" id="days"></div>
     </div><!-- /week-main -->
     <details class="reminders-note" id="remindersNote">
@@ -1562,6 +1822,13 @@ function durationHours(start, end) {
 }
 function formatHM(hm) { return hm; }
 function badgeText(kind) { return CONFIG.labels[kind] || kind; }
+function shortBadge(kind) {
+  const map = {
+    ib: "IB", sat: "SAT", free: "Free", light: "Light",
+    locked: "Tutor", school: "School", social: "Social"
+  };
+  return map[kind] || badgeText(kind);
+}
 
 function normalizePick(raw) {
   if (raw == null) return { kind: "free" };
@@ -2102,8 +2369,12 @@ function truncate(s, n) {
 
 function displayName(slot, pick) {
   if (slot.locked) return slot.label || badgeText(slot.kind);
-  if (pick.kind === "ib" && pick.subject) return badgeText("ib") + " · " + pick.subject;
-  if (pick.kind === "sat" && pick.area) return badgeText("sat") + " · " + pick.area;
+  if (pick.kind === "ib" && pick.subject) return pick.subject;
+  if (pick.kind === "sat" && pick.area) return pick.area;
+  if (pick.kind === "ib") return "Pick IB subject";
+  if (pick.kind === "sat") return "Pick SAT area";
+  if (pick.kind === "light") return "Light";
+  if (pick.kind === "free") return slot.label || "Free";
   return slot.label || badgeText(pick.kind);
 }
 
@@ -2184,28 +2455,33 @@ function renderSlot(slot) {
   const pick = slot.locked ? { kind: slot.kind } : getPick(slot.id);
   const kind = pick.kind;
   const choosable = !slot.locked;
+  const fullTopic = (!slot.locked && pick.topic) ? String(pick.topic) : "";
   const noteBits = [];
-  if (slot.note) noteBits.push(`<span class="note">${escapeHtml(slot.note)}</span>`);
-  if (!slot.locked && pick.topic) {
-    noteBits.push(`<span class="topic-line">${escapeHtml(truncate(pick.topic, 56))}</span>`);
+  if (slot.note && (kind === "school" || kind === "locked" || kind === "social")) {
+    noteBits.push(`<span class="note" title="${escapeHtml(slot.note)}">${escapeHtml(truncate(slot.note, 48))}</span>`);
+  } else if (slot.note && kind === "free") {
+    noteBits.push(`<span class="note" title="${escapeHtml(slot.note)}">${escapeHtml(truncate(slot.note, 40))}</span>`);
+  }
+  if (fullTopic) {
+    noteBits.push(`<span class="topic-line" title="${escapeHtml(fullTopic)}">${escapeHtml(truncate(fullTopic, 64))}</span>`);
   }
   const note = noteBits.join("");
   const name = displayName(slot, pick);
+  const nameTitle = fullTopic ? (name + " · " + fullTopic) : name;
   const ariaExtra = pick.subject || pick.area || "";
   const aria = choosable
-    ? `${slot.start}–${slot.end}, ${badgeText(kind)}${ariaExtra ? " · " + ariaExtra : ""}. Tap to change kind.`
-    : "";
+    ? `${slot.start}–${slot.end}, ${badgeText(kind)}${ariaExtra ? " · " + ariaExtra : ""}${fullTopic ? " · " + fullTopic : ""}. Tap to change kind.`
+    : `${slot.start}–${slot.end}, ${badgeText(kind)} · ${name}`;
+
+  const headInner = `
+         <span class="time">${escapeHtml(formatHM(slot.start))}–${escapeHtml(formatHM(slot.end))}</span>
+         <span class="name" title="${escapeHtml(nameTitle)}"><span class="name-main">${escapeHtml(name)}</span>${note}</span>
+         <span class="badge" title="${escapeHtml(badgeText(kind))}">${escapeHtml(shortBadge(kind))}</span>`;
 
   const head = choosable
-    ? `<button type="button" class="slot choosable" data-id="${escapeHtml(slot.id)}" aria-label="${escapeHtml(aria)}">
-         <span class="time">${escapeHtml(formatHM(slot.start))}–${escapeHtml(formatHM(slot.end))}</span>
-         <span class="name">${escapeHtml(name)}${note}</span>
-         <span class="badge">${escapeHtml(badgeText(kind))}</span>
+    ? `<button type="button" class="slot choosable" data-id="${escapeHtml(slot.id)}" aria-label="${escapeHtml(aria)}">${headInner}
        </button>`
-    : `<div class="slot" aria-disabled="true">
-         <span class="time">${escapeHtml(formatHM(slot.start))}–${escapeHtml(formatHM(slot.end))}</span>
-         <span class="name">${escapeHtml(name)}${note}</span>
-         <span class="badge">${escapeHtml(badgeText(kind))}</span>
+    : `<div class="slot" aria-disabled="true" aria-label="${escapeHtml(aria)}">${headInner}
        </div>`;
 
   let dueChip = "";
@@ -2220,7 +2496,9 @@ function renderSlot(slot) {
     }
   }
   const meta = choosable ? renderMeta(slot, pick) : "";
-  return `<div class="slot-wrap kind-${kind}">${head}${dueChip}${meta}</div>`;
+  const studyClass = (kind === "ib" || kind === "sat") ? " is-study" : "";
+  const lockedClass = slot.locked ? " is-locked" : "";
+  return `<div class="slot-wrap kind-${kind}${studyClass}${lockedClass}" data-kind="${escapeHtml(kind)}">${head}${dueChip}${meta}</div>`;
 }
 
 function bindMetaHandlers(root) {
@@ -2304,7 +2582,10 @@ function bindMetaHandlers(root) {
             line.className = "topic-line";
             nameEl.appendChild(line);
           }
-          if (line) line.textContent = truncate(t, 56);
+          if (line) {
+            line.textContent = truncate(t, 64);
+            line.title = t;
+          }
         } else if (line) {
           line.remove();
         }
@@ -2313,19 +2594,89 @@ function bindMetaHandlers(root) {
   });
 }
 
+
+function daySummaryChips(day) {
+  const counts = { ib: 0, sat: 0, free: 0, light: 0, tutor: 0 };
+  day.slots.forEach(slot => {
+    if (slot.hidden) return;
+    if (slot.locked) {
+      if (slot.kind === "locked") counts.tutor += 1;
+      return;
+    }
+    const k = getPick(slot.id).kind;
+    if (counts[k] != null) counts[k] += 1;
+  });
+  const chips = [];
+  if (counts.ib) chips.push(`<span class="ds-chip ib">${counts.ib} IB</span>`);
+  if (counts.sat) chips.push(`<span class="ds-chip sat">${counts.sat} SAT</span>`);
+  if (counts.light) chips.push(`<span class="ds-chip light">${counts.light} Light</span>`);
+  if (counts.free) chips.push(`<span class="ds-chip free">${counts.free} Free</span>`);
+  if (counts.tutor) chips.push(`<span class="ds-chip tutor">${counts.tutor} Tutor</span>`);
+  return chips.join("");
+}
+
+const CAL_VIEW_KEY = "ishaan-cal-view";
+function getCalView() {
+  try {
+    const v = localStorage.getItem(CAL_VIEW_KEY);
+    if (v === "agenda" || v === "edit") return v;
+  } catch (e) {}
+  return "agenda";
+}
+function setCalView(view) {
+  try { localStorage.setItem(CAL_VIEW_KEY, view); } catch (e) {}
+  applyCalView(view);
+}
+function applyCalView(view) {
+  const root = document.getElementById("days");
+  if (root) {
+    root.classList.toggle("view-agenda", view === "agenda");
+    root.classList.toggle("view-edit", view !== "agenda");
+  }
+  const btnA = document.getElementById("btnViewAgenda");
+  const btnE = document.getElementById("btnViewEdit");
+  if (btnA && btnE) {
+    btnA.classList.toggle("active", view === "agenda");
+    btnE.classList.toggle("active", view !== "agenda");
+    btnA.setAttribute("aria-pressed", view === "agenda" ? "true" : "false");
+    btnE.setAttribute("aria-pressed", view !== "agenda" ? "true" : "false");
+  }
+  const hint = document.getElementById("viewToggleHint");
+  if (hint) {
+    hint.textContent = view === "agenda"
+      ? "Agenda — dense scan; switch to Edit to change subjects/topics"
+      : "Edit — tap blocks to cycle; pick subject & topic below each slot";
+  }
+}
+function bindCalViewToggle() {
+  const btnA = document.getElementById("btnViewAgenda");
+  const btnE = document.getElementById("btnViewEdit");
+  if (!btnA || !btnE || btnA.dataset.bound) return;
+  btnA.dataset.bound = "1";
+  btnA.addEventListener("click", () => setCalView("agenda"));
+  btnE.addEventListener("click", () => setCalView("edit"));
+  applyCalView(getCalView());
+}
+
 function render() {
   const root = document.getElementById("days");
   root.innerHTML = CONFIG.days.map(day => {
     const visible = day.slots.filter(s => !s.hidden);
     const choosableCount = visible.filter(s => !s.locked).length;
+    const summary = daySummaryChips(day);
     return `<section class="day" data-day="${day.id}">
       <div class="day-head">
-        <h2>${escapeHtml(day.name)}</h2>
-        <span class="sub">${choosableCount} open block${choosableCount === 1 ? "" : "s"}</span>
+        <div class="day-title">
+          <h2>${escapeHtml(day.name)}</h2>
+          <div class="day-summary">${summary}</div>
+        </div>
+        <span class="sub">${choosableCount} open</span>
       </div>
       <div class="slots">${visible.map(renderSlot).join("")}</div>
     </section>`;
   }).join("");
+
+  applyCalView(getCalView());
 
   root.querySelectorAll(".slot.choosable").forEach(el => {
     el.addEventListener("click", () => {
@@ -2498,6 +2849,7 @@ document.getElementById("btnCopy").addEventListener("click", async () => {
   }
 });
 
+bindCalViewToggle();
 document.getElementById("btnSync").addEventListener("click", async () => {
   const warns = targetWarning();
   if (warns.length) {
