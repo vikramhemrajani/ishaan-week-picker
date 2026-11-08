@@ -10,6 +10,8 @@ Static site with **Week** and **Topics** tabs (British English). Live: https://v
 
 - **Dense dashboard UX** — wider shell (~1320px), sticky Week/Topics tabs, balance rail + multi-column day/topic grids on desktop; howto/notice collapsed by default.
 
+- **Shared plan (cross-browser)** — published picks live at `choices/YYYY-MM-DD.json`. Empty/blank localStorage auto-loads the shared file; **Reset to shared plan** forces a reload. Every **Sync** paste includes `SHARED_PLAN_JSON` + `AUDIT_ENTRY_JSON` so Dad’s Assistant can republish (static hosts cannot be written from the browser). Audit trail: `audit/choices-log.jsonl`.
+
 - **Week navigator** — prev/next, jump list, and date picker for planning ahead (± weeks around the published skeleton). The published week keeps **live calendar locks**; other weeks use a **typical-week template** (same school/social/open skeleton + recurring tutors, dates shifted). Choices: `localStorage` key `ishaan-week-YYYY-MM-DD`. Sync paste still starts with `SYNC_WEEK <weekStart>`.
 
 - **Fill Free from Due** — one-tap (and Free-slot Due chips) seeds empty Free slots from Topics spaced revisits (Seen 3d · Reviewed 7d · Exam-ready 21d). Never overwrites IB/SAT/Light; respects 12h IB and reserves room for 3h SAT.

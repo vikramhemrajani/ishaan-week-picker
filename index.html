@@ -778,6 +778,31 @@
   .due-chip .due-age { font-weight: 550; color: #b45309; }
   .due-empty { font-size: 0.8rem; color: #92400e; }
   .deferred-note { margin: 8px 12px 0; padding: 8px 10px; border-radius: 10px; background: #f8fafc; border: 1px dashed #cbd5e1; font-size: 0.78rem; color: #475569; }
+
+  .shared-plan {
+    margin: 0 0 8px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    color: #065f46;
+    font-size: 12.5px;
+    line-height: 1.4;
+  }
+  .shared-plan.missing {
+    background: #f8fafc;
+    border-color: #e2e8f0;
+    color: #475569;
+  }
+  .shared-plan strong { color: #064e3b; }
+  .btn-shared {
+    background: #059669;
+    color: #fff;
+    border: none;
+  }
+  .btn-shared:hover { filter: brightness(1.05); }
+  .btn-shared:disabled { opacity: 0.55; cursor: default; }
+
   .btn-fill-due { background: #7c3aed; color: #fff; border: none; }
   .btn-fill-due:hover { filter: brightness(1.05); }
 
@@ -996,7 +1021,7 @@
       For SAT: choose Reading &amp; Writing, Math, or Full practice, then a topic.
       Open study/free/light blocks are <strong>45&nbsp;minutes</strong> each (0.75&nbsp;h).
       Aim for <strong>exactly 12&nbsp;h IB</strong> and <strong>exactly 3&nbsp;h SAT</strong>.
-      When ready, tap <strong>Sync to calendar</strong> (or Copy my choices) and send to Dad.
+      When ready, tap <strong>Sync to calendar</strong> (or Copy my choices) and send to Dad — that also republishes the shared plan for every browser.
       </div>
     </details>
 
@@ -1095,10 +1120,12 @@
     <div class="actions">
       <button type="button" class="btn-sync" id="btnSync">Sync to calendar</button>
       <button type="button" class="btn-primary" id="btnCopy">Copy my choices</button>
+      <button type="button" class="btn-shared" id="btnLoadShared" title="Load the published shared plan for this week (overwrites picks stored in this browser). GitHub Pages cannot write from the browser — Sync asks Dad’s Assistant to republish choices/YYYY-MM-DD.json for everyone.">Reset to shared plan</button>
       <button type="button" class="btn-secondary" id="btnReset">Reset week</button>
       <button type="button" class="btn-fill-due" id="btnFillDue" title="Fill empty Free slots from Topics Due this week (Seen 3d · Reviewed 7d · Exam-ready 21d). Keeps existing IB/SAT/Light picks. Respects 12h IB and reserves room for 3h SAT.">Fill Free from Due</button>
       <button type="button" class="btn-secondary" id="btnPrint">Print / save PDF</button>
     </div>
+    <div class="shared-plan missing" id="sharedPlanStatus" role="status" aria-live="polite">Checking shared plan…</div>
     <div class="due-suggest" id="dueSuggest" role="status" aria-live="polite"></div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <div class="sync-box" id="syncBox" role="status" aria-live="polite"></div>
@@ -1588,6 +1615,261 @@ function initState() {
 function persistState() {
   try { localStorage.setItem(getStorageKey(), JSON.stringify(state)); } catch (e) { /* ignore */ }
 }
+
+
+/* ===== Shared plan (cross-browser) =====
+ * Source of truth on the static host: choices/YYYY-MM-DD.json (+ audit/choices-log.jsonl).
+ * Browsers cannot write GitHub Pages; Sync paste asks Dad’s Assistant to republish.
+ */
+const SHARED_CHOICES_DIR = "choices/";
+const SHARED_AUDIT_URL = "audit/choices-log.jsonl";
+let sharedPlanMeta = { weekStart: null, available: false, updatedAt: null, lastAudit: null, loading: false };
+
+function sharedChoicesUrl(weekStart) {
+  return SHARED_CHOICES_DIR + weekStart + ".json";
+}
+
+function decodeHtmlEntities(s) {
+  if (s == null) return s;
+  const t = String(s);
+  if (!t.includes("&")) return t;
+  return t
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'");
+}
+
+function choicesArrayToStateMap(arr) {
+  const map = {};
+  (arr || []).forEach(row => {
+    if (!row || !row.id) return;
+    const cleaned = { ...row };
+    if (cleaned.subject) cleaned.subject = decodeHtmlEntities(cleaned.subject);
+    if (cleaned.topic) cleaned.topic = decodeHtmlEntities(cleaned.topic);
+    if (cleaned.area) cleaned.area = decodeHtmlEntities(cleaned.area);
+    map[row.id] = normalizePick(cleaned);
+  });
+  return map;
+}
+
+function extractChoicesList(payload) {
+  if (!payload) return [];
+  if (Array.isArray(payload)) return payload;
+  if (Array.isArray(payload.choices)) return payload.choices;
+  return [];
+}
+
+function applySharedChoices(payload, { persist = true } = {}) {
+  const list = extractChoicesList(payload);
+  if (!list.length) return false;
+  const map = choicesArrayToStateMap(list);
+  let applied = 0;
+  Object.keys(state).forEach(id => {
+    if (id in map) {
+      state[id] = map[id];
+      applied++;
+    }
+  });
+  if (persist) persistState();
+  return applied > 0;
+}
+
+function isStateBlank() {
+  const ids = Object.keys(state);
+  if (!ids.length) return true;
+  return ids.every(id => getPick(id).kind === "free");
+}
+
+function localStorageHasKey() {
+  try { return localStorage.getItem(getStorageKey()) != null; } catch (e) { return false; }
+}
+
+function hourSnapshot() {
+  return {
+    ib: Math.round(hoursFor("ib") * 10) / 10,
+    sat: Math.round(hoursFor("sat") * 10) / 10,
+    free: Math.round(hoursFor("free") * 10) / 10,
+    light: Math.round(hoursFor("light") * 10) / 10
+  };
+}
+
+function countKinds() {
+  const c = { ib: 0, sat: 0, free: 0, light: 0 };
+  Object.keys(state).forEach(id => {
+    const k = getPick(id).kind;
+    if (k in c) c[k]++;
+  });
+  return c;
+}
+
+function formatHktStamp(iso) {
+  if (!iso) return "—";
+  try {
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return String(iso);
+    return new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Asia/Hong_Kong",
+      weekday: "short", day: "numeric", month: "short",
+      hour: "2-digit", minute: "2-digit", hour12: false
+    }).format(d) + " HKT";
+  } catch (e) {
+    return String(iso);
+  }
+}
+
+async function fetchSharedChoices(weekStart) {
+  const url = sharedChoicesUrl(weekStart) + "?t=" + Date.now();
+  try {
+    const res = await fetch(url, { cache: "no-store" });
+    if (res.status === 404) return null;
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (e) {
+    return null;
+  }
+}
+
+async function fetchLatestAuditForWeek(weekStart) {
+  try {
+    const res = await fetch(SHARED_AUDIT_URL + "?t=" + Date.now(), { cache: "no-store" });
+    if (!res.ok) return null;
+    const text = await res.text();
+    const lines = text.split(/\n+/).map(l => l.trim()).filter(Boolean);
+    let last = null;
+    for (const line of lines) {
+      try {
+        const row = JSON.parse(line);
+        if (row && row.weekStart === weekStart) last = row;
+      } catch (e) { /* skip */ }
+    }
+    return last;
+  } catch (e) {
+    return null;
+  }
+}
+
+function updateSharedPlanChrome() {
+  const el = document.getElementById("sharedPlanStatus");
+  const btn = document.getElementById("btnLoadShared");
+  if (!el) return;
+  const ws = CONFIG.weekStart;
+  if (sharedPlanMeta.loading) {
+    el.className = "shared-plan missing";
+    el.textContent = "Checking shared plan…";
+    if (btn) btn.disabled = true;
+    return;
+  }
+  if (!sharedPlanMeta.available || sharedPlanMeta.weekStart !== ws) {
+    el.className = "shared-plan missing";
+    el.innerHTML = "No shared plan published for <strong>" + escapeHtml(ws) +
+      "</strong> yet. After you Sync, Dad’s Assistant republishes <code>choices/" +
+      escapeHtml(ws) + ".json</code> so every browser sees the same picks.";
+    if (btn) btn.disabled = true;
+    return;
+  }
+  el.className = "shared-plan";
+  const when = formatHktStamp(sharedPlanMeta.updatedAt || (sharedPlanMeta.lastAudit && sharedPlanMeta.lastAudit.ts));
+  const hours = sharedPlanMeta.lastAudit && sharedPlanMeta.lastAudit.hours
+    ? sharedPlanMeta.lastAudit.hours
+    : null;
+  const hourBit = hours
+    ? ` · IB ${hours.ib}h · SAT ${hours.sat}h · Free ${hours.free}h · Light ${hours.light}h`
+    : "";
+  const src = sharedPlanMeta.lastAudit && sharedPlanMeta.lastAudit.source
+    ? ` · via ${escapeHtml(String(sharedPlanMeta.lastAudit.source))}`
+    : "";
+  el.innerHTML = "Shared plan for <strong>" + escapeHtml(ws) + "</strong> last published <strong>" +
+    escapeHtml(when) + "</strong>" + escapeHtml(hourBit) + src +
+    ". This browser keeps local edits until you Sync (Assistant republishes) or tap <strong>Reset to shared plan</strong>.";
+  if (btn) btn.disabled = false;
+}
+
+async function refreshSharedPlanMeta() {
+  const ws = CONFIG.weekStart;
+  sharedPlanMeta = { weekStart: ws, available: false, updatedAt: null, lastAudit: null, loading: true };
+  updateSharedPlanChrome();
+  const [payload, audit] = await Promise.all([
+    fetchSharedChoices(ws),
+    fetchLatestAuditForWeek(ws)
+  ]);
+  sharedPlanMeta.loading = false;
+  sharedPlanMeta.lastAudit = audit;
+  if (payload) {
+    sharedPlanMeta.available = true;
+    sharedPlanMeta.updatedAt = payload.updatedAt || (audit && audit.ts) || null;
+    if (!sharedPlanMeta.updatedAt && audit) sharedPlanMeta.updatedAt = audit.ts;
+  } else {
+    sharedPlanMeta.available = false;
+    sharedPlanMeta.updatedAt = audit && audit.ts || null;
+  }
+  updateSharedPlanChrome();
+  return payload;
+}
+
+async function loadSharedPlan({ force = false, quiet = false } = {}) {
+  const ws = CONFIG.weekStart;
+  const payload = await fetchSharedChoices(ws);
+  const audit = await fetchLatestAuditForWeek(ws);
+  sharedPlanMeta.weekStart = ws;
+  sharedPlanMeta.lastAudit = audit;
+  sharedPlanMeta.loading = false;
+  if (!payload) {
+    sharedPlanMeta.available = false;
+    updateSharedPlanChrome();
+    if (force && !quiet) showToast("No shared plan for this week yet.", true);
+    return false;
+  }
+  sharedPlanMeta.available = true;
+  sharedPlanMeta.updatedAt = payload.updatedAt || (audit && audit.ts) || null;
+  const hadLocal = localStorageHasKey();
+  const blank = isStateBlank();
+  if (!force) {
+    if (hadLocal && !blank) {
+      updateSharedPlanChrome();
+      return false; // keep local edits
+    }
+    // missing key OR blank local → seed from shared
+  }
+  const ok = applySharedChoices(payload, { persist: true });
+  updateSharedPlanChrome();
+  if (ok) {
+    render();
+    if (!quiet) showToast(force ? "Reset to shared plan." : "Loaded shared plan for this week.");
+  } else if (force && !quiet) {
+    showToast("Shared plan had no matching slots.", true);
+  }
+  return ok;
+}
+
+function buildPublishBundle() {
+  const rowsAll = buildChoicesJson(false);
+  const hours = hourSnapshot();
+  const counts = countKinds();
+  const updatedAt = new Date().toISOString();
+  const sharedDoc = {
+    weekStart: CONFIG.weekStart,
+    updatedAt,
+    source: "Sync paste",
+    timezone: "Asia/Hong_Kong",
+    totals: hours,
+    counts,
+    slotCount: rowsAll.length,
+    choices: rowsAll
+  };
+  const auditEntry = {
+    ts: updatedAt,
+    weekStart: CONFIG.weekStart,
+    source: "Sync paste",
+    counts,
+    hours,
+    slotCount: rowsAll.length,
+    note: "Browser Sync — Assistant should write choices/" + CONFIG.weekStart + ".json and append this audit line"
+  };
+  return { sharedDoc, auditEntry };
+}
+
 
 function nextKind(current) {
   const cycle = CONFIG.cycle;
@@ -2151,9 +2433,13 @@ function buildPlainText() {
 
 function buildSyncPayload() {
   const rows = buildChoicesJson(true);
+  const bundle = buildPublishBundle();
   const lines = [];
   lines.push("SYNC_WEEK " + CONFIG.weekStart);
   lines.push("CHOICES_JSON:" + JSON.stringify(rows));
+  lines.push("SHARED_PLAN_JSON:" + JSON.stringify(bundle.sharedDoc));
+  lines.push("AUDIT_ENTRY_JSON:" + JSON.stringify(bundle.auditEntry));
+  lines.push("PUBLISH_HINT: Write choices/" + CONFIG.weekStart + ".json from SHARED_PLAN_JSON; append AUDIT_ENTRY_JSON to audit/choices-log.jsonl; push gh-pages + deed republish. Site cannot self-write.");
   return lines.join("\n");
 }
 
@@ -2229,9 +2515,10 @@ document.getElementById("btnSync").addEventListener("click", async () => {
   if (ok) {
     showToast("Synced request copied.");
     showSyncBox(
-      "<strong>Synced request copied</strong> — send/paste to Dad’s Assistant to write General Timetable " +
-      "(old <em>DRAFT</em> study entries for this week will be removed).<br/>" +
-      "This page does <strong>not</strong> update the calendar by itself."
+      "<strong>Synced request copied</strong> — send/paste to Dad’s Assistant to: (1) write General Timetable " +
+      "(remove old <em>DRAFT</em> study for this week), and (2) <strong>republish the shared plan</strong> " +
+      "(<code>choices/" + escapeHtml(CONFIG.weekStart) + ".json</code> + audit log) so every browser sees the same picks.<br/>" +
+      "GitHub Pages cannot be written from this browser — Sync is the publish path."
     );
   } else {
     showToast("Couldn’t copy — showing payload.", true);
@@ -2250,6 +2537,12 @@ document.getElementById("btnReset").addEventListener("click", () => {
   document.getElementById("syncBox").classList.remove("show");
   render();
   showToast("Week reset — all open slots are Free.");
+  updateSharedPlanChrome();
+});
+
+document.getElementById("btnLoadShared").addEventListener("click", async () => {
+  if (!confirm("Replace this browser’s picks with the published shared plan for " + CONFIG.weekStart + "?")) return;
+  await loadSharedPlan({ force: true });
 });
 
 document.getElementById("btnPrint").addEventListener("click", () => {
@@ -2716,7 +3009,7 @@ function buildWeekConfig(weekStartRaw) {
   };
 }
 
-function applyWeekConfig(weekCfg) {
+async function applyWeekConfig(weekCfg) {
   CONFIG = weekCfg;
   STORAGE_KEY = getStorageKey();
   initState();
@@ -2726,6 +3019,8 @@ function applyWeekConfig(weekCfg) {
   try {
     window.WEEK_SLOT_CONFIG = CONFIG;
   } catch (e) { /* ignore */ }
+  await loadSharedPlan({ force: false, quiet: true });
+  await refreshSharedPlanMeta();
 }
 
 function updateWeekChrome() {
@@ -2837,16 +3132,18 @@ function weekStartFromHash() {
 }
 
 wireWeekNav();
-(function bootWeek() {
+(async function bootWeek() {
   const fromHash = weekStartFromHash();
   if (fromHash && fromHash !== PUBLISHED_CONFIG.weekStart) {
-    applyWeekConfig(buildWeekConfig(fromHash));
+    await applyWeekConfig(buildWeekConfig(fromHash));
   } else {
     CONFIG = buildWeekConfig(PUBLISHED_CONFIG.weekStart);
     STORAGE_KEY = getStorageKey();
     initState();
     updateWeekChrome();
     render();
+    await loadSharedPlan({ force: false, quiet: true });
+    await refreshSharedPlanMeta();
   }
 })();
 loadProgress();
@@ -2888,6 +3185,9 @@ window.WEEK_SLOT_STATE = state;
 window.PUBLISHED_CONFIG = PUBLISHED_CONFIG;
 window.buildWeekConfig = buildWeekConfig;
 window.goToWeek = goToWeek;
+window.loadSharedPlan = loadSharedPlan;
+window.refreshSharedPlanMeta = refreshSharedPlanMeta;
+window.buildPublishBundle = buildPublishBundle;
 window.TOPIC_BANK = TOPIC_BANK;
 window.TOPICS_DATA = TOPICS_DATA;
 window.bumpTopicFromWeek = bumpTopicFromWeek;

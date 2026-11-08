@@ -1,0 +1,372 @@
+{
+  "weekStart": "2026-11-09",
+  "updatedAt": "2026-11-08T22:20:12+08:00",
+  "source": "Ishaan CHOICES_JSON (seed publish)",
+  "timezone": "Asia/Hong_Kong",
+  "totals": {
+    "ib": 12.0,
+    "sat": 3.0,
+    "free": 12.8,
+    "light": 3.0
+  },
+  "counts": {
+    "ib": 16,
+    "sat": 4,
+    "free": 17,
+    "light": 4
+  },
+  "slotCount": 41,
+  "choices": [
+    {
+      "id": "mon-09-o0",
+      "day": "Monday 9 Nov",
+      "date": "2026-11-09",
+      "start": "06:00",
+      "end": "06:45",
+      "kind": "ib",
+      "subject": "Spanish B",
+      "topic": "Assessment SL — Paper 1 writing (25%)"
+    },
+    {
+      "id": "mon-09-o1",
+      "day": "Monday 9 Nov",
+      "date": "2026-11-09",
+      "start": "16:30",
+      "end": "17:15",
+      "kind": "free"
+    },
+    {
+      "id": "mon-09-o2",
+      "day": "Monday 9 Nov",
+      "date": "2026-11-09",
+      "start": "17:35",
+      "end": "18:20",
+      "kind": "free"
+    },
+    {
+      "id": "mon-09-o3",
+      "day": "Monday 9 Nov",
+      "date": "2026-11-09",
+      "start": "18:40",
+      "end": "19:25",
+      "kind": "sat",
+      "area": "Reading & Writing"
+    },
+    {
+      "id": "tue-10-o0",
+      "day": "Tuesday 10 Nov",
+      "date": "2026-11-10",
+      "start": "06:00",
+      "end": "06:45",
+      "kind": "ib",
+      "subject": "History"
+    },
+    {
+      "id": "tue-10-o1",
+      "day": "Tuesday 10 Nov",
+      "date": "2026-11-10",
+      "start": "16:30",
+      "end": "17:15",
+      "kind": "ib",
+      "subject": "Maths AA",
+      "topic": "AHL 1.16 — Systems of linear equations (≤3); matrices / row reduction"
+    },
+    {
+      "id": "tue-10-o2",
+      "day": "Tuesday 10 Nov",
+      "date": "2026-11-10",
+      "start": "17:35",
+      "end": "18:20",
+      "kind": "ib",
+      "subject": "English A Lit"
+    },
+    {
+      "id": "tue-10-o3",
+      "day": "Tuesday 10 Nov",
+      "date": "2026-11-10",
+      "start": "18:40",
+      "end": "19:25",
+      "kind": "light"
+    },
+    {
+      "id": "wed-11-o0",
+      "day": "Wednesday 11 Nov",
+      "date": "2026-11-11",
+      "start": "06:00",
+      "end": "06:45",
+      "kind": "ib",
+      "subject": "Physics"
+    },
+    {
+      "id": "wed-11-o1",
+      "day": "Wednesday 11 Nov",
+      "date": "2026-11-11",
+      "start": "16:30",
+      "end": "17:15",
+      "kind": "ib",
+      "subject": "English A Lit"
+    },
+    {
+      "id": "thu-12-o0",
+      "day": "Thursday 12 Nov",
+      "date": "2026-11-12",
+      "start": "06:00",
+      "end": "06:45",
+      "kind": "ib",
+      "subject": "English A Lit"
+    },
+    {
+      "id": "thu-12-o1",
+      "day": "Thursday 12 Nov",
+      "date": "2026-11-12",
+      "start": "16:30",
+      "end": "17:15",
+      "kind": "ib",
+      "subject": "Music"
+    },
+    {
+      "id": "thu-12-o2",
+      "day": "Thursday 12 Nov",
+      "date": "2026-11-12",
+      "start": "17:35",
+      "end": "18:20",
+      "kind": "light"
+    },
+    {
+      "id": "thu-12-o3",
+      "day": "Thursday 12 Nov",
+      "date": "2026-11-12",
+      "start": "18:40",
+      "end": "19:25",
+      "kind": "sat",
+      "area": "Reading & Writing"
+    },
+    {
+      "id": "fri-13-o0",
+      "day": "Friday 13 Nov",
+      "date": "2026-11-13",
+      "start": "06:00",
+      "end": "06:45",
+      "kind": "sat"
+    },
+    {
+      "id": "fri-13-o1",
+      "day": "Friday 13 Nov",
+      "date": "2026-11-13",
+      "start": "16:30",
+      "end": "17:15",
+      "kind": "ib",
+      "subject": "Spanish B",
+      "topic": "Theme — Experiences (optional: leisure activities; holidays and travel; life stories; rites of passage; customs and traditions; migration)"
+    },
+    {
+      "id": "fri-13-o2",
+      "day": "Friday 13 Nov",
+      "date": "2026-11-13",
+      "start": "17:35",
+      "end": "18:20",
+      "kind": "ib",
+      "subject": "History"
+    },
+    {
+      "id": "fri-13-o3",
+      "day": "Friday 13 Nov",
+      "date": "2026-11-13",
+      "start": "18:40",
+      "end": "19:25",
+      "kind": "light"
+    },
+    {
+      "id": "sat-14-o0",
+      "day": "Saturday 14 Nov",
+      "date": "2026-11-14",
+      "start": "06:00",
+      "end": "06:45",
+      "kind": "free"
+    },
+    {
+      "id": "sat-14-o1",
+      "day": "Saturday 14 Nov",
+      "date": "2026-11-14",
+      "start": "09:00",
+      "end": "09:45",
+      "kind": "free"
+    },
+    {
+      "id": "sat-14-o2",
+      "day": "Saturday 14 Nov",
+      "date": "2026-11-14",
+      "start": "11:45",
+      "end": "12:30",
+      "kind": "ib",
+      "subject": "Physics",
+      "topic": "A.2 Forces and momentum (SL)"
+    },
+    {
+      "id": "sat-14-o3",
+      "day": "Saturday 14 Nov",
+      "date": "2026-11-14",
+      "start": "13:00",
+      "end": "13:45",
+      "kind": "free"
+    },
+    {
+      "id": "sat-14-o4",
+      "day": "Saturday 14 Nov",
+      "date": "2026-11-14",
+      "start": "14:10",
+      "end": "14:55",
+      "kind": "free"
+    },
+    {
+      "id": "sat-14-o5",
+      "day": "Saturday 14 Nov",
+      "date": "2026-11-14",
+      "start": "15:20",
+      "end": "16:05",
+      "kind": "free"
+    },
+    {
+      "id": "sat-14-o6",
+      "day": "Saturday 14 Nov",
+      "date": "2026-11-14",
+      "start": "16:30",
+      "end": "17:15",
+      "kind": "free"
+    },
+    {
+      "id": "sat-14-o7",
+      "day": "Saturday 14 Nov",
+      "date": "2026-11-14",
+      "start": "17:35",
+      "end": "18:20",
+      "kind": "free"
+    },
+    {
+      "id": "sat-14-o8",
+      "day": "Saturday 14 Nov",
+      "date": "2026-11-14",
+      "start": "18:40",
+      "end": "19:25",
+      "kind": "ib",
+      "subject": "Maths AA"
+    },
+    {
+      "id": "sat-14-o9",
+      "day": "Saturday 14 Nov",
+      "date": "2026-11-14",
+      "start": "20:10",
+      "end": "20:55",
+      "kind": "ib",
+      "subject": "Music"
+    },
+    {
+      "id": "sat-14-o10",
+      "day": "Saturday 14 Nov",
+      "date": "2026-11-14",
+      "start": "21:15",
+      "end": "22:00",
+      "kind": "free"
+    },
+    {
+      "id": "sun-15-o0",
+      "day": "Sunday 15 Nov",
+      "date": "2026-11-15",
+      "start": "06:00",
+      "end": "06:45",
+      "kind": "free"
+    },
+    {
+      "id": "sun-15-o1",
+      "day": "Sunday 15 Nov",
+      "date": "2026-11-15",
+      "start": "09:00",
+      "end": "09:45",
+      "kind": "free"
+    },
+    {
+      "id": "sun-15-o2",
+      "day": "Sunday 15 Nov",
+      "date": "2026-11-15",
+      "start": "10:00",
+      "end": "10:45",
+      "kind": "sat",
+      "area": "Math"
+    },
+    {
+      "id": "sun-15-o3",
+      "day": "Sunday 15 Nov",
+      "date": "2026-11-15",
+      "start": "11:45",
+      "end": "12:30",
+      "kind": "ib",
+      "subject": "History"
+    },
+    {
+      "id": "sun-15-o4",
+      "day": "Sunday 15 Nov",
+      "date": "2026-11-15",
+      "start": "13:00",
+      "end": "13:45",
+      "kind": "free"
+    },
+    {
+      "id": "sun-15-o5",
+      "day": "Sunday 15 Nov",
+      "date": "2026-11-15",
+      "start": "14:10",
+      "end": "14:55",
+      "kind": "free"
+    },
+    {
+      "id": "sun-15-o6",
+      "day": "Sunday 15 Nov",
+      "date": "2026-11-15",
+      "start": "15:20",
+      "end": "16:05",
+      "kind": "free"
+    },
+    {
+      "id": "sun-15-o7",
+      "day": "Sunday 15 Nov",
+      "date": "2026-11-15",
+      "start": "16:30",
+      "end": "17:15",
+      "kind": "free"
+    },
+    {
+      "id": "sun-15-o8",
+      "day": "Sunday 15 Nov",
+      "date": "2026-11-15",
+      "start": "17:35",
+      "end": "18:20",
+      "kind": "ib",
+      "subject": "Maths AA"
+    },
+    {
+      "id": "sun-15-o9",
+      "day": "Sunday 15 Nov",
+      "date": "2026-11-15",
+      "start": "18:40",
+      "end": "19:25",
+      "kind": "light"
+    },
+    {
+      "id": "sun-15-o10",
+      "day": "Sunday 15 Nov",
+      "date": "2026-11-15",
+      "start": "20:10",
+      "end": "20:55",
+      "kind": "ib",
+      "subject": "Spanish B"
+    },
+    {
+      "id": "sun-15-o11",
+      "day": "Sunday 15 Nov",
+      "date": "2026-11-15",
+      "start": "21:15",
+      "end": "22:00",
+      "kind": "free"
+    }
+  ]
+}
