@@ -30,6 +30,7 @@
     --bad: #dc2626;
   }
   * { box-sizing: border-box; }
+  .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0; }
   body {
     margin: 0;
     font-family: "SF Pro Text", "Segoe UI", system-ui, -apple-system, sans-serif;
@@ -781,6 +782,49 @@
   .btn-fill-due:hover { filter: brightness(1.05); }
 
   /* Dense dashboard layouts (desktop) */
+  .week-nav {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+    padding: 8px 12px; background: #fff; border-bottom: 1px solid var(--line);
+    grid-column: 1 / -1;
+  }
+  .week-nav .wn-arrows { display: flex; gap: 4px; }
+  .week-nav button.wn-btn {
+    min-width: 36px; padding: 6px 10px; border-radius: 8px;
+    background: var(--paper); color: var(--ink); border: 1px solid var(--line);
+    font-size: 1rem; font-weight: 700; line-height: 1;
+  }
+  .week-nav button.wn-btn:hover { background: #e2e8f0; }
+  .week-nav button.wn-btn:disabled { opacity: 0.4; cursor: default; }
+  .week-nav .wn-centre { flex: 1; min-width: 180px; }
+  .week-nav .wn-label {
+    font-weight: 750; font-size: 0.95rem; letter-spacing: -0.01em; color: var(--ink);
+  }
+  .week-nav .wn-meta {
+    display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 3px;
+  }
+  .week-nav .wn-badge {
+    display: inline-flex; align-items: center; font-size: 0.68rem; font-weight: 750;
+    text-transform: uppercase; letter-spacing: 0.04em; padding: 2px 8px; border-radius: 999px;
+  }
+  .week-nav .wn-badge.live { background: #d1fae5; color: #047857; }
+  .week-nav .wn-badge.typical { background: #e0e7ff; color: #3730a3; }
+  .week-nav .wn-jump {
+    display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+  }
+  .week-nav .wn-jump label { font-size: 0.72rem; font-weight: 650; color: var(--muted); }
+  .week-nav select, .week-nav input[type="date"] {
+    font: inherit; font-size: 0.82rem; padding: 5px 8px; border-radius: 8px;
+    border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+    max-width: 100%;
+  }
+  .week-nav button.wn-this {
+    padding: 6px 10px; font-size: 0.78rem; border-radius: 8px;
+    background: var(--ib); color: #fff; border: none; font-weight: 650;
+  }
+  @media (min-width: 1024px) {
+    .week-shell > .week-nav { border-radius: 0; }
+  }
+
   .week-shell { display: block; }
   .week-rail { display: contents; }
   .week-main { display: contents; }
@@ -897,6 +941,26 @@
       </div>
     </details>
 
+    <div class="week-nav" role="navigation" aria-label="Week navigator">
+      <div class="wn-arrows">
+        <button type="button" class="wn-btn" id="btnWeekPrev" aria-label="Previous week">‹</button>
+        <button type="button" class="wn-btn" id="btnWeekNext" aria-label="Next week">›</button>
+      </div>
+      <div class="wn-centre">
+        <div class="wn-label" id="weekNavLabel">Mon 9 Nov – Sun 15 Nov 2026</div>
+        <div class="wn-meta">
+          <span class="wn-badge live" id="weekNavBadge">Live calendar locks</span>
+        </div>
+      </div>
+      <div class="wn-jump">
+        <label for="weekJumpSelect">Plan ahead</label>
+        <select id="weekJumpSelect" aria-label="Jump to week"></select>
+        <label for="weekJumpDate" class="sr-only">Or pick a Monday</label>
+        <input type="date" id="weekJumpDate" aria-label="Pick a date in the week"/>
+        <button type="button" class="wn-this" id="btnWeekPublished">Published week</button>
+      </div>
+    </div>
+
     <div class="week-rail">
     <div class="balance" id="balancePanel" aria-live="polite">
       <div class="balance-head">
@@ -979,7 +1043,7 @@
     <div class="week-main">
     <div class="days" id="days"></div>
     </div><!-- /week-main -->
-    <p class="hint">
+    <p class="hint" id="weekHint">
       Locks come from General Timetable + school calendar for this week only — tutors are not invented.
       Dinner is usually <strong>19:30–20:00</strong> (open slots avoid it). Hard stop <strong>22:30</strong>.
       Bhavan and Dr&nbsp;OK one-offs are excluded. Sunday ritual rebuilds next week’s page from the live calendars.
@@ -1042,7 +1106,7 @@
 
 <script>
 
-const CONFIG = {"title":"Week of Mon 9 Nov – Sun 15 Nov 2026 · pick your study slots","weekStart":"2026-11-09","weekEnd":"2026-11-15","weekLabel":"Mon 9 Nov – Sun 15 Nov 2026","timezone":"Asia/Hong_Kong","hardStop":"22:30","targets":{"ibMin":12,"ibMax":12,"satMin":3,"satMax":3},"cycle":["free","ib","sat","light"],"labels":{"ib":"Study IB","sat":"Study SAT","free":"Free","light":"Light","locked":"Tutor","school":"School","social":"Social"},"exclusions":["Bhavan","Dr OK"],"days":[{"id":"mon-09","name":"Monday 9 Nov","date":"2026-11-09","dayShort":"Mon","slots":[{"id":"mon-09-o0","start":"06:00","end":"06:45","kind":"free","label":"Before school","locked":false},{"id":"mon-09-school","start":"08:00","end":"15:00","kind":"school","label":"School","note":"Home ~15:30 · study from 16:30","locked":true},{"id":"mon-09-o1","start":"16:30","end":"17:15","kind":"free","label":"After school","locked":false},{"id":"mon-09-o2","start":"17:35","end":"18:20","kind":"free","label":"After school","locked":false},{"id":"mon-09-o3","start":"18:40","end":"19:25","kind":"free","label":"Evening","locked":false},{"id":"mon-09-tutor-1930","start":"19:30","end":"20:30","kind":"locked","label":"Physics · Ghosh","note":"From calendar","locked":true,"satTutor":false,"sourceTitle":"Physics Ms Ghosh"}]},{"id":"tue-10","name":"Tuesday 10 Nov","date":"2026-11-10","dayShort":"Tue","slots":[{"id":"tue-10-o0","start":"06:00","end":"06:45","kind":"free","label":"Before school","locked":false},{"id":"tue-10-school","start":"08:00","end":"15:00","kind":"school","label":"School","note":"Home ~15:30 · study from 16:30","locked":true},{"id":"tue-10-o1","start":"16:30","end":"17:15","kind":"free","label":"After school","locked":false},{"id":"tue-10-o2","start":"17:35","end":"18:20","kind":"free","label":"After school","locked":false},{"id":"tue-10-o3","start":"18:40","end":"19:25","kind":"free","label":"Evening","locked":false},{"id":"tue-10-tutor-2000","start":"20:00","end":"21:00","kind":"locked","label":"English tutor","note":"From calendar","locked":true,"satTutor":false,"sourceTitle":"English Tutor"}]},{"id":"wed-11","name":"Wednesday 11 Nov","date":"2026-11-11","dayShort":"Wed","slots":[{"id":"wed-11-o0","start":"06:00","end":"06:45","kind":"free","label":"Before school","locked":false},{"id":"wed-11-school","start":"08:00","end":"15:00","kind":"school","label":"School","note":"Home ~15:30 · study from 16:30","locked":true},{"id":"wed-11-o1","start":"16:30","end":"17:15","kind":"free","label":"After school","locked":false},{"id":"wed-11-tutor-1800","start":"18:00","end":"19:00","kind":"locked","label":"History tutor","note":"From calendar","locked":true,"satTutor":false,"sourceTitle":"History Tutor"},{"id":"wed-11-tutor-2000","start":"20:00","end":"21:00","kind":"locked","label":"Maths tutor","note":"From calendar","locked":true,"satTutor":false,"sourceTitle":"Math Tutor"}]},{"id":"thu-12","name":"Thursday 12 Nov","date":"2026-11-12","dayShort":"Thu","slots":[{"id":"thu-12-o0","start":"06:00","end":"06:45","kind":"free","label":"Before school","locked":false},{"id":"thu-12-school","start":"08:00","end":"15:00","kind":"school","label":"School","note":"Home ~15:30 · study from 16:30","locked":true},{"id":"thu-12-o1","start":"16:30","end":"17:15","kind":"free","label":"After school","locked":false},{"id":"thu-12-o2","start":"17:35","end":"18:20","kind":"free","label":"After school","locked":false},{"id":"thu-12-o3","start":"18:40","end":"19:25","kind":"free","label":"Evening","locked":false},{"id":"thu-12-tutor-2000","start":"20:00","end":"21:00","kind":"locked","label":"Maths tutor","note":"From calendar","locked":true,"satTutor":false,"sourceTitle":"Math Tutor"}]},{"id":"fri-13","name":"Friday 13 Nov","date":"2026-11-13","dayShort":"Fri","slots":[{"id":"fri-13-o0","start":"06:00","end":"06:45","kind":"free","label":"Before school","locked":false},{"id":"fri-13-school","start":"08:00","end":"13:05","kind":"school","label":"School","note":"Ends 13:05 · social until 16:00 · study from 16:30","locked":true},{"id":"fri-13-social","start":"13:05","end":"16:00","kind":"social","label":"Social time","note":"Protected — study from 16:30","locked":true},{"id":"fri-13-o1","start":"16:30","end":"17:15","kind":"free","label":"After school","locked":false},{"id":"fri-13-o2","start":"17:35","end":"18:20","kind":"free","label":"After school","locked":false},{"id":"fri-13-o3","start":"18:40","end":"19:25","kind":"free","label":"Evening","locked":false}]},{"id":"sat-14","name":"Saturday 14 Nov","date":"2026-11-14","dayShort":"Sat","slots":[{"id":"sat-14-o0","start":"06:00","end":"06:45","kind":"free","label":"Early morning","locked":false},{"id":"sat-14-o1","start":"09:00","end":"09:45","kind":"free","label":"Morning","locked":false},{"id":"sat-14-tutor-1030","start":"10:30","end":"11:30","kind":"locked","label":"Physics · Ghosh","note":"From calendar","locked":true,"satTutor":false,"sourceTitle":"Physics Ms Ghosh"},{"id":"sat-14-o2","start":"11:45","end":"12:30","kind":"free","label":"Morning","locked":false},{"id":"sat-14-o3","start":"13:00","end":"13:45","kind":"free","label":"Afternoon","locked":false},{"id":"sat-14-o4","start":"14:10","end":"14:55","kind":"free","label":"Afternoon","locked":false},{"id":"sat-14-o5","start":"15:20","end":"16:05","kind":"free","label":"Afternoon","locked":false},{"id":"sat-14-o6","start":"16:30","end":"17:15","kind":"free","label":"Late afternoon","locked":false},{"id":"sat-14-o7","start":"17:35","end":"18:20","kind":"free","label":"Late afternoon","locked":false},{"id":"sat-14-o8","start":"18:40","end":"19:25","kind":"free","label":"Evening","locked":false},{"id":"sat-14-o9","start":"20:10","end":"20:55","kind":"free","label":"Evening","locked":false},{"id":"sat-14-o10","start":"21:15","end":"22:00","kind":"free","label":"Late evening","locked":false}]},{"id":"sun-15","name":"Sunday 15 Nov","date":"2026-11-15","dayShort":"Sun","slots":[{"id":"sun-15-o0","start":"06:00","end":"06:45","kind":"free","label":"Early morning","locked":false},{"id":"sun-15-o1","start":"09:00","end":"09:45","kind":"free","label":"Morning","locked":false},{"id":"sun-15-o2","start":"10:00","end":"10:45","kind":"free","label":"Morning","locked":false},{"id":"sun-15-o3","start":"11:45","end":"12:30","kind":"free","label":"Morning","locked":false},{"id":"sun-15-o4","start":"13:00","end":"13:45","kind":"free","label":"Afternoon","locked":false},{"id":"sun-15-o5","start":"14:10","end":"14:55","kind":"free","label":"Afternoon","locked":false},{"id":"sun-15-o6","start":"15:20","end":"16:05","kind":"free","label":"Afternoon","locked":false},{"id":"sun-15-o7","start":"16:30","end":"17:15","kind":"free","label":"Late afternoon","locked":false},{"id":"sun-15-o8","start":"17:35","end":"18:20","kind":"free","label":"Late afternoon","locked":false},{"id":"sun-15-o9","start":"18:40","end":"19:25","kind":"free","label":"Evening","locked":false},{"id":"sun-15-o10","start":"20:10","end":"20:55","kind":"free","label":"Evening","locked":false},{"id":"sun-15-o11","start":"21:15","end":"22:00","kind":"free","label":"Late evening","locked":false}]}]};
+const PUBLISHED_CONFIG = {"title":"Week of Mon 9 Nov – Sun 15 Nov 2026 · pick your study slots","weekStart":"2026-11-09","weekEnd":"2026-11-15","weekLabel":"Mon 9 Nov – Sun 15 Nov 2026","timezone":"Asia/Hong_Kong","hardStop":"22:30","targets":{"ibMin":12,"ibMax":12,"satMin":3,"satMax":3},"cycle":["free","ib","sat","light"],"labels":{"ib":"Study IB","sat":"Study SAT","free":"Free","light":"Light","locked":"Tutor","school":"School","social":"Social"},"exclusions":["Bhavan","Dr OK"],"days":[{"id":"mon-09","name":"Monday 9 Nov","date":"2026-11-09","dayShort":"Mon","slots":[{"id":"mon-09-o0","start":"06:00","end":"06:45","kind":"free","label":"Before school","locked":false},{"id":"mon-09-school","start":"08:00","end":"15:00","kind":"school","label":"School","note":"Home ~15:30 · study from 16:30","locked":true},{"id":"mon-09-o1","start":"16:30","end":"17:15","kind":"free","label":"After school","locked":false},{"id":"mon-09-o2","start":"17:35","end":"18:20","kind":"free","label":"After school","locked":false},{"id":"mon-09-o3","start":"18:40","end":"19:25","kind":"free","label":"Evening","locked":false},{"id":"mon-09-tutor-1930","start":"19:30","end":"20:30","kind":"locked","label":"Physics · Ghosh","note":"From calendar","locked":true,"satTutor":false,"sourceTitle":"Physics Ms Ghosh"}]},{"id":"tue-10","name":"Tuesday 10 Nov","date":"2026-11-10","dayShort":"Tue","slots":[{"id":"tue-10-o0","start":"06:00","end":"06:45","kind":"free","label":"Before school","locked":false},{"id":"tue-10-school","start":"08:00","end":"15:00","kind":"school","label":"School","note":"Home ~15:30 · study from 16:30","locked":true},{"id":"tue-10-o1","start":"16:30","end":"17:15","kind":"free","label":"After school","locked":false},{"id":"tue-10-o2","start":"17:35","end":"18:20","kind":"free","label":"After school","locked":false},{"id":"tue-10-o3","start":"18:40","end":"19:25","kind":"free","label":"Evening","locked":false},{"id":"tue-10-tutor-2000","start":"20:00","end":"21:00","kind":"locked","label":"English tutor","note":"From calendar","locked":true,"satTutor":false,"sourceTitle":"English Tutor"}]},{"id":"wed-11","name":"Wednesday 11 Nov","date":"2026-11-11","dayShort":"Wed","slots":[{"id":"wed-11-o0","start":"06:00","end":"06:45","kind":"free","label":"Before school","locked":false},{"id":"wed-11-school","start":"08:00","end":"15:00","kind":"school","label":"School","note":"Home ~15:30 · study from 16:30","locked":true},{"id":"wed-11-o1","start":"16:30","end":"17:15","kind":"free","label":"After school","locked":false},{"id":"wed-11-tutor-1800","start":"18:00","end":"19:00","kind":"locked","label":"History tutor","note":"From calendar","locked":true,"satTutor":false,"sourceTitle":"History Tutor"},{"id":"wed-11-tutor-2000","start":"20:00","end":"21:00","kind":"locked","label":"Maths tutor","note":"From calendar","locked":true,"satTutor":false,"sourceTitle":"Math Tutor"}]},{"id":"thu-12","name":"Thursday 12 Nov","date":"2026-11-12","dayShort":"Thu","slots":[{"id":"thu-12-o0","start":"06:00","end":"06:45","kind":"free","label":"Before school","locked":false},{"id":"thu-12-school","start":"08:00","end":"15:00","kind":"school","label":"School","note":"Home ~15:30 · study from 16:30","locked":true},{"id":"thu-12-o1","start":"16:30","end":"17:15","kind":"free","label":"After school","locked":false},{"id":"thu-12-o2","start":"17:35","end":"18:20","kind":"free","label":"After school","locked":false},{"id":"thu-12-o3","start":"18:40","end":"19:25","kind":"free","label":"Evening","locked":false},{"id":"thu-12-tutor-2000","start":"20:00","end":"21:00","kind":"locked","label":"Maths tutor","note":"From calendar","locked":true,"satTutor":false,"sourceTitle":"Math Tutor"}]},{"id":"fri-13","name":"Friday 13 Nov","date":"2026-11-13","dayShort":"Fri","slots":[{"id":"fri-13-o0","start":"06:00","end":"06:45","kind":"free","label":"Before school","locked":false},{"id":"fri-13-school","start":"08:00","end":"13:05","kind":"school","label":"School","note":"Ends 13:05 · social until 16:00 · study from 16:30","locked":true},{"id":"fri-13-social","start":"13:05","end":"16:00","kind":"social","label":"Social time","note":"Protected — study from 16:30","locked":true},{"id":"fri-13-o1","start":"16:30","end":"17:15","kind":"free","label":"After school","locked":false},{"id":"fri-13-o2","start":"17:35","end":"18:20","kind":"free","label":"After school","locked":false},{"id":"fri-13-o3","start":"18:40","end":"19:25","kind":"free","label":"Evening","locked":false}]},{"id":"sat-14","name":"Saturday 14 Nov","date":"2026-11-14","dayShort":"Sat","slots":[{"id":"sat-14-o0","start":"06:00","end":"06:45","kind":"free","label":"Early morning","locked":false},{"id":"sat-14-o1","start":"09:00","end":"09:45","kind":"free","label":"Morning","locked":false},{"id":"sat-14-tutor-1030","start":"10:30","end":"11:30","kind":"locked","label":"Physics · Ghosh","note":"From calendar","locked":true,"satTutor":false,"sourceTitle":"Physics Ms Ghosh"},{"id":"sat-14-o2","start":"11:45","end":"12:30","kind":"free","label":"Morning","locked":false},{"id":"sat-14-o3","start":"13:00","end":"13:45","kind":"free","label":"Afternoon","locked":false},{"id":"sat-14-o4","start":"14:10","end":"14:55","kind":"free","label":"Afternoon","locked":false},{"id":"sat-14-o5","start":"15:20","end":"16:05","kind":"free","label":"Afternoon","locked":false},{"id":"sat-14-o6","start":"16:30","end":"17:15","kind":"free","label":"Late afternoon","locked":false},{"id":"sat-14-o7","start":"17:35","end":"18:20","kind":"free","label":"Late afternoon","locked":false},{"id":"sat-14-o8","start":"18:40","end":"19:25","kind":"free","label":"Evening","locked":false},{"id":"sat-14-o9","start":"20:10","end":"20:55","kind":"free","label":"Evening","locked":false},{"id":"sat-14-o10","start":"21:15","end":"22:00","kind":"free","label":"Late evening","locked":false}]},{"id":"sun-15","name":"Sunday 15 Nov","date":"2026-11-15","dayShort":"Sun","slots":[{"id":"sun-15-o0","start":"06:00","end":"06:45","kind":"free","label":"Early morning","locked":false},{"id":"sun-15-o1","start":"09:00","end":"09:45","kind":"free","label":"Morning","locked":false},{"id":"sun-15-o2","start":"10:00","end":"10:45","kind":"free","label":"Morning","locked":false},{"id":"sun-15-o3","start":"11:45","end":"12:30","kind":"free","label":"Morning","locked":false},{"id":"sun-15-o4","start":"13:00","end":"13:45","kind":"free","label":"Afternoon","locked":false},{"id":"sun-15-o5","start":"14:10","end":"14:55","kind":"free","label":"Afternoon","locked":false},{"id":"sun-15-o6","start":"15:20","end":"16:05","kind":"free","label":"Afternoon","locked":false},{"id":"sun-15-o7","start":"16:30","end":"17:15","kind":"free","label":"Late afternoon","locked":false},{"id":"sun-15-o8","start":"17:35","end":"18:20","kind":"free","label":"Late afternoon","locked":false},{"id":"sun-15-o9","start":"18:40","end":"19:25","kind":"free","label":"Evening","locked":false},{"id":"sun-15-o10","start":"20:10","end":"20:55","kind":"free","label":"Evening","locked":false},{"id":"sun-15-o11","start":"21:15","end":"22:00","kind":"free","label":"Late evening","locked":false}]}]};
 
 const TOPIC_BANK = {"ibSubjects":["English A Lit","Maths AA","Physics","Spanish B","Music","History","ToK","Thrive"],"ibTopics":{"English A Lit":[],"Maths AA":[{"code":"SL 1.1","topic":"SL 1.1 — Operations with numbers in form a × 10^k","kind":"Content","id":"maths-aa__sl-1-1__5c13d83738"},{"code":"SL 1.2","topic":"SL 1.2 — Arithmetic sequences and series","kind":"Content","id":"maths-aa__sl-1-2__d5b1b33d1a"},{"code":"SL 1.3","topic":"SL 1.3 — Geometric sequences and series","kind":"Content","id":"maths-aa__sl-1-3__6866dd3769"},{"code":"SL 1.4","topic":"SL 1.4 — Financial applications of geometric sequences and series","kind":"Content","id":"maths-aa__sl-1-4__28742f4d87"},{"code":"SL 1.5","topic":"SL 1.5 — Laws of exponents (integer); introduction to logarithms","kind":"Content","id":"maths-aa__sl-1-5__e7b82ef15c"},{"code":"SL 1.6","topic":"SL 1.6 — Simple deductive proof (LHS to RHS)","kind":"Content","id":"maths-aa__sl-1-6__88c310a23a"},{"code":"SL 1.7","topic":"SL 1.7 — Rational exponents; laws of logarithms; change of base","kind":"Content","id":"maths-aa__sl-1-7__154359d685"},{"code":"SL 1.8","topic":"SL 1.8 — Sum of infinite convergent geometric sequences","kind":"Content","id":"maths-aa__sl-1-8__413aa347aa"},{"code":"SL 1.9","topic":"SL 1.9 — The binomial theorem (n ∈ ℕ)","kind":"Content","id":"maths-aa__sl-1-9__91c4497f70"},{"code":"AHL 1.10","topic":"AHL 1.10 — Counting principles; binomial theorem (fractional/negative indices)","kind":"Content","id":"maths-aa__ahl-1-10__a4d24a62a1"},{"code":"AHL 1.11","topic":"AHL 1.11 — Partial fractions","kind":"Content","id":"maths-aa__ahl-1-11__4a22aa1d43"},{"code":"AHL 1.12","topic":"AHL 1.12 — Complex numbers; the complex plane","kind":"Content","id":"maths-aa__ahl-1-12__b73ae65f10"},{"code":"AHL 1.13","topic":"AHL 1.13 — Modulus–argument (polar) form","kind":"Content","id":"maths-aa__ahl-1-13__cf05457e81"},{"code":"AHL 1.14","topic":"AHL 1.14 — Complex conjugate roots; De Moivre’s theorem","kind":"Content","id":"maths-aa__ahl-1-14__8126061517"},{"code":"AHL 1.15","topic":"AHL 1.15 — Proof by induction; proof by contradiction","kind":"Content","id":"maths-aa__ahl-1-15__976da51024"},{"code":"AHL 1.16","topic":"AHL 1.16 — Systems of linear equations (≤3); matrices / row reduction","kind":"Content","id":"maths-aa__ahl-1-16__f99429c0f8"},{"code":"SL 2.1","topic":"SL 2.1 — Equation of a straight line; parallel and perpendicular gradients","kind":"Content","id":"maths-aa__sl-2-1__b85d9be036"},{"code":"SL 2.2","topic":"SL 2.2 — Concept of a function; domain, range and graph","kind":"Content","id":"maths-aa__sl-2-2__f6e9788a95"},{"code":"SL 2.3","topic":"SL 2.3 — The graph of a function y = f(x)","kind":"Content","id":"maths-aa__sl-2-3__6f34fbd8f7"},{"code":"SL 2.4","topic":"SL 2.4 — Key features of graphs","kind":"Content","id":"maths-aa__sl-2-4__d6db9e6028"},{"code":"SL 2.5","topic":"SL 2.5 — Composite functions; inverse function","kind":"Content","id":"maths-aa__sl-2-5__db3f7637ba"},{"code":"SL 2.6","topic":"SL 2.6 — The quadratic function f(x) = ax² + bx + c","kind":"Content","id":"maths-aa__sl-2-6__0ba64dfef8"},{"code":"SL 2.7","topic":"SL 2.7 — Quadratic equations and inequalities","kind":"Content","id":"maths-aa__sl-2-7__aad4fecf6d"},{"code":"SL 2.8","topic":"SL 2.8 — Reciprocal and rational functions","kind":"Content","id":"maths-aa__sl-2-8__8e3494eccb"},{"code":"SL 2.9","topic":"SL 2.9 — Exponential and logarithmic functions and graphs","kind":"Content","id":"maths-aa__sl-2-9__bc1cc0969f"},{"code":"SL 2.10","topic":"SL 2.10 — Solving equations graphically and analytically","kind":"Content","id":"maths-aa__sl-2-10__04eea304b8"},{"code":"SL 2.11","topic":"SL 2.11 — Transformations of graphs","kind":"Content","id":"maths-aa__sl-2-11__4bd63ad9a7"},{"code":"AHL 2.12","topic":"AHL 2.12 — Polynomial functions; factor and remainder theorems","kind":"Content","id":"maths-aa__ahl-2-12__a8f5bb6e1d"},{"code":"AHL 2.13","topic":"AHL 2.13 — Further rational functions","kind":"Content","id":"maths-aa__ahl-2-13__125aa473b6"},{"code":"AHL 2.14","topic":"AHL 2.14 — Odd and even functions; periodic functions","kind":"Content","id":"maths-aa__ahl-2-14__4b9b9203d9"},{"code":"AHL 2.15","topic":"AHL 2.15 — Inequalities g(x) ≥ f(x)","kind":"Content","id":"maths-aa__ahl-2-15__128abe0ddb"},{"code":"AHL 2.16","topic":"AHL 2.16 — Modulus graphs; modulus equations and inequalities","kind":"Content","id":"maths-aa__ahl-2-16__23f85cda99"},{"code":"SL 3.1","topic":"SL 3.1 — Distance and midpoint in three-dimensional space","kind":"Content","id":"maths-aa__sl-3-1__0d5387f620"},{"code":"SL 3.2","topic":"SL 3.2 — Sine/cosine/tangent ratios; sine and cosine rules; area of a triangle","kind":"Content","id":"maths-aa__sl-3-2__930cc0c882"},{"code":"SL 3.3","topic":"SL 3.3 — Applications of right and non-right-angled trigonometry","kind":"Content","id":"maths-aa__sl-3-3__1504851048"},{"code":"SL 3.4","topic":"SL 3.4 — Radian measure; arc length; sector area","kind":"Content","id":"maths-aa__sl-3-4__3373761cc6"},{"code":"SL 3.5","topic":"SL 3.5 — Unit-circle definitions of cos θ, sin θ, tan θ","kind":"Content","id":"maths-aa__sl-3-5__eb82f1fbaf"},{"code":"SL 3.6","topic":"SL 3.6 — Pythagorean identity; double-angle identities for sine and cosine","kind":"Content","id":"maths-aa__sl-3-6__ac9ed22e12"},{"code":"SL 3.7","topic":"SL 3.7 — Circular functions and their graphs","kind":"Content","id":"maths-aa__sl-3-7__436922772a"},{"code":"SL 3.8","topic":"SL 3.8 — Solving trigonometric equations in a finite interval","kind":"Content","id":"maths-aa__sl-3-8__e066034d2f"},{"code":"AHL 3.9","topic":"AHL 3.9 — Reciprocal trigonometric ratios; inverse trig functions","kind":"Content","id":"maths-aa__ahl-3-9__bb132a7e23"},{"code":"AHL 3.10","topic":"AHL 3.10 — Compound angle identities","kind":"Content","id":"maths-aa__ahl-3-10__5f9176afaa"},{"code":"AHL 3.11","topic":"AHL 3.11 — Symmetry relationships of trigonometric functions","kind":"Content","id":"maths-aa__ahl-3-11__6af8b632a7"},{"code":"AHL 3.12","topic":"AHL 3.12 — Vectors; position and displacement vectors","kind":"Content","id":"maths-aa__ahl-3-12__ee5c5a27a3"},{"code":"AHL 3.13","topic":"AHL 3.13 — Scalar (dot) product","kind":"Content","id":"maths-aa__ahl-3-13__14bfa382bb"},{"code":"AHL 3.14","topic":"AHL 3.14 — Vector equation of a line","kind":"Content","id":"maths-aa__ahl-3-14__3db190aa22"},{"code":"AHL 3.15","topic":"AHL 3.15 — Coincident, parallel, intersecting and skew lines","kind":"Content","id":"maths-aa__ahl-3-15__c2a2cce8d4"},{"code":"AHL 3.16","topic":"AHL 3.16 — Vector (cross) product","kind":"Content","id":"maths-aa__ahl-3-16__a25bffdb4c"},{"code":"AHL 3.17","topic":"AHL 3.17 — Vector and Cartesian equations of a plane","kind":"Content","id":"maths-aa__ahl-3-17__53766a67d3"},{"code":"AHL 3.18","topic":"AHL 3.18 — Intersections of lines and planes; angles between them","kind":"Content","id":"maths-aa__ahl-3-18__c52a1017a0"},{"code":"SL 4.1","topic":"SL 4.1 — Population, sample; discrete and continuous data","kind":"Content","id":"maths-aa__sl-4-1__3099c20083"},{"code":"SL 4.2","topic":"SL 4.2 — Presentation of data; histograms; cumulative frequency","kind":"Content","id":"maths-aa__sl-4-2__2aafed6a24"},{"code":"SL 4.3","topic":"SL 4.3 — Measures of central tendency and dispersion","kind":"Content","id":"maths-aa__sl-4-3__eafdefa589"},{"code":"SL 4.4","topic":"SL 4.4 — Linear correlation of bivariate data; Pearson’s r","kind":"Content","id":"maths-aa__sl-4-4__3c12ce5d27"},{"code":"SL 4.5","topic":"SL 4.5 — Probability concepts; sample space; complementary events","kind":"Content","id":"maths-aa__sl-4-5__de861bbb0e"},{"code":"SL 4.6","topic":"SL 4.6 — Venn/tree/sample-space diagrams; combined events","kind":"Content","id":"maths-aa__sl-4-6__b3dcb3d137"},{"code":"SL 4.7","topic":"SL 4.7 — Discrete random variables; expected value","kind":"Content","id":"maths-aa__sl-4-7__7ab026df75"},{"code":"SL 4.8","topic":"SL 4.8 — Binomial distribution","kind":"Content","id":"maths-aa__sl-4-8__81b38d380f"},{"code":"SL 4.9","topic":"SL 4.9 — The normal distribution and curve","kind":"Content","id":"maths-aa__sl-4-9__d20160a959"},{"code":"SL 4.10","topic":"SL 4.10 — Regression line of x on y","kind":"Content","id":"maths-aa__sl-4-10__5606418882"},{"code":"SL 4.11","topic":"SL 4.11 — Conditional probability; independent events (formal)","kind":"Content","id":"maths-aa__sl-4-11__d062b86126"},{"code":"SL 4.12","topic":"SL 4.12 — Standardization of normal variables (z-values)","kind":"Content","id":"maths-aa__sl-4-12__0029e5a5c8"},{"code":"AHL 4.13","topic":"AHL 4.13 — Bayes’ theorem (maximum of three events)","kind":"Content","id":"maths-aa__ahl-4-13__d00a950834"},{"code":"AHL 4.14","topic":"AHL 4.14 — Variance of a discrete RV; continuous RVs and probability density functions","kind":"Content","id":"maths-aa__ahl-4-14__f41c67b8bc"},{"code":"SL 5.1","topic":"SL 5.1 — Introduction to the concept of a limit","kind":"Content","id":"maths-aa__sl-5-1__387003e087"},{"code":"SL 5.2","topic":"SL 5.2 — Increasing and decreasing functions","kind":"Content","id":"maths-aa__sl-5-2__5feff1ed9f"},{"code":"SL 5.3","topic":"SL 5.3 — Derivative of f(x) = axⁿ","kind":"Content","id":"maths-aa__sl-5-3__0e27953205"},{"code":"SL 5.4","topic":"SL 5.4 — Tangents and normals","kind":"Content","id":"maths-aa__sl-5-4__b0e97e2f8c"},{"code":"SL 5.5","topic":"SL 5.5 — Integration as anti-differentiation; definite integrals","kind":"Content","id":"maths-aa__sl-5-5__246b2f5b3e"},{"code":"SL 5.6","topic":"SL 5.6 — Derivatives of xⁿ (n ∈ ℚ), sin x, cos x, eˣ, ln x; chain/product/quotient rules","kind":"Content","id":"maths-aa__sl-5-6__d20c5c9718"},{"code":"SL 5.7","topic":"SL 5.7 — The second derivative","kind":"Content","id":"maths-aa__sl-5-7__599d49365d"},{"code":"SL 5.8","topic":"SL 5.8 — Local maxima and minima; optimisation; points of inflexion","kind":"Content","id":"maths-aa__sl-5-8__49c9e9cbb8"},{"code":"SL 5.9","topic":"SL 5.9 — Kinematic problems (displacement, velocity, acceleration)","kind":"Content","id":"maths-aa__sl-5-9__da8ff95788"},{"code":"SL 5.10","topic":"SL 5.10 — Indefinite integrals of standard functions","kind":"Content","id":"maths-aa__sl-5-10__ef562e4f38"},{"code":"SL 5.11","topic":"SL 5.11 — Definite integrals; area under a curve","kind":"Content","id":"maths-aa__sl-5-11__9073d457ea"},{"code":"AHL 5.12","topic":"AHL 5.12 — Continuity and differentiability; derivative from first principles","kind":"Content","id":"maths-aa__ahl-5-12__93966c2ceb"},{"code":"AHL 5.13","topic":"AHL 5.13 — Evaluation of limits; l’Hôpital’s rule","kind":"Content","id":"maths-aa__ahl-5-13__c5c7781f76"},{"code":"AHL 5.14","topic":"AHL 5.14 — Implicit differentiation; related rates; optimisation","kind":"Content","id":"maths-aa__ahl-5-14__09bd50f68e"},{"code":"AHL 5.15","topic":"AHL 5.15 — Further derivatives (tan, sec, cosec, cot, aˣ, logₐ, inverse trig)","kind":"Content","id":"maths-aa__ahl-5-15__1d98b70494"},{"code":"AHL 5.16","topic":"AHL 5.16 — Integration by substitution and by parts","kind":"Content","id":"maths-aa__ahl-5-16__f2eb51e2ea"},{"code":"AHL 5.17","topic":"AHL 5.17 — Area between curve and y-axis; volumes of revolution","kind":"Content","id":"maths-aa__ahl-5-17__1ca9fd0824"},{"code":"AHL 5.18","topic":"AHL 5.18 — First-order differential equations; Euler’s method; variables separable","kind":"Content","id":"maths-aa__ahl-5-18__01f14d0cd8"},{"code":"AHL 5.19","topic":"AHL 5.19 — Maclaurin series","kind":"Content","id":"maths-aa__ahl-5-19__14fc588ba8"},{"code":"Assessment","topic":"Assessment HL — Paper 1 (2 h, no technology, 30%)","kind":"Assessment","id":"maths-aa__assessment__3c6c4083a8"},{"code":"Assessment","topic":"Assessment HL — Paper 2 (2 h, technology, 30%)","kind":"Assessment","id":"maths-aa__assessment__b290385acb"},{"code":"Assessment","topic":"Assessment HL — Paper 3 (1 h 15, technology, 20%)","kind":"Assessment","id":"maths-aa__assessment__16fb1a2657"},{"code":"Assessment","topic":"Assessment — Mathematical exploration (20%)","kind":"Assessment","id":"maths-aa__assessment__acecf77f6d"}],"Physics":[{"code":"A.1","topic":"A.1 Kinematics (SL)","kind":"Content","id":"physics__a-1__2b051b1857"},{"code":"A.2","topic":"A.2 Forces and momentum (SL)","kind":"Content","id":"physics__a-2__3566f6a136"},{"code":"A.3","topic":"A.3 Work, energy and power (SL)","kind":"Content","id":"physics__a-3__955c51918b"},{"code":"B.1","topic":"B.1 Thermal energy transfers (SL)","kind":"Content","id":"physics__b-1__3d1a867707"},{"code":"B.2","topic":"B.2 Greenhouse effect (SL)","kind":"Content","id":"physics__b-2__c6d5cc4d0b"},{"code":"B.3","topic":"B.3 Gas laws (SL)","kind":"Content","id":"physics__b-3__2e465475d3"},{"code":"B.5","topic":"B.5 Current and circuits (SL)","kind":"Content","id":"physics__b-5__13c7891950"},{"code":"C.1","topic":"C.1 Simple harmonic motion (SL + additional HL content marked •• in brief — SL studies core)","kind":"Content","id":"physics__c-1__9cbb0b0028"},{"code":"C.2","topic":"C.2 Wave model (SL)","kind":"Content","id":"physics__c-2__238af39edf"},{"code":"C.3","topic":"C.3 Wave phenomena (SL + ••)","kind":"Content","id":"physics__c-3__fa89706f9d"},{"code":"C.4","topic":"C.4 Standing waves and resonance (SL)","kind":"Content","id":"physics__c-4__a76c70797e"},{"code":"C.5","topic":"C.5 Doppler effect (SL + ••)","kind":"Content","id":"physics__c-5__1c5d4460f2"},{"code":"D.1","topic":"D.1 Gravitational fields (SL + ••)","kind":"Content","id":"physics__d-1__55de939a08"},{"code":"D.2","topic":"D.2 Electric and magnetic fields (SL + ••)","kind":"Content","id":"physics__d-2__d797fb8b0e"},{"code":"D.3","topic":"D.3 Motion in electromagnetic fields (SL)","kind":"Content","id":"physics__d-3__88d680e9a7"},{"code":"E.1","topic":"E.1 Structure of the atom (SL + ••)","kind":"Content","id":"physics__e-1__00bcd5e881"},{"code":"E.3","topic":"E.3 Radioactive decay (SL + ••)","kind":"Content","id":"physics__e-3__156a213334"},{"code":"E.4","topic":"E.4 Fission (SL)","kind":"Content","id":"physics__e-4__1b0fc5f4b2"},{"code":"E.5","topic":"E.5 Fusion and stars (SL)","kind":"Content","id":"physics__e-5__c7a913ef9f"},{"code":"","topic":"Experimental programme — practical work + collaborative sciences project","kind":"Component","id":"physics__fc457bab4c"},{"code":"Assessment","topic":"IA — Scientific investigation (20%)","kind":"Assessment","id":"physics__assessment__47abe27feb"}],"Spanish B":[{"code":"Theme","topic":"Theme — Identities (optional: lifestyles; health and well-being; beliefs and values; subcultures; language and identity)","kind":"Theme","id":"spanish-b__theme__c2097fae2e"},{"code":"Theme","topic":"Theme — Experiences (optional: leisure activities; holidays and travel; life stories; rites of passage; customs and traditions; migration)","kind":"Theme","id":"spanish-b__theme__17a04ac2e7"},{"code":"Theme","topic":"Theme — Human ingenuity (optional: entertainment; artistic expressions; communication and media; technology; scientific innovation)","kind":"Theme","id":"spanish-b__theme__145aa20674"},{"code":"Theme","topic":"Theme — Social organization (optional: social relationships; community; social engagement; education; the working world; law and order)","kind":"Theme","id":"spanish-b__theme__79995a997b"},{"code":"Theme","topic":"Theme — Sharing the planet (optional: the environment; human rights; peace and conflict; equality; globalization; ethics; urban and rural environment)","kind":"Theme","id":"spanish-b__theme__c8fbddf86f"},{"code":"Assessment","topic":"Assessment SL — Paper 1 writing (25%)","kind":"Assessment","id":"spanish-b__assessment__4215f75148"},{"code":"Assessment","topic":"Assessment SL — Paper 2 listening + reading (50%)","kind":"Assessment","id":"spanish-b__assessment__ce9df96fc3"},{"code":"Assessment","topic":"Assessment SL — Individual oral (25%)","kind":"Assessment","id":"spanish-b__assessment__e6b005eb9d"}],"Music":[],"History":[],"ToK":[{"code":"Theme","topic":"Core theme — Knowledge and the knower","kind":"Theme","id":"tok__theme__07472b3280"},{"code":"Theme","topic":"Optional theme (menu) — Knowledge and technology — NOT confirmed as Island’s choice","kind":"Theme","id":"tok__theme__047ed5ddda"},{"code":"Theme","topic":"Optional theme (menu) — Knowledge and language — NOT confirmed as Island’s choice","kind":"Theme","id":"tok__theme__8ade64fa4d"},{"code":"Theme","topic":"Optional theme (menu) — Knowledge and politics — NOT confirmed as Island’s choice","kind":"Theme","id":"tok__theme__2c7b1a80bc"},{"code":"Theme","topic":"Optional theme (menu) — Knowledge and religion — NOT confirmed as Island’s choice","kind":"Theme","id":"tok__theme__f24d952717"},{"code":"Theme","topic":"Optional theme (menu) — Knowledge and indigenous societies — NOT confirmed as Island’s choice","kind":"Theme","id":"tok__theme__75973d9a6f"},{"code":"","topic":"AoK — History","kind":"Area","id":"tok__cdcef81106"},{"code":"","topic":"AoK — The human sciences","kind":"Area","id":"tok__8bb96eb39e"},{"code":"","topic":"AoK — The natural sciences","kind":"Area","id":"tok__c35c9a47a6"},{"code":"","topic":"AoK — The arts","kind":"Area","id":"tok__f2736b65ab"},{"code":"","topic":"AoK — Mathematics","kind":"Area","id":"tok__0e0bb92bc2"},{"code":"Assessment","topic":"Assessment — ToK exhibition (internal, 1/3)","kind":"Assessment","id":"tok__assessment__72387a207c"},{"code":"Assessment","topic":"Assessment — ToK essay on a prescribed title (external, 2/3)","kind":"Assessment","id":"tok__assessment__8a875c2676"}],"Thrive":[{"code":"","topic":"Island School pastoral / student support and wellbeing programme — not an IB examined subject","kind":"Pastoral","id":"thrive__f3464244b4"}]},"satAreas":["Reading & Writing","Math","Full practice"],"satTopics":{"Reading & Writing":[{"code":"RW","topic":"Reading & Writing — practice set","kind":"SAT"},{"code":"RW","topic":"Reading & Writing — vocab / craft","kind":"SAT"},{"code":"RW","topic":"Reading & Writing — timed section","kind":"SAT"}],"Math":[{"code":"M","topic":"Math — practice set","kind":"SAT"},{"code":"M","topic":"Math — weak-topic drill","kind":"SAT"},{"code":"M","topic":"Math — timed section","kind":"SAT"}],"Full practice":[{"code":"PT","topic":"Full practice test / review","kind":"SAT"}]},"subjectIdByChooser":{"English A Lit":"english","Maths AA":"maths-aa","Physics":"physics","Spanish B":"spanish-b","Music":"music","History":"history","ToK":"tok","Thrive":"thrive"},"emptyTopicLists":["English A Lit","History","Music"],"note":"EN/History/Music topic lists empty — deferred pending Ishaan; Other / type… only."};
 
@@ -1062,6 +1126,7 @@ let topicsFilterSubject = "all";
 let topicsSearch = "";
 
 function deepClone(o) { return JSON.parse(JSON.stringify(o)); }
+let CONFIG = deepClone(PUBLISHED_CONFIG);
 
 function loadProgress() {
   progressState = deepClone(PROGRESS_DEFAULT);
@@ -1344,16 +1409,20 @@ function switchTab(which) {
   const lead = document.getElementById("headerLead");
   if (lead) {
     if (isWeek) {
-      lead.innerHTML = 'Week of <strong>Mon 9 Nov – Sun 15 Nov 2026</strong>. Tap open blocks to cycle ' +
-        '<strong>Free → Study IB → Study SAT → Light</strong>. Targets: <strong>12h IB</strong> · <strong>3h SAT</strong>. ' +
-        'Topics tab tracks syllabus coverage (verified rows only).';
+      const label = (CONFIG && CONFIG.weekLabel) ? CONFIG.weekLabel : PUBLISHED_CONFIG.weekLabel;
+      lead.innerHTML = "Week of <strong>" + escapeHtml(label) + "</strong>. Tap open blocks to cycle " +
+        "<strong>Free → Study IB → Study SAT → Light</strong>. Targets: <strong>12h IB</strong> · <strong>3h SAT</strong>. " +
+        "Use the week navigator to plan ahead. Topics tab tracks syllabus coverage (verified rows only).";
     } else {
-      lead.innerHTML = '<strong>Topic tracker</strong> — traffic-light overview and coverage map across verified IB topics. ' +
-        'Progress lives in this browser; <strong>Copy progress</strong> to Sync with Dad’s Assistant.';
+      lead.innerHTML = "<strong>Topic tracker</strong> — traffic-light overview and coverage map across verified IB topics. " +
+        "Progress lives in this browser; <strong>Copy progress</strong> to Sync with Dad’s Assistant.";
     }
   }
   if (!isWeek) renderTopicsPanel();
-  try { history.replaceState(null, "", isWeek ? "#week" : "#topics"); } catch (e) {}
+  try {
+    if (isWeek) history.replaceState(null, "", "#week=" + (CONFIG && CONFIG.weekStart ? CONFIG.weekStart : PUBLISHED_CONFIG.weekStart));
+    else history.replaceState(null, "", "#topics");
+  } catch (e) {}
 }
 
 function buildProgressPayload() {
@@ -1377,7 +1446,8 @@ function buildProgressPayload() {
 
 
 const OTHER_VALUE = "__other__";
-const STORAGE_KEY = "ishaan-week-" + CONFIG.weekStart;
+function getStorageKey() { return "ishaan-week-" + CONFIG.weekStart; }
+let STORAGE_KEY = getStorageKey();
 
 const state = {};
 
@@ -1430,7 +1500,7 @@ function initState() {
   Object.keys(state).forEach(k => delete state[k]);
   Object.assign(state, defaults);
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(getStorageKey());
     if (raw) {
       const saved = JSON.parse(raw);
       Object.keys(saved).forEach(id => {
@@ -1441,7 +1511,7 @@ function initState() {
 }
 
 function persistState() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) { /* ignore */ }
+  try { localStorage.setItem(getStorageKey(), JSON.stringify(state)); } catch (e) { /* ignore */ }
 }
 
 function nextKind(current) {
@@ -2267,9 +2337,267 @@ document.getElementById("btnFillDue").addEventListener("click", () => {
   fillFreeWithDueRevisits();
 });
 
-initState();
+
+/* ===== Week navigator / planning ahead ===== */
+const WEEK_PLAN_BACK = 4;   // weeks before published
+const WEEK_PLAN_AHEAD = 16; // weeks after published
+const MONTHS_SHORT = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const DOW_SHORT = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const DOW_LONG = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+function parseISODate(iso) {
+  const [y, m, d] = iso.split("-").map(Number);
+  return new Date(y, m - 1, d);
+}
+function toISODate(dt) {
+  const y = dt.getFullYear();
+  const m = String(dt.getMonth() + 1).padStart(2, "0");
+  const d = String(dt.getDate()).padStart(2, "0");
+  return y + "-" + m + "-" + d;
+}
+function addDaysISO(iso, n) {
+  const dt = parseISODate(iso);
+  dt.setDate(dt.getDate() + n);
+  return toISODate(dt);
+}
+function startOfWeekMonday(iso) {
+  const dt = parseISODate(iso);
+  const day = dt.getDay();
+  const diff = day === 0 ? -6 : 1 - day;
+  dt.setDate(dt.getDate() + diff);
+  return toISODate(dt);
+}
+function formatDayName(iso) {
+  const dt = parseISODate(iso);
+  return DOW_LONG[dt.getDay()] + " " + dt.getDate() + " " + MONTHS_SHORT[dt.getMonth()];
+}
+function formatWeekLabel(startIso, endIso) {
+  const a = parseISODate(startIso);
+  const b = parseISODate(endIso);
+  const left = DOW_SHORT[a.getDay()] + " " + a.getDate() + " " + MONTHS_SHORT[a.getMonth()];
+  const right = DOW_SHORT[b.getDay()] + " " + b.getDate() + " " + MONTHS_SHORT[b.getMonth()] + " " + b.getFullYear();
+  if (a.getFullYear() !== b.getFullYear()) {
+    return left + " " + a.getFullYear() + " – " + right;
+  }
+  return left + " – " + right;
+}
+function dayIdFor(iso) {
+  const dt = parseISODate(iso);
+  return DOW_SHORT[dt.getDay()].toLowerCase() + "-" + String(dt.getDate()).padStart(2, "0");
+}
+function remapSlotId(oldId, oldDayId, newDayId) {
+  if (oldId.indexOf(oldDayId) === 0) return newDayId + oldId.slice(oldDayId.length);
+  return newDayId + "-" + oldId;
+}
+function daysBetweenISO(a, b) {
+  const ms = parseISODate(b) - parseISODate(a);
+  return Math.round(ms / 86400000);
+}
+function isPublishedWeek(weekStart) {
+  return weekStart === PUBLISHED_CONFIG.weekStart;
+}
+function planBounds() {
+  const pub = PUBLISHED_CONFIG.weekStart;
+  return {
+    min: addDaysISO(pub, -7 * WEEK_PLAN_BACK),
+    max: addDaysISO(pub, 7 * WEEK_PLAN_AHEAD)
+  };
+}
+function clampWeekStart(weekStart) {
+  let ws = startOfWeekMonday(weekStart);
+  const b = planBounds();
+  if (ws < b.min) ws = b.min;
+  if (ws > b.max) ws = b.max;
+  return ws;
+}
+
+/** Build a week config. Published week uses exact calendar locks; other weeks
+ *  clone the published Mon–Sun skeleton (school/social/open + recurring tutors)
+ *  with dates shifted — labelled as a typical-week template until Sunday ritual
+ *  republishes live General Timetable locks. */
+function buildWeekConfig(weekStartRaw) {
+  const weekStart = clampWeekStart(weekStartRaw);
+  const weekEnd = addDaysISO(weekStart, 6);
+  const live = isPublishedWeek(weekStart);
+  const base = deepClone(PUBLISHED_CONFIG);
+  const delta = daysBetweenISO(PUBLISHED_CONFIG.weekStart, weekStart);
+  const days = base.days.map(day => {
+    const newDate = addDaysISO(day.date, delta);
+    const newId = dayIdFor(newDate);
+    const oldId = day.id;
+    const slots = day.slots.map(slot => {
+      const s = deepClone(slot);
+      s.id = remapSlotId(slot.id, oldId, newId);
+      if (!live && (s.kind === "locked" || s.kind === "school" || s.kind === "social")) {
+        if (s.kind === "locked") {
+          s.note = "Typical recurring · confirm when Sunday ritual publishes live locks";
+        } else if (s.kind === "school" && !s.note) {
+          s.note = "Typical school block";
+        } else if (s.kind === "social") {
+          s.note = "Typical Fri social · confirm live calendar";
+        }
+      }
+      return s;
+    });
+    return {
+      id: newId,
+      name: formatDayName(newDate),
+      date: newDate,
+      dayShort: DOW_SHORT[parseISODate(newDate).getDay()],
+      slots
+    };
+  });
+  const label = formatWeekLabel(weekStart, weekEnd);
+  return {
+    title: "Week of " + label + " · pick your study slots",
+    weekStart,
+    weekEnd,
+    weekLabel: label,
+    timezone: base.timezone,
+    hardStop: base.hardStop,
+    targets: base.targets,
+    cycle: base.cycle,
+    labels: base.labels,
+    exclusions: base.exclusions,
+    days,
+    locksSource: live ? "calendar" : "typical"
+  };
+}
+
+function applyWeekConfig(weekCfg) {
+  CONFIG = weekCfg;
+  STORAGE_KEY = getStorageKey();
+  initState();
+  updateWeekChrome();
+  document.getElementById("syncBox")?.classList.remove("show");
+  render();
+  try {
+    window.WEEK_SLOT_CONFIG = CONFIG;
+  } catch (e) { /* ignore */ }
+}
+
+function updateWeekChrome() {
+  const label = CONFIG.weekLabel;
+  const live = CONFIG.locksSource === "calendar";
+  const navLabel = document.getElementById("weekNavLabel");
+  if (navLabel) navLabel.textContent = label;
+  const range = document.getElementById("weekRange");
+  if (range) range.textContent = label;
+  const badge = document.getElementById("weekNavBadge");
+  if (badge) {
+    badge.textContent = live ? "Live calendar locks" : "Typical week template";
+    badge.classList.toggle("live", live);
+    badge.classList.toggle("typical", !live);
+  }
+  const lead = document.getElementById("headerLead");
+  if (lead) {
+    lead.innerHTML = "Week of <strong>" + escapeHtml(label) + "</strong>. Tap open blocks to cycle " +
+      "<strong>Free → Study IB → Study SAT → Light</strong>. Targets: <strong>12h IB</strong> · <strong>3h SAT</strong>. " +
+      "Use the week navigator to plan ahead. Topics tab tracks syllabus coverage (verified rows only).";
+  }
+  const hint = document.getElementById("weekHint");
+  if (hint) {
+    if (live) {
+      hint.innerHTML = "Locks come from General Timetable + school calendar for this published week — tutors are not invented. " +
+        "Dinner is usually <strong>19:30–20:00</strong> (open slots avoid it). Hard stop <strong>22:30</strong>. " +
+        "Bhavan and Dr&nbsp;OK one-offs are excluded. Sunday ritual rebuilds next week’s live locks from the calendars.";
+    } else {
+      hint.innerHTML = "This week uses a <strong>typical-week template</strong> (school / Fri social / recurring tutors shifted from the last published skeleton). " +
+        "It is for planning ahead — live General Timetable locks arrive when the Sunday ritual republishes. " +
+        "Choices are stored per week (<code>ishaan-week-" + escapeHtml(CONFIG.weekStart) + "</code>). Sync paste includes <strong>SYNC_WEEK " +
+        escapeHtml(CONFIG.weekStart) + "</strong>.";
+    }
+  }
+  const sel = document.getElementById("weekJumpSelect");
+  if (sel) sel.value = CONFIG.weekStart;
+  const dateEl = document.getElementById("weekJumpDate");
+  if (dateEl) dateEl.value = CONFIG.weekStart;
+  const b = planBounds();
+  const prev = document.getElementById("btnWeekPrev");
+  const next = document.getElementById("btnWeekNext");
+  if (prev) prev.disabled = CONFIG.weekStart <= b.min;
+  if (next) next.disabled = CONFIG.weekStart >= b.max;
+  // hash without fighting Topics tab
+  const onTopics = document.getElementById("panel-topics")?.classList.contains("active");
+  if (!onTopics) {
+    const want = "#week=" + CONFIG.weekStart;
+    if (location.hash !== want && location.hash !== "#week") {
+      history.replaceState(null, "", want);
+    }
+  }
+}
+
+function populateWeekJumpSelect() {
+  const sel = document.getElementById("weekJumpSelect");
+  if (!sel) return;
+  const b = planBounds();
+  const opts = [];
+  let ws = b.min;
+  while (ws <= b.max) {
+    const we = addDaysISO(ws, 6);
+    const lab = formatWeekLabel(ws, we);
+    const tag = isPublishedWeek(ws) ? " · published" : "";
+    opts.push('<option value="' + ws + '">' + lab + tag + "</option>");
+    ws = addDaysISO(ws, 7);
+  }
+  sel.innerHTML = opts.join("");
+  sel.value = CONFIG.weekStart;
+}
+
+function goToWeek(weekStart) {
+  const next = buildWeekConfig(weekStart);
+  if (next.weekStart === CONFIG.weekStart && CONFIG.days && CONFIG.days.length) {
+    updateWeekChrome();
+    return;
+  }
+  applyWeekConfig(next);
+}
+
+function shiftWeek(deltaWeeks) {
+  goToWeek(addDaysISO(CONFIG.weekStart, 7 * deltaWeeks));
+}
+
+function wireWeekNav() {
+  populateWeekJumpSelect();
+  document.getElementById("btnWeekPrev")?.addEventListener("click", () => shiftWeek(-1));
+  document.getElementById("btnWeekNext")?.addEventListener("click", () => shiftWeek(1));
+  document.getElementById("btnWeekPublished")?.addEventListener("click", () => goToWeek(PUBLISHED_CONFIG.weekStart));
+  document.getElementById("weekJumpSelect")?.addEventListener("change", (e) => goToWeek(e.target.value));
+  document.getElementById("weekJumpDate")?.addEventListener("change", (e) => {
+    if (!e.target.value) return;
+    goToWeek(startOfWeekMonday(e.target.value));
+  });
+  const dateEl = document.getElementById("weekJumpDate");
+  if (dateEl) {
+    const b = planBounds();
+    dateEl.min = b.min;
+    dateEl.max = addDaysISO(b.max, 6);
+  }
+}
+
+function weekStartFromHash() {
+  const h = (location.hash || "").replace(/^#/, "");
+  if (h.startsWith("week=")) {
+    const raw = decodeURIComponent(h.slice(5).split("&")[0]);
+    if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return startOfWeekMonday(raw);
+  }
+  return null;
+}
+
+wireWeekNav();
+(function bootWeek() {
+  const fromHash = weekStartFromHash();
+  if (fromHash && fromHash !== PUBLISHED_CONFIG.weekStart) {
+    applyWeekConfig(buildWeekConfig(fromHash));
+  } else {
+    CONFIG = buildWeekConfig(PUBLISHED_CONFIG.weekStart);
+    STORAGE_KEY = getStorageKey();
+    initState();
+    updateWeekChrome();
+    render();
+  }
+})();
 loadProgress();
-render();
 
 document.getElementById("tab-week").addEventListener("click", () => switchTab("week"));
 document.getElementById("tab-topics").addEventListener("click", () => switchTab("topics"));
@@ -2297,11 +2625,17 @@ document.getElementById("btnResetProgress").addEventListener("click", () => {
   showToast("Topic progress reset on this device.");
 });
 
-if (location.hash === "#topics") switchTab("topics");
-else switchTab("week");
+(function bootTabs() {
+  const h = (location.hash || "").replace(/^#/, "");
+  if (h === "topics" || h.startsWith("topics")) switchTab("topics");
+  else switchTab("week");
+})();
 
 window.WEEK_SLOT_CONFIG = CONFIG;
 window.WEEK_SLOT_STATE = state;
+window.PUBLISHED_CONFIG = PUBLISHED_CONFIG;
+window.buildWeekConfig = buildWeekConfig;
+window.goToWeek = goToWeek;
 window.TOPIC_BANK = TOPIC_BANK;
 window.TOPICS_DATA = TOPICS_DATA;
 window.bumpTopicFromWeek = bumpTopicFromWeek;
