@@ -1333,31 +1333,7 @@
   .slot-wrap.kind-locked.sat-class .badge {
     background: #ffedd5; color: #c2410c; border: 1px solid #fdba74;
   }
-
-  .family-key-panel {
-    display: none; position: fixed; inset: 0; z-index: 80;
-    background: rgba(15, 23, 42, 0.45);
-    align-items: center; justify-content: center; padding: 16px;
-  }
-  .family-key-panel.show { display: flex; }
-  .family-key-card {
-    width: min(440px, 100%); background: #fff; border-radius: 14px;
-    border: 1px solid #cbd5e1; padding: 16px 18px;
-    box-shadow: 0 18px 40px -18px rgba(15,23,42,0.45);
-  }
-  .family-key-card h3 { margin: 0 0 6px; font-size: 1rem; }
-  .family-key-card p { margin: 0 0 10px; font-size: 0.85rem; color: #475569; line-height: 1.45; }
-  .family-key-card label { display: block; font-size: 0.75rem; font-weight: 700; margin-bottom: 4px; }
-  .family-key-card input[type="password"],
-  .family-key-card input[type="text"] {
-    width: 100%; box-sizing: border-box; padding: 8px 10px; border-radius: 8px;
-    border: 1px solid #cbd5e1; font-size: 0.95rem; font-family: inherit;
-  }
-  .family-key-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-  .family-key-actions button { min-height: 40px; padding: 8px 12px; border-radius: 10px; font-weight: 650; cursor: pointer; font-family: inherit; }
-  .family-key-actions .primary { background: #0f766e; color: #fff; border: none; }
-  .family-key-actions .secondary { background: #fff; color: #334155; border: 1px solid #cbd5e1; }
-  .sync-box.ok { background: #ecfdf5; border-color: #6ee7b7; color: #065f46; }
+.sync-box.ok { background: #ecfdf5; border-color: #6ee7b7; color: #065f46; }
   .sync-box.err { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
   .sync-box.err strong { color: #7f1d1d; }
   .sync-box .sync-fallback { margin-top: 8px; }
@@ -1633,19 +1609,6 @@
   </footer>
 </div>
 
-<div class="family-key-panel" id="familyKeyPanel" hidden>
-  <div class="family-key-card" role="dialog" aria-modal="true" aria-labelledby="familyKeyTitle">
-    <h3 id="familyKeyTitle">Family sync key</h3>
-    <p>Enter the family key once on this device. It stays in this browser and is never stored on the public page.</p>
-    <label for="familyKeyInput">Family sync key</label>
-    <input type="password" id="familyKeyInput" autocomplete="off" spellcheck="false"/>
-    <div class="family-key-actions">
-      <button type="button" class="primary" id="btnSaveFamilyKey">Save and continue</button>
-      <button type="button" class="secondary" id="btnCancelFamilyKey">Cancel</button>
-    </div>
-    <p>Ask Vikram if you do not have the key. You can change it later from the week or topics actions.</p>
-  </div>
-</div>
 
 <script>
 
@@ -3114,40 +3077,21 @@ function showUnconfiguredSync(payload, target) {
 
 function promptFamilyKey({ replace = false } = {}) {
   return new Promise((resolve) => {
-    const panel = document.getElementById("familyKeyPanel");
-    const input = document.getElementById("familyKeyInput");
-    const save = document.getElementById("btnSaveFamilyKey");
-    const cancel = document.getElementById("btnCancelFamilyKey");
-    if (!panel || !input || !save || !cancel) {
+    const message = replace
+      ? "Replace the family sync code stored in this browser:"
+      : "Enter the family sync code for this device. It stays in this browser only.";
+    const entered = window.prompt(message, replace ? "" : storedFamilyKey());
+    if (entered === null) {
       resolve(null);
       return;
     }
-    panel.hidden = false;
-    panel.classList.add("show");
-    input.value = replace ? "" : storedFamilyKey();
-    setTimeout(() => input.focus(), 0);
-    const done = (value) => {
-      panel.classList.remove("show");
-      panel.hidden = true;
-      save.removeEventListener("click", onSave);
-      cancel.removeEventListener("click", onCancel);
-      input.removeEventListener("keydown", onKey);
-      resolve(value);
-    };
-    const onSave = () => {
-      const key = (input.value || "").trim();
-      if (!key) { input.focus(); return; }
-      persistFamilyKey(key);
-      done(key);
-    };
-    const onCancel = () => done(null);
-    const onKey = (e) => {
-      if (e.key === "Enter") { e.preventDefault(); onSave(); }
-      if (e.key === "Escape") { e.preventDefault(); onCancel(); }
-    };
-    save.addEventListener("click", onSave);
-    cancel.addEventListener("click", onCancel);
-    input.addEventListener("keydown", onKey);
+    const key = entered.trim();
+    if (!key) {
+      resolve(null);
+      return;
+    }
+    persistFamilyKey(key);
+    resolve(key);
   });
 }
 
@@ -3160,11 +3104,11 @@ async function ensureFamilyKey({ replace = false } = {}) {
 }
 
 function isSyncHost(origin) {
+  if (!isSyncApiConfigured()) return false;
   try {
+    const allowed = new URL(SYNC_API_URL).hostname;
     const u = new URL(origin);
-    return u.hostname === "script.google.com" ||
-      u.hostname.endsWith(".google.com") ||
-      u.hostname.endsWith(".googleusercontent.com");
+    return !!allowed && u.hostname === allowed;
   } catch (e) {
     return false;
   }
