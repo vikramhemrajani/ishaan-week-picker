@@ -1,0 +1,108 @@
+{
+  "weekStart": "2027-02-08",
+  "weekEnd": "2027-02-14",
+  "timezone": "Asia/Hong_Kong",
+  "fetchedAt": "2026-11-15T16:35:05+08:00",
+  "sources": [
+    "General Timetable (Google Calendar)",
+    "Study calendar (SAT classes)"
+  ],
+  "exclusions": [
+    "Bhavan",
+    "Dr OK"
+  ],
+  "notes": "School periods collapsed per day. DRAFT study events and other transparent events ignored. SAT booked classes from the Study calendar (and Zuperscore on General Timetable) included as sat_class locks. Friday social 13:05–16:00 is a standing rule.",
+  "locks": [
+    {
+      "kind": "tutor",
+      "id": "1qi7d2qa054eptvti4oblif9ed_20270208T113000Z",
+      "title": "Physics Ms Ghosh",
+      "date": "2027-02-08",
+      "start": "19:30",
+      "end": "20:30",
+      "minutes": 60,
+      "satTutor": false,
+      "source": "General Timetable",
+      "sourceTitle": "Physics Ms Ghosh",
+      "day": "Mon"
+    },
+    {
+      "kind": "tutor",
+      "id": "0mrltjdg7oo82i5e85gg8jk866_20270209T120000Z",
+      "title": "English Tutor",
+      "date": "2027-02-09",
+      "start": "20:00",
+      "end": "21:00",
+      "minutes": 60,
+      "satTutor": false,
+      "source": "General Timetable",
+      "sourceTitle": "English Tutor",
+      "day": "Tue"
+    },
+    {
+      "kind": "tutor",
+      "id": "7td3n4kbbjv2v26bpmfvut92lu_20270210T100000Z",
+      "title": "History Tutor",
+      "date": "2027-02-10",
+      "start": "18:00",
+      "end": "19:00",
+      "minutes": 60,
+      "satTutor": false,
+      "source": "General Timetable",
+      "sourceTitle": "History Tutor",
+      "day": "Wed"
+    },
+    {
+      "kind": "tutor",
+      "id": "1fj25qa2gkhn6u1jgq89saah41_20270210T120000Z",
+      "title": "Math Tutor",
+      "date": "2027-02-10",
+      "start": "20:00",
+      "end": "21:00",
+      "minutes": 60,
+      "satTutor": false,
+      "source": "General Timetable",
+      "sourceTitle": "Math Tutor",
+      "day": "Wed"
+    },
+    {
+      "kind": "tutor",
+      "id": "1fj25qa2gkhn6u1jgq89saah41_20270211T120000Z",
+      "title": "Math Tutor",
+      "date": "2027-02-11",
+      "start": "20:00",
+      "end": "21:00",
+      "minutes": 60,
+      "satTutor": false,
+      "source": "General Timetable",
+      "sourceTitle": "Math Tutor",
+      "day": "Thu"
+    },
+    {
+      "id": "social-2027-02-12",
+      "title": "Social time",
+      "date": "2027-02-12",
+      "day": "Fri",
+      "start": "13:05",
+      "end": "16:00",
+      "minutes": 175,
+      "kind": "social",
+      "satTutor": false,
+      "source": "rule",
+      "sourceTitle": "Fri social after early finish"
+    },
+    {
+      "kind": "tutor",
+      "id": "132thc80jamonk6383ulv8g0p5_20270213T023000Z",
+      "title": "Physics Ms Ghosh",
+      "date": "2027-02-13",
+      "start": "10:30",
+      "end": "11:30",
+      "minutes": 60,
+      "satTutor": false,
+      "source": "General Timetable",
+      "sourceTitle": "Physics Ms Ghosh",
+      "day": "Sat"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+# Secrets and credential files — never commit
+.clasprc.json
+**/.clasprc.json
+.env
+.env.*
+*.pem
+family-sync-key
+**/family-sync-key
+**/token
+**/*.token
+**/*secret*
+
+# Local clasp / raw dumps
+apps-script/.clasp.json.bak
+scripts/raw/
+locks/_raw/

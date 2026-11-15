@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ishaan week picker · sync</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; padding: 24px; color: #0f172a; background: #f8fafc; }
+    h1 { font-size: 1.05rem; margin: 0 0 8px; }
+    p { font-size: 0.9rem; line-height: 1.45; color: #334155; }
+    .status { margin-top: 16px; padding: 10px 12px; border-radius: 10px; background: #fff; border: 1px solid #e2e8f0; }
+    .ok { border-color: #6ee7b7; background: #ecfdf5; color: #065f46; }
+    .err { border-color: #fecaca; background: #fef2f2; color: #991b1b; }
+  </style>
+</head>
+<body>
+  <h1>Sending this week</h1>
+  <p>This window writes General Timetable drafts and updates the shared plan. It closes on its own when finished.</p>
+  <div id="status" class="status">Waiting for the planner…</div>
+  <script>
+    var ALLOWED_HOSTS = {
+      'ishaan-week-picker.deed.page': true,
+      'vikramhemrajani.github.io': true
+    };
+    var READY = 'ishaan-week-picker-ready';
+    var REQUEST = 'ishaan-week-picker-request';
+    var RESULT = 'ishaan-week-picker-result';
+    var statusEl = document.getElementById('status');
+    var finished = false;
+
+    function allowedOrigin(origin) {
+      try {
+        var u = new URL(origin);
+        if (ALLOWED_HOSTS[u.hostname]) return true;
+        if (u.hostname.slice(-32) === '--ishaan-week-picker.deed.page') return true;
+        return false;
+      } catch (e) { return false; }
+    }
+
+    function setStatus(text, cls) {
+      statusEl.textContent = text;
+      statusEl.className = 'status' + (cls ? ' ' + cls : '');
+    }
+
+    function clientOriginFromQuery() {
+      try {
+        var q = new URLSearchParams(location.search).get('clientOrigin');
+        if (q && allowedOrigin(q)) return q;
+      } catch (e) {}
+      return '*';
+    }
+
+    function notifyReady() {
+      if (!window.opener) {
+        setStatus('Open this from the week planner — this window cannot work on its own.', 'err');
+        return;
+      }
+      var target = clientOriginFromQuery();
+      try {
+        window.opener.postMessage({ type: READY }, target === '*' ? '*' : target);
+        setStatus('Connected. Sending the plan…');
+      } catch (e) {
+        setStatus('Could not talk to the planner window.', 'err');
+      }
+    }
+
+    function reply(origin, payload) {
+      if (!window.opener) return;
+      window.opener.postMessage({ type: RESULT, payload: payload }, origin);
+    }
+
+    window.addEventListener('message', function (ev) {
+      if (!allowedOrigin(ev.origin)) return;
+      var data = ev.data || {};
+      if (data.type !== REQUEST) return;
+      if (finished) return;
+      finished = true;
+      var body = data.payload || data;
+      setStatus('Writing calendar drafts and publishing the shared plan…');
+      google.script.run
+        .withSuccessHandler(function (result) {
+          reply(ev.origin, result);
+          setStatus((result && result.ok) ? 'Synced. This window will close.' : ((result && result.error) || 'Sync failed.'), result && result.ok ? 'ok' : 'err');
+          setTimeout(function () { window.close(); }, 600);
+        })
+        .withFailureHandler(function (err) {
+          var msg = (err && err.message) ? err.message : String(err || 'Unknown error');
+          reply(ev.origin, { ok: false, error: msg });
+          setStatus(msg, 'err');
+          setTimeout(function () { window.close(); }, 1600);
+        })
+        .handleClientRequest(body);
+    });
+
+    notifyReady();
+  </script>
+</body>
+</html>

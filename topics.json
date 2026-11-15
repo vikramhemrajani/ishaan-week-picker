@@ -4,7 +4,7 @@
     "student": "Ishaan Hemrajani",
     "school": "Island School 12WW",
     "programme": "IB DP Y1",
-    "asOf": "2026-10-26",
+    "asOf": "2026-11-15",
     "timezone": "Asia/Hong_Kong",
     "britishEnglish": true,
     "statusEnum": [
@@ -13,39 +13,179 @@
       "Reviewed once",
       "Exam-ready"
     ],
-    "note": "Verified topics only — no invented curriculum. English A Lit, History, and Music topic coverage deferred pending Ishaan (books / school pathway unknown); Week tab still offers those subject labels with Other / type… only. Gaps_TBC stay flagged for active subjects.",
-    "exportedAt": "2026-11-08T19:32:07+08:00",
+    "note": "Verified topics only — no invented curriculum. English A Literature SL and History HL banks added 15 Nov 2026 from official briefs and Island School files (Add / Add as TBC only). Music topic coverage remains deferred; Week tab still offers Music with Other / type… only. Gaps_TBC stay flagged.",
+    "exportedAt": "2026-11-15T16:42:16+08:00",
     "source": "Ishaan_IB_study_topic_tracker.xlsx",
-    "totalTopics": 130,
+    "totalTopics": 198,
     "deferredSubjects": [
-      {
-        "id": "english",
-        "chooserLabel": "English A Lit",
-        "label": "English A Literature SL",
-        "reason": "Deferred pending Ishaan — books / school topics unknown"
-      },
       {
         "id": "music",
         "chooserLabel": "Music",
         "label": "Music HL",
         "reason": "Deferred pending Ishaan — books / school topics unknown"
-      },
-      {
-        "id": "history",
-        "chooserLabel": "History",
-        "label": "History HL",
-        "reason": "Deferred pending Ishaan — books / school topics unknown"
       }
     ],
     "coverageSubjects": [
+      "english",
       "maths-aa",
       "physics",
       "spanish-b",
+      "history",
       "tok",
       "thrive"
     ]
   },
   "subjects": [
+    {
+      "sheet": "English A Lit",
+      "id": "english",
+      "chooserLabel": "English A Lit",
+      "label": "English A Literature SL",
+      "level": "SL",
+      "total": 14,
+      "topics": [
+        {
+          "id": "english__aoe-readers-writers-texts__9ec023847a",
+          "code": "AoE",
+          "topic": "Areas of exploration — Readers, writers and texts",
+          "kind": "Area",
+          "flag": null,
+          "notes": "Official Literature brief, 50 hours at SL. School PPT slide 3.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "english__aoe-time-and-space__5a7d152a4c",
+          "code": "AoE",
+          "topic": "Areas of exploration — Time and space",
+          "kind": "Area",
+          "flag": null,
+          "notes": "Official Literature brief, 50 hours at SL. School PPT slide 4.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "english__aoe-intertextuality__0c1d6185f5",
+          "code": "AoE",
+          "topic": "Areas of exploration — Intertextuality: connecting texts",
+          "kind": "Area",
+          "flag": null,
+          "notes": "Official name in the brief is “Intertextuality: connecting texts.” School slide shortens this to “Intertextuality.”",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "english__global-issues__600a85b0f5",
+          "code": "IO",
+          "topic": "Global issues for the Individual Oral — culture, identity and community; beliefs, values and education; politics, power and justice; art, creativity and the imagination; science, technology and the natural world",
+          "kind": "Theme",
+          "flag": null,
+          "notes": "School PPT slide 7. Official IO is organised around a common global issue (Literature brief). The five field names are from the school slide, not from the two-page brief; treated as the standard Language A set, still to be confirmed against the full guide IA chapter if a copy is obtained. One row, not five, so the Week tab does not pretend each field is a separate examined topic.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "english__learner-portfolio__3a05491ce5",
+          "code": "Portfolio",
+          "topic": "Learner portfolio (mandatory, not graded; may be requested by the IB)",
+          "kind": "Component",
+          "flag": null,
+          "notes": "Official Literature guide: central, mandatory, basis of assessment preparation, not directly assessed. School PPT slide 8. Still to confirm that the school’s “Master Copy of Instructions LL Learner Portfolio” is Literature, not Language and Literature, material.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "english__duffy-worlds-wife__0ab5327f35",
+          "code": "Text",
+          "topic": "The World’s Wife — Carol Ann Duffy (poetry, this term)",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School Y12 texts slide; starred “this term”; school says they start with Duffy for SL/HL. Term overview also lists 5 weeks under Politics, Power & Justice. SL pathway. Originally written in English — relevant later for the official IO “language studied” slot, but no IO pairing is invented here.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "english__satrapi-persepolis__93066bb906",
+          "code": "Text",
+          "topic": "Persepolis — Marjane Satrapi (graphic novel, this term)",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School Y12 texts slide, starred “this term.” Term overview: 4 weeks under Beliefs, Values & Education, plus a brief ABC intro on authorial choices / graphic-novel features. Originally written in French (a possible later IO translation work — not assigned here). This is a literary work on the Literature course, not a “non-literary text.”",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "english__esquivel-like-water-for-chocolate__8b2f386068",
+          "code": "Text",
+          "topic": "Like Water For Chocolate — Laura Esquivel (novel, this term)",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School Y12 texts slide, starred “this term.” Missing from the term-overview slide — do not drop it for that reason; it remains on the Y12 list. Originally written in Spanish (a possible later IO translation work — not assigned here).",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "english__obrien-things-they-carried__f7f720bdc6",
+          "code": "Text",
+          "topic": "The Things They Carried — Tim O’Brien (novel)",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School Y12 texts slide; not starred as this term. Missing from the term-overview slide. Keep as a confirmed Y12 SL text, not as a this-term unit, until the school says when it is taught.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "english__assessment-paper-1__bfe7bc82e9",
+          "code": "Assessment",
+          "topic": "Assessment SL — Paper 1 guided literary analysis (35%)",
+          "kind": "Assessment",
+          "flag": null,
+          "notes": "Official Literature brief: one unseen literary passage from a choice of two forms, 1 hr 15 min, 35%. School also requires a minimum of two Paper 1 assessments this term.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "english__assessment-paper-2__f9556dce07",
+          "code": "Assessment",
+          "topic": "Assessment SL — Paper 2 comparative essay (35%)",
+          "kind": "Assessment",
+          "flag": null,
+          "notes": "Official Literature brief: one comparative essay on two literary works studied, from a choice of four questions, 1 hr 45 min, 35%. Works used in the IO must not be reused here.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "english__assessment-individual-oral__b539c50cfb",
+          "code": "Assessment",
+          "topic": "Assessment SL — Individual Oral (30%): one work in English and one work in translation on a common global issue",
+          "kind": "Assessment",
+          "flag": null,
+          "notes": "Official Literature brief wording, not the school’s Lang Lit wording. SL 30%. School and IB-school handbooks: 10 minutes prepared + 5 minutes of questions. Do not describe this as a literary + non-literary oral.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "english__assessment-mini-ia-practice__eb7bffd78b",
+          "code": "Assessment",
+          "topic": "This term — mini IA oral practice (5 minutes) on a literary work",
+          "kind": "Assessment",
+          "flag": null,
+          "notes": "School “outcomes by the end of this term” slide. School practice, not an official IB component. Useful as a Week-tab skill row. Official IO is two works, 10 + 5 minutes.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "english__assessment-full-ia-practice__8c03fa180e",
+          "code": "Assessment",
+          "topic": "This term — full IA oral practice (10 minutes) on a literary work",
+          "kind": "Assessment",
+          "flag": null,
+          "notes": "School term-outcomes slide. School practice toward the official IO; still described by the school as one literary work, so it is not yet the official two-work task.",
+          "priority": null,
+          "excelStatus": "Not started"
+        }
+      ]
+    },
     {
       "sheet": "Maths AA",
       "id": "maths-aa",
@@ -1237,6 +1377,556 @@
       ]
     },
     {
+      "sheet": "History",
+      "id": "history",
+      "chooserLabel": "History",
+      "label": "History HL",
+      "level": "HL",
+      "total": 54,
+      "topics": [
+        {
+          "id": "history__p1-fs3-meiji-overview__62adef9879",
+          "code": "FS3",
+          "topic": "P1 FS3 — The Meiji Restoration (1853–1894)",
+          "kind": "Content",
+          "flag": null,
+          "notes": "Official option name “Political and economic transitions” is in the FA 2028 brief; the case-study title and dates are from the school FS3 pack and match secondary guide transcripts. Both case studies in the option must be studied (official brief).",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__p1-fs3-russia-overview__cf50e5dfe4",
+          "code": "FS3",
+          "topic": "P1 FS3 — The Russian Federation (1985–1999)",
+          "kind": "Content",
+          "flag": null,
+          "notes": "Same sources. Specified content is in the school comparison table, but school notes are still almost empty compared with Meiji (Pearson page references). The bullets below can still be studied; the notes gap remains.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__p1-fs3-meiji-tokugawa__b11aaca1b7",
+          "code": "FS3",
+          "topic": "P1 FS3 Meiji — What caused the transition? Decline of the Tokugawa Shogunate",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School FS3 comparison table, IQ 1. School notes plus embedded “Decline of the Tokugawa Shogunate” table (social / economic / political / foreign policy / diplomatic crises). Pearson page refs in the pack are secondary.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__p1-fs3-meiji-stagnation__b182ff766e",
+          "code": "FS3",
+          "topic": "P1 FS3 Meiji — What caused the transition? Stagnation and demands for rapid modernisation",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School FS3 table, IQ 1. British spelling “modernisation” is used in the topic text; the school table uses “modernization.” Auto-bump will follow whichever string is later entered — implementation should pick one form and keep it stable.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__p1-fs3-meiji-western-influence__59da982ef1",
+          "code": "FS3",
+          "topic": "P1 FS3 Meiji — What caused the transition? Influence of the United States (USA) and European countries",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School FS3 table, IQ 1. School notes: Perry, Treaty of Kanagawa (1854), Harris Treaty (1858), unequal / Ansei treaties.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__p1-fs3-meiji-oligarchy__f03aafb59d",
+          "code": "FS3",
+          "topic": "P1 FS3 Meiji — How was the transition achieved? Roles of the Meiji oligarchy and Emperor Mutsuhito",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School FS3 table, IQ 2. School notes: Charter Oath 1868; Ōkubo, Itō, Saigō, Kido; debate over how far the emperor actually ruled.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__p1-fs3-meiji-land-industry-trade__65dabe35b1",
+          "code": "FS3",
+          "topic": "P1 FS3 Meiji — How was the transition achieved? Land reform, industrialisation and trade",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School FS3 table, IQ 2. Pearson pages 34–41 cited in the pack (secondary).",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__p1-fs3-meiji-constitution-1889__a36211a229",
+          "code": "FS3",
+          "topic": "P1 FS3 Meiji — How was the transition achieved? Constitution of 1889",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School FS3 table, IQ 2. Pearson pages 41–45 cited in the pack (secondary).",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__p1-fs3-meiji-peasant-unrest__60ff87ea66",
+          "code": "FS3",
+          "topic": "P1 FS3 Meiji — What challenges did society face after the transition? Peasant unrest",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School FS3 table, IQ 3. Pearson page 48 cited (secondary).",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__p1-fs3-meiji-satsuma__31ab73ed40",
+          "code": "FS3",
+          "topic": "P1 FS3 Meiji — What challenges did society face after the transition? Satsuma Rebellion",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School FS3 table, IQ 3. Pearson pages 23, 52 cited (secondary).",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__p1-fs3-meiji-foreign-imperialism__a3727a78ae",
+          "code": "FS3",
+          "topic": "P1 FS3 Meiji — What challenges did society face after the transition? Foreign relations and imperialism",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School FS3 table, IQ 3. Pearson pages 55–63 cited (secondary). Do not extend this row past 1894 (for example “Taishō democracy”) — that lies outside the specified dates.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__p1-fs3-russia-communist-party__e0a3a2db16",
+          "code": "FS3",
+          "topic": "P1 FS3 Russia — What caused the transition? Role of the Communist Party",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School FS3 comparison table, IQ 1. No filled school notes yet.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__p1-fs3-russia-stagnation-reform__fcc7c1df56",
+          "code": "FS3",
+          "topic": "P1 FS3 Russia — What caused the transition? Impact of stagnation and failed economic reform",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School FS3 table, IQ 1. No filled school notes yet.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__p1-fs3-russia-eastern-europe__c2915f665e",
+          "code": "FS3",
+          "topic": "P1 FS3 Russia — What caused the transition? Challenges to communism in Eastern Europe",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School FS3 table, IQ 1. No filled school notes yet.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__p1-fs3-russia-gorbachev-yeltsin__afd87192d3",
+          "code": "FS3",
+          "topic": "P1 FS3 Russia — How was the transition achieved? Roles of Mikhail Gorbachev and Boris Yeltsin",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School FS3 table, IQ 2. No filled school notes yet.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__p1-fs3-russia-constitution-1993__662c3e7fae",
+          "code": "FS3",
+          "topic": "P1 FS3 Russia — How was the transition achieved? Constitution of 1993",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School FS3 table, IQ 2. No filled school notes yet.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__p1-fs3-russia-privatization__4000e782c6",
+          "code": "FS3",
+          "topic": "P1 FS3 Russia — How was the transition achieved? Privatisation, market liberalisation and tax reforms",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School FS3 table, IQ 2 (school spelling “Privatization, market liberalization”). British spellings used in the topic text; implementation should keep one form stable for auto-bump. No filled school notes yet.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__p1-fs3-russia-coup-1991-crisis-1993__093c2e868b",
+          "code": "FS3",
+          "topic": "P1 FS3 Russia — What challenges did society face after the transition? Communist hardline coup (1991) and the constitutional crisis (September–October 1993)",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School FS3 table wording. Secondary transcripts often say “Soviet coup attempt (1991)” for the same bullet. No filled school notes yet.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__p1-fs3-russia-strikes-crime__25a183c94c",
+          "code": "FS3",
+          "topic": "P1 FS3 Russia — What challenges did society face after the transition? Labour strikes, protests and organised crime",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School FS3 table, IQ 3. No filled school notes yet.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__p1-fs3-russia-chechen-war__137c75c9cf",
+          "code": "FS3",
+          "topic": "P1 FS3 Russia — What challenges did society face after the transition? First Chechen War (1994–1996)",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School FS3 table, IQ 3. No filled school notes yet.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__p2-auth-concepts__7235e1b4c5",
+          "code": "P2",
+          "topic": "P2 Section A — specified historical concepts (cause and consequence; continuity and change; perspectives; significance)",
+          "kind": "Assessment",
+          "flag": null,
+          "notes": "Official FA 2028 brief: four specified concepts; Paper 2 Section A is two questions on those concepts, answer one, illustrated from the thematic study.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__p2-auth-emerge__32fa306082",
+          "code": "P2",
+          "topic": "P2 Authoritarian rule — Why did authoritarian rule emerge? (role of ideas; social factors; role of conflict; economic factors)",
+          "kind": "Content",
+          "flag": null,
+          "notes": "Official-looking inquiry question 1 and four lines of inquiry, from secondary guide transcripts; not in the public brief. Case studies TBC.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__p2-auth-maintained__42a77ecf32",
+          "code": "P2",
+          "topic": "P2 Authoritarian rule — How was authoritarian rule maintained? (legal methods; use of force; propaganda; popular support)",
+          "kind": "Content",
+          "flag": null,
+          "notes": "Official-looking inquiry question 2, same caveat.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__p2-auth-lives__b2bd9b842f",
+          "code": "P2",
+          "topic": "P2 Authoritarian rule — How did authoritarian rule affect people’s lives? (economic effects; social effects; experiences of women; experiences of marginalised groups)",
+          "kind": "Content",
+          "flag": null,
+          "notes": "Matches school Table 14 row labels and the four 15-mark practice questions in the FS3 pack image. Official-looking inquiry question 3.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__p2-auth-challenged__be561f0490",
+          "code": "P2",
+          "topic": "P2 Authoritarian rule — How was authoritarian rule challenged? (internal opposition; popular resistance; impact of policies; external threats)",
+          "kind": "Content",
+          "flag": null,
+          "notes": "Official-looking inquiry question 4, from secondary transcripts (ActiveHistory / IITIAN / Augment). Not filled in the school pack.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__p2-auth-practice-15-mark__d017786495",
+          "code": "P2",
+          "topic": "P2 practice — 15-mark essay using at least two examples from at least two regions",
+          "kind": "Assessment",
+          "flag": null,
+          "notes": "School-embedded practice questions on economic consequences, social impact, women, and marginalised groups. Aligns with official Paper 2 Section B part 2 (essay synthesising diverse examples). Skills row only; does not name case studies.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__rs9-truman-containment__8703f235af",
+          "code": "RS9",
+          "topic": "RS9 — Truman and Eisenhower: Truman’s containment policy",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School RS9 table topic 1. This is the only bullet with filled school notes so far (Truman Doctrine, Marshall Plan, OAS, US and USSR perspectives). Secondary title: “Impact of the Cold War on the Americas during the presidencies of Harry S. Truman and Dwight D. Eisenhower.”",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__rs9-mccarthyism__81bce8e13a",
+          "code": "RS9",
+          "topic": "RS9 — Truman and Eisenhower: McCarthyism",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School RS9 table topic 1. Notes table left blank.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__rs9-eisenhower-new-look__6cf16740b8",
+          "code": "RS9",
+          "topic": "RS9 — Truman and Eisenhower: Eisenhower’s New Look policy",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School RS9 table topic 1. Notes table left blank.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__rs9-us-intervention-cia__3c12392129",
+          "code": "RS9",
+          "topic": "RS9 — Truman and Eisenhower: US intervention in Latin America, including role of the CIA",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School RS9 table topic 1. Notes table left blank.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__rs9-cuba-hemispheric-reactions__d5e8c06f02",
+          "code": "RS9",
+          "topic": "RS9 — Cuban Revolution: hemispheric reactions to the revolution",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School RS9 table topic 2 wording. Secondary transcripts often say “Regional reactions to the revolution.”",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__rs9-cuba-bay-of-pigs__a3f0541402",
+          "code": "RS9",
+          "topic": "RS9 — Cuban Revolution: Bay of Pigs",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School RS9 table topic 2. Notes blank.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__rs9-cuba-missile-crisis__7a6b9bfaf7",
+          "code": "RS9",
+          "topic": "RS9 — Cuban Revolution: Cuban Missile Crisis",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School RS9 table topic 2. Notes blank.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__rs9-cuba-diplomatic-impact__9bfa2634c2",
+          "code": "RS9",
+          "topic": "RS9 — Cuban Revolution: diplomatic impact on Latin American countries",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School RS9 table topic 2. Secondary transcripts often say “Diplomatic impact in Latin America.”",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__rs9-kennedy-alliance-for-progress__9c828135dc",
+          "code": "RS9",
+          "topic": "RS9 — Kennedy and Johnson: Kennedy’s Alliance for Progress",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School RS9 table topic 3. Secondary title adds “on the Americas.” Notes blank.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__rs9-johnson-dominican-republic__56546c4931",
+          "code": "RS9",
+          "topic": "RS9 — Kennedy and Johnson: intervention in the Dominican Republic",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School RS9 table topic 3. Notes blank.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__rs9-johnson-vietnam-domestic__5f65017ea0",
+          "code": "RS9",
+          "topic": "RS9 — Kennedy and Johnson: domestic impact of Johnson’s policy in Vietnam",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School RS9 table topic 3. Notes blank.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__rs9-vietnam-regional-support-opposition__9ca07dc5d5",
+          "code": "RS9",
+          "topic": "RS9 — Kennedy and Johnson: regional support for, and opposition to, US involvement in Vietnam",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School RS9 table topic 3. Notes blank.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__rs9-school-of-the-americas-condor__ae376a5a48",
+          "code": "RS9",
+          "topic": "RS9 — US foreign policies 1968–1988: School of the Americas and the Condor Plan",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School RS9 table topic 4 (this topic is missing from the pack’s intro list; the table is followed here). Secondary title: “Impact of US foreign policies on the Americas (1968–1988).” Notes blank.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__rs9-nixon-chile__0cdd0aaacd",
+          "code": "RS9",
+          "topic": "RS9 — US foreign policies 1968–1988: Richard Nixon’s covert operations and Chile",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School RS9 table topic 4. Notes blank.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__rs9-carter-human-rights-panama__3fb8138448",
+          "code": "RS9",
+          "topic": "RS9 — US foreign policies 1968–1988: Jimmy Carter’s quest for human rights and the Panama Canal Treaty (1977)",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School RS9 table topic 4. Notes blank.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__rs9-reagan-contras__d67257eb8c",
+          "code": "RS9",
+          "topic": "RS9 — US foreign policies 1968–1988: Ronald Reagan and the Contras in Nicaragua",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School RS9 table topic 4. Notes blank.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__rs9-canada-anti-communism__3ede56708a",
+          "code": "RS9",
+          "topic": "RS9 — Canada: domestic anti-communism",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School RS9 table topic 5. Notes blank.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__rs9-canada-nato-norad__a4530490d2",
+          "code": "RS9",
+          "topic": "RS9 — Canada: NATO and NORAD",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School RS9 table topic 5. Notes blank.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__rs9-canada-un-peacekeeping__d6fdabace2",
+          "code": "RS9",
+          "topic": "RS9 — Canada: creation of UN peacekeeping forces",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School RS9 table topic 5. Notes blank.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__rs9-canada-usa-cooperation-tension__c8c6ecd895",
+          "code": "RS9",
+          "topic": "RS9 — Canada: cooperation and tension with the USA",
+          "kind": "Content",
+          "flag": null,
+          "notes": "School RS9 table topic 5. Notes blank.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__rs9-latam-rio-oas__858ae8ca85",
+          "code": "RS9",
+          "topic": "RS9 — One Latin American country (TBC): Rio Pact, OAS and regional collaboration",
+          "kind": "Content",
+          "flag": "TBC",
+          "notes": "School RS9 table topic 6; country “To be confirmed.” Specified content can be tracked, but it cannot be finished as a country study until the school names the country.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__rs9-latam-domestic-political__827c01884e",
+          "code": "RS9",
+          "topic": "RS9 — One Latin American country (TBC): domestic political impact of the Cold War",
+          "kind": "Content",
+          "flag": "TBC",
+          "notes": "Same as above.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__rs9-latam-usa-cooperation-tension__e59ad6c48f",
+          "code": "RS9",
+          "topic": "RS9 — One Latin American country (TBC): cooperation and tension with the USA",
+          "kind": "Content",
+          "flag": "TBC",
+          "notes": "Same as above.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__rs9-latam-ussr-cooperation-tension__fff52a2de5",
+          "code": "RS9",
+          "topic": "RS9 — One Latin American country (TBC): cooperation and tension with the USSR",
+          "kind": "Content",
+          "flag": "TBC",
+          "notes": "Same as above.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__assessment-paper-1__8787c886e6",
+          "code": "Assessment",
+          "topic": "Assessment HL — Paper 1 focused study, source paper (20%)",
+          "kind": "Assessment",
+          "flag": null,
+          "notes": "Official FA 2028 brief: 1 hr 15 min, 20%, three static questions, 24 marks, on the chosen focused study (here FS3).",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__assessment-paper-2__98a7264cfc",
+          "code": "Assessment",
+          "topic": "Assessment HL — Paper 2 thematic study, Authoritarian rule (25%)",
+          "kind": "Assessment",
+          "flag": null,
+          "notes": "Official brief: 1 hr 45 min, 25%, Section A concepts + Section B short response and essay, 25 marks.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__assessment-paper-3__1ed60474b7",
+          "code": "Assessment",
+          "topic": "Assessment HL — Paper 3 regional studies, two essays from two studies (35%)",
+          "kind": "Assessment",
+          "flag": null,
+          "notes": "Official brief: 2 hours, 35%, two essays, each from a different regional study (here RS8 and RS9 once both are taught), 30 marks.",
+          "priority": null,
+          "excelStatus": "Not started"
+        },
+        {
+          "id": "history__assessment-ia__104b9d7412",
+          "code": "Assessment",
+          "topic": "Assessment HL — Historical investigation (20%)",
+          "kind": "Assessment",
+          "flag": null,
+          "notes": "Official brief and updates page: 20 hours, 20%, 24 marks; three sections (inquiry question, sources and perspectives, synthesis and evaluation); maximum seven sources; no reflection section. Ishaan’s IA topic is not yet known — this is the component row only.",
+          "priority": null,
+          "excelStatus": "Not started"
+        }
+      ]
+    },
+    {
       "sheet": "ToK",
       "id": "tok",
       "chooserLabel": "ToK",
@@ -1399,19 +2089,29 @@
   ],
   "gaps": [
     {
+      "category": "Deferred",
       "flag": "Deferred",
-      "detail": "English A Lit, History, and Music — topic coverage deferred; will build with Ishaan (school books / pathways unknown). Subject chips remain on Week for labelling; topic lists empty (Other / type… only).",
-      "category": "Deferred"
+      "detail": "Music — topic coverage deferred; will build with Ishaan (school books / pathways unknown). Subject chip remains on Week for labelling; topic list empty (Other / type… only)."
     },
     {
+      "category": "TBC",
+      "flag": "TBC",
+      "detail": "History RS9 — one Latin American country is still “to be confirmed”; four specified-content rows are in the bank and flagged TBC. Paper 2 Hitler/Mao case studies and Regional Study 8 specified content are not in the bank yet."
+    },
+    {
+      "category": "Gap",
       "flag": "Gap in public brief",
-      "detail": "Physics — public brief has theme codes only; no finer A.1-style sub-bullets inventable",
-      "category": "Gap"
+      "detail": "Physics — public brief has theme codes only; no finer A.1-style sub-bullets inventable"
     },
     {
+      "category": "Uncertain",
       "flag": "Unknown",
-      "detail": "ToK — which two of five optional themes Island teaches is UNKNOWN; all five listed as menu options only",
-      "category": "Uncertain"
+      "detail": "ToK — which two of five optional themes Island teaches is UNKNOWN; all five listed as menu options only"
+    },
+    {
+      "category": "Gap",
+      "flag": "Gap",
+      "detail": "English A Literature SL — three of the seven required SL works are not yet named by the school, so they are not in the bank. HL-only texts and unconfirmed term-overview titles are also held back."
     }
   ],
   "sources": [
@@ -1499,6 +2199,66 @@
       "n": 17,
       "title": "Pearson naming for RS8/RS9 as cited by family research",
       "urlOrNote": "(not a public URL)"
+    },
+    {
+      "n": 18,
+      "title": "Language A: language and literature subject brief (FA 2021) — used only to contrast IO wording with Literature",
+      "urlOrNote": "https://www.ibo.org/contentassets/5895a05412144fe890312bad52b17044/curriculum.brief-languagea.language.and.literature-eng.pdf"
+    },
+    {
+      "n": 19,
+      "title": "Language A: literature guide (FA 2021), public university-admission copy",
+      "urlOrNote": "https://ibo.org/globalassets/new-structure/university-admission/pdfs/subject-guides/language-a-literature-guide.pdf"
+    },
+    {
+      "n": 20,
+      "title": "History in the DP course page (FA 2027 table still on this page; use the 2028 brief for Ishaan)",
+      "urlOrNote": "https://www.ibo.org/programmes/diploma-programme/curriculum/individuals-and-societies/history/"
+    },
+    {
+      "n": 21,
+      "title": "History updates (new course launch and assessment changes)",
+      "urlOrNote": "https://www.ibo.org/university-admission/latest-curriculum-updates/history-updates/"
+    },
+    {
+      "n": 22,
+      "title": "Hodder / Hachette, Access to History for the IB Diploma: Emergence of the Americas in global affairs (1880–1945), sample (RS8 title only; no RS8 bullets added)",
+      "urlOrNote": "https://media.hachettelearning.com/media/medialibraries/hodder/samples/history/14-16/access-to-history-for-the-ib-dp/9781036014773-emergence-of-americas-in-global-affairs-web-sample.pdf"
+    },
+    {
+      "n": 23,
+      "title": "Pearson International Schools blog, “New IB DP History Guide: Exciting dilemmas,” February 2026",
+      "urlOrNote": "https://www.pearson.com/international-schools/international-schools-blog/2026/02/new-ib-dp-history-guide--exciting-dilemmas.html"
+    },
+    {
+      "n": 24,
+      "title": "ActiveHistory, IB History Paper 2 (2028) guide",
+      "urlOrNote": "https://www.activehistory.co.uk/ibdp/Paper_2.php"
+    },
+    {
+      "n": 25,
+      "title": "ActiveHistory, Meiji Restoration (1853–1894) and Russian Federation (1985–1999) as the FS3 pair",
+      "urlOrNote": "https://www.activehistory.co.uk/ibdp/p1_meiji/index.php ; https://www.activehistory.co.uk/ibdp/p1_russia/index.php"
+    },
+    {
+      "n": 26,
+      "title": "IITIAN Academy, secondary transcripts of FS3 / RS8 / RS9 / Paper 2 specified-content headings",
+      "urlOrNote": "https://www.iitianacademy.com/ibdp-history/sl-hl-paper-1-focused-studies-study-notes/ ; https://www.iitianacademy.com/ibdp-history/hl-paper-3-emergence-of-the-americas-in-global-affairs-study-notes/ ; https://www.iitianacademy.com/ibdp-history/hl-paper-3-the-americas-during-the-cold-war-study-notes/ ; https://www.iitianacademy.com/ibdp-history-hl-sl-paper-2-thematic-study-3-how-was-authoritarian-rule-challenged/"
+    },
+    {
+      "n": 27,
+      "title": "Clastify, Americas regional syllabus headings for RS8 and RS9",
+      "urlOrNote": "https://www.clastify.com/knowledge-hub/ib-syllabus-topics/history/the-americas/2-8 ; https://www.clastify.com/knowledge-hub/ib-syllabus-topics/history/the-americas/2-9"
+    },
+    {
+      "n": 28,
+      "title": "Examon AI, IB History 2028 syllabus dump (cross-check only; Paper 2 section not trusted on its own)",
+      "urlOrNote": "https://www.examon.ai/ibdp/history-2028/syllabus"
+    },
+    {
+      "n": 29,
+      "title": "Geelong Grammar School IB handbook, English A: Literature (7/10 work count and Literature IO translation requirement)",
+      "urlOrNote": "https://resources.ggs.vic.edu.au/curriculum/ib-diploma/group-1-studies-in-language-and-literature/english-a-literature/"
     }
   ],
   "chooser": {
@@ -1523,20 +2283,18 @@
       "Thrive": "thrive"
     },
     "coverageSubjectIds": [
+      "english",
       "maths-aa",
       "physics",
       "spanish-b",
+      "history",
       "tok",
       "thrive"
     ],
     "deferredChooserLabels": [
-      "English A Lit",
-      "History",
       "Music"
     ],
     "emptyTopicLists": [
-      "English A Lit",
-      "History",
       "Music"
     ]
   }

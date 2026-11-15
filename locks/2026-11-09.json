@@ -2,7 +2,7 @@
   "weekStart": "2026-11-09",
   "weekEnd": "2026-11-15",
   "timezone": "Asia/Hong_Kong",
-  "fetchedAt": "2026-11-08T22:33:07+08:00",
+  "fetchedAt": "2026-11-15T16:35:05+08:00",
   "sources": [
     "General Timetable (Google Calendar)",
     "Study calendar (SAT classes)"
@@ -11,7 +11,7 @@
     "Bhavan",
     "Dr OK"
   ],
-  "notes": "School periods collapsed per day. DRAFT study events ignored. SAT booked classes from Study calendar included as sat_class locks.",
+  "notes": "School periods collapsed per day. DRAFT study events and other transparent events ignored. SAT booked classes from the Study calendar (and Zuperscore on General Timetable) included as sat_class locks. Friday social 13:05–16:00 is a standing rule.",
   "locks": [
     {
       "id": "school-2026-11-09",
@@ -27,17 +27,17 @@
       "sourceTitle": "School (collapsed periods)"
     },
     {
+      "kind": "tutor",
       "id": "1qi7d2qa054eptvti4oblif9ed_20261109T113000Z",
       "title": "Physics Ms Ghosh",
       "date": "2026-11-09",
-      "day": "Mon",
       "start": "19:30",
       "end": "20:30",
       "minutes": 60,
-      "kind": "tutor",
       "satTutor": false,
       "source": "General Timetable",
-      "sourceTitle": "Physics Ms Ghosh"
+      "sourceTitle": "Physics Ms Ghosh",
+      "day": "Mon"
     },
     {
       "id": "school-2026-11-10",
@@ -53,17 +53,17 @@
       "sourceTitle": "School (collapsed periods)"
     },
     {
+      "kind": "tutor",
       "id": "0mrltjdg7oo82i5e85gg8jk866_20261110T120000Z",
       "title": "English Tutor",
       "date": "2026-11-10",
-      "day": "Tue",
       "start": "20:00",
       "end": "21:00",
       "minutes": 60,
-      "kind": "tutor",
       "satTutor": false,
       "source": "General Timetable",
-      "sourceTitle": "English Tutor"
+      "sourceTitle": "English Tutor",
+      "day": "Tue"
     },
     {
       "id": "school-2026-11-11",
@@ -71,38 +71,38 @@
       "date": "2026-11-11",
       "day": "Wed",
       "start": "08:00",
-      "end": "15:00",
-      "minutes": 420,
+      "end": "11:55",
+      "minutes": 235,
       "kind": "school",
       "satTutor": false,
       "source": "General Timetable",
       "sourceTitle": "School (collapsed periods)"
     },
     {
+      "kind": "tutor",
       "id": "7td3n4kbbjv2v26bpmfvut92lu_20261111T100000Z",
       "title": "History Tutor",
       "date": "2026-11-11",
-      "day": "Wed",
       "start": "18:00",
       "end": "19:00",
       "minutes": 60,
-      "kind": "tutor",
       "satTutor": false,
       "source": "General Timetable",
-      "sourceTitle": "History Tutor"
+      "sourceTitle": "History Tutor",
+      "day": "Wed"
     },
     {
+      "kind": "tutor",
       "id": "1fj25qa2gkhn6u1jgq89saah41_20261111T120000Z",
       "title": "Math Tutor",
       "date": "2026-11-11",
-      "day": "Wed",
       "start": "20:00",
       "end": "21:00",
       "minutes": 60,
-      "kind": "tutor",
       "satTutor": false,
       "source": "General Timetable",
-      "sourceTitle": "Math Tutor"
+      "sourceTitle": "Math Tutor",
+      "day": "Wed"
     },
     {
       "id": "school-2026-11-12",
@@ -118,17 +118,17 @@
       "sourceTitle": "School (collapsed periods)"
     },
     {
+      "kind": "tutor",
       "id": "1fj25qa2gkhn6u1jgq89saah41_20261112T120000Z",
       "title": "Math Tutor",
       "date": "2026-11-12",
-      "day": "Thu",
       "start": "20:00",
       "end": "21:00",
       "minutes": 60,
-      "kind": "tutor",
       "satTutor": false,
       "source": "General Timetable",
-      "sourceTitle": "Math Tutor"
+      "sourceTitle": "Math Tutor",
+      "day": "Thu"
     },
     {
       "id": "school-2026-11-13",
@@ -157,43 +157,43 @@
       "sourceTitle": "Fri social after early finish"
     },
     {
-      "id": "ik2emfe8r9djb6lgbn48s1f5sc",
-      "title": "SAT class \u00b7 Zuperscore (60 mins)",
+      "kind": "sat_class",
+      "id": "b383g4khn9rq2ktkssu8q57pgs",
+      "title": "Zuperscore SAT Reading — Krati Sharma",
       "date": "2026-11-13",
-      "day": "Fri",
       "start": "19:45",
       "end": "20:45",
       "minutes": 60,
-      "kind": "sat_class",
       "satTutor": true,
-      "source": "Study",
-      "sourceTitle": "SAT class \u00b7 Zuperscore (60 mins)"
+      "source": "General Timetable",
+      "sourceTitle": "Zuperscore SAT Reading — Krati Sharma",
+      "day": "Fri"
     },
     {
+      "kind": "tutor",
       "id": "132thc80jamonk6383ulv8g0p5_20261114T023000Z",
       "title": "Physics Ms Ghosh",
       "date": "2026-11-14",
-      "day": "Sat",
       "start": "10:30",
       "end": "11:30",
       "minutes": 60,
-      "kind": "tutor",
       "satTutor": false,
       "source": "General Timetable",
-      "sourceTitle": "Physics Ms Ghosh"
+      "sourceTitle": "Physics Ms Ghosh",
+      "day": "Sat"
     },
     {
-      "id": "7v3u7e90e817qdvkuhcbk94qc4",
-      "title": "SAT class \u00b7 Phoenix (60 mins)",
+      "kind": "sat_class",
+      "id": "eq5hn6duuod55cvlesa7v3ouuo",
+      "title": "Zuperscore SAT Writing — Tisha Varghese",
       "date": "2026-11-15",
-      "day": "Sun",
       "start": "19:45",
       "end": "20:45",
       "minutes": 60,
-      "kind": "sat_class",
       "satTutor": true,
-      "source": "Study",
-      "sourceTitle": "SAT class \u00b7 Phoenix (60 mins)"
+      "source": "General Timetable",
+      "sourceTitle": "Zuperscore SAT Writing — Tisha Varghese",
+      "day": "Sun"
     }
   ]
 }
