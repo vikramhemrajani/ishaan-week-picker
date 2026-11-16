@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": null,
+  "updatedAt": "2026-11-15T07:43:41.226Z",
   "statusEnum": [
     "Not started",
     "Seen in class",
@@ -9,83 +9,83 @@
   ],
   "byTopicId": {
     "maths-aa__sl-1-1__5c13d83738": {
-      "status": "Not started",
-      "lastTouched": null,
+      "status": "Exam-ready",
+      "lastTouched": "2026-11-10T10:15:40.343Z",
       "notes": ""
     },
     "maths-aa__sl-1-2__d5b1b33d1a": {
-      "status": "Not started",
-      "lastTouched": null,
+      "status": "Exam-ready",
+      "lastTouched": "2026-11-10T10:15:44.077Z",
       "notes": ""
     },
     "maths-aa__sl-1-3__6866dd3769": {
-      "status": "Not started",
-      "lastTouched": null,
+      "status": "Exam-ready",
+      "lastTouched": "2026-11-10T10:15:46.377Z",
       "notes": ""
     },
     "maths-aa__sl-1-4__28742f4d87": {
-      "status": "Not started",
-      "lastTouched": null,
+      "status": "Exam-ready",
+      "lastTouched": "2026-11-10T10:15:42.160Z",
       "notes": ""
     },
     "maths-aa__sl-1-5__e7b82ef15c": {
-      "status": "Not started",
-      "lastTouched": null,
+      "status": "Exam-ready",
+      "lastTouched": "2026-11-10T10:15:44.743Z",
       "notes": ""
     },
     "maths-aa__sl-1-6__88c310a23a": {
-      "status": "Not started",
-      "lastTouched": null,
+      "status": "Exam-ready",
+      "lastTouched": "2026-11-10T10:15:47.126Z",
       "notes": ""
     },
     "maths-aa__sl-1-7__154359d685": {
-      "status": "Not started",
-      "lastTouched": null,
+      "status": "Exam-ready",
+      "lastTouched": "2026-11-10T10:15:51.943Z",
       "notes": ""
     },
     "maths-aa__sl-1-8__413aa347aa": {
-      "status": "Not started",
-      "lastTouched": null,
+      "status": "Exam-ready",
+      "lastTouched": "2026-11-10T10:15:50.426Z",
       "notes": ""
     },
     "maths-aa__sl-1-9__91c4497f70": {
-      "status": "Not started",
-      "lastTouched": null,
+      "status": "Exam-ready",
+      "lastTouched": "2026-11-10T10:15:49.210Z",
       "notes": ""
     },
     "maths-aa__ahl-1-10__a4d24a62a1": {
-      "status": "Not started",
-      "lastTouched": null,
+      "status": "Seen in class",
+      "lastTouched": "2026-11-10T10:15:56.060Z",
       "notes": ""
     },
     "maths-aa__ahl-1-11__4a22aa1d43": {
-      "status": "Not started",
-      "lastTouched": null,
+      "status": "Seen in class",
+      "lastTouched": "2026-11-10T10:15:57.077Z",
       "notes": ""
     },
     "maths-aa__ahl-1-12__b73ae65f10": {
-      "status": "Not started",
-      "lastTouched": null,
+      "status": "Seen in class",
+      "lastTouched": "2026-11-10T10:15:57.877Z",
       "notes": ""
     },
     "maths-aa__ahl-1-13__cf05457e81": {
-      "status": "Not started",
-      "lastTouched": null,
+      "status": "Seen in class",
+      "lastTouched": "2026-11-10T10:16:02.493Z",
       "notes": ""
     },
     "maths-aa__ahl-1-14__8126061517": {
-      "status": "Not started",
-      "lastTouched": null,
+      "status": "Seen in class",
+      "lastTouched": "2026-11-10T10:16:01.710Z",
       "notes": ""
     },
     "maths-aa__ahl-1-15__976da51024": {
-      "status": "Not started",
-      "lastTouched": null,
+      "status": "Reviewed once",
+      "lastTouched": "2026-11-15T07:41:39.712Z",
       "notes": ""
     },
     "maths-aa__ahl-1-16__f99429c0f8": {
-      "status": "Not started",
-      "lastTouched": null,
+      "status": "Reviewed once",
+      "lastTouched": "2026-11-08T14:04:06.100Z",
       "notes": ""
     },
     "maths-aa__sl-2-1__b85d9be036": {
@@ -144,8 +144,8 @@
       "notes": ""
     },
     "maths-aa__ahl-2-12__a8f5bb6e1d": {
-      "status": "Not started",
-      "lastTouched": null,
+      "status": "Reviewed once",
+      "lastTouched": "2026-11-15T07:41:06.599Z",
       "notes": ""
     },
     "maths-aa__ahl-2-13__125aa473b6": {
@@ -444,13 +444,13 @@
       "notes": ""
     },
     "physics__a-1__2b051b1857": {
-      "status": "Not started",
-      "lastTouched": null,
+      "status": "Exam-ready",
+      "lastTouched": "2026-11-10T10:15:03.644Z",
       "notes": ""
     },
     "physics__a-2__3566f6a136": {
-      "status": "Not started",
-      "lastTouched": null,
+      "status": "Reviewed once",
+      "lastTouched": "2026-11-14T03:53:01.240Z",
       "notes": ""
     },
     "physics__a-3__955c51918b": {
@@ -460,7 +460,7 @@
     },
     "physics__b-1__3d1a867707": {
       "status": "Not started",
-      "lastTouched": null,
+      "lastTouched": "2026-11-10T10:15:09.344Z",
       "notes": ""
     },
     "physics__b-2__c6d5cc4d0b": {
@@ -549,13 +549,13 @@
       "notes": ""
     },
     "spanish-b__theme__c2097fae2e": {
-      "status": "Not started",
-      "lastTouched": null,
+      "status": "Reviewed once",
+      "lastTouched": "2026-11-08T14:07:52.349Z",
       "notes": ""
     },
     "spanish-b__theme__17a04ac2e7": {
-      "status": "Not started",
-      "lastTouched": null,
+      "status": "Reviewed once",
+      "lastTouched": "2026-11-15T07:43:41.226Z",
       "notes": ""
     },
     "spanish-b__theme__145aa20674": {
@@ -574,8 +574,8 @@
       "notes": ""
     },
     "spanish-b__assessment__4215f75148": {
-      "status": "Not started",
-      "lastTouched": null,
+      "status": "Reviewed once",
+      "lastTouched": "2026-11-08T14:03:27.346Z",
       "notes": ""
     },
     "spanish-b__assessment__ce9df96fc3": {
@@ -589,18 +589,18 @@
       "notes": ""
     },
     "tok__theme__07472b3280": {
-      "status": "Not started",
-      "lastTouched": null,
+      "status": "Seen in class",
+      "lastTouched": "2026-11-10T10:15:17.510Z",
       "notes": ""
     },
     "tok__theme__047ed5ddda": {
-      "status": "Not started",
-      "lastTouched": null,
+      "status": "Exam-ready",
+      "lastTouched": "2026-11-10T10:15:24.227Z",
       "notes": ""
     },
     "tok__theme__8ade64fa4d": {
       "status": "Not started",
-      "lastTouched": null,
+      "lastTouched": "2026-11-10T10:15:27.393Z",
       "notes": ""
     },
     "tok__theme__2c7b1a80bc": {
@@ -654,8 +654,8 @@
       "notes": ""
     },
     "thrive__f3464244b4": {
-      "status": "Not started",
-      "lastTouched": null,
+      "status": "Exam-ready",
+      "lastTouched": "2026-11-10T11:17:34.042Z",
       "notes": ""
     },
     "english__aoe-readers-writers-texts__9ec023847a": {
