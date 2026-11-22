@@ -1,0 +1,363 @@
+{
+  "weekStart": "2026-11-23",
+  "weekLabel": "Mon 23 Nov – Sun 29 Nov 2026",
+  "updatedAt": "2026-11-22T16:40:42+08:00",
+  "source": "Sunday due-revisit seed",
+  "timezone": "Asia/Hong_Kong",
+  "totals": {
+    "ib": 7.5,
+    "sat": 0.0,
+    "free": 22.5,
+    "light": 0.0
+  },
+  "counts": {
+    "ib": 10,
+    "sat": 0,
+    "free": 30,
+    "light": 0
+  },
+  "seededDueRevisits": 10,
+  "notes": "Phase B: seeded coverage-subject due revisits (Maths AA, Physics, Spanish B, ToK, Thrive) into empty Free slots up to the 12h IB cap, reserving 3h for SAT. English / History / Music not seeded. Family can adjust, then Sync to calendar.",
+  "choices": [
+    {
+      "id": "mon-23-o0",
+      "day": "Monday 23 Nov",
+      "date": "2026-11-23",
+      "start": "06:00",
+      "end": "06:45",
+      "kind": "ib",
+      "subject": "Physics",
+      "topic": "A.2 Forces and momentum (SL)"
+    },
+    {
+      "id": "mon-23-o1",
+      "day": "Monday 23 Nov",
+      "date": "2026-11-23",
+      "start": "16:30",
+      "end": "17:15",
+      "kind": "ib",
+      "subject": "Spanish B",
+      "topic": "Theme — Identities (optional: lifestyles; health and well-being; beliefs and values; subcultures; language and identity)"
+    },
+    {
+      "id": "mon-23-o2",
+      "day": "Monday 23 Nov",
+      "date": "2026-11-23",
+      "start": "17:35",
+      "end": "18:20",
+      "kind": "ib",
+      "subject": "Spanish B",
+      "topic": "Assessment SL — Paper 1 writing (25%)"
+    },
+    {
+      "id": "mon-23-o3",
+      "day": "Monday 23 Nov",
+      "date": "2026-11-23",
+      "start": "18:40",
+      "end": "19:25",
+      "kind": "ib",
+      "subject": "ToK",
+      "topic": "Core theme — Knowledge and the knower"
+    },
+    {
+      "id": "tue-24-o0",
+      "day": "Tuesday 24 Nov",
+      "date": "2026-11-24",
+      "start": "06:00",
+      "end": "06:45",
+      "kind": "ib",
+      "subject": "Maths AA",
+      "topic": "AHL 1.10 — Counting principles; binomial theorem (fractional/negative indices)"
+    },
+    {
+      "id": "tue-24-o2",
+      "day": "Tuesday 24 Nov",
+      "date": "2026-11-24",
+      "start": "17:35",
+      "end": "18:20",
+      "kind": "ib",
+      "subject": "Maths AA",
+      "topic": "AHL 1.11 — Partial fractions"
+    },
+    {
+      "id": "tue-24-o3",
+      "day": "Tuesday 24 Nov",
+      "date": "2026-11-24",
+      "start": "18:40",
+      "end": "19:25",
+      "kind": "ib",
+      "subject": "Maths AA",
+      "topic": "AHL 1.12 — Complex numbers; the complex plane"
+    },
+    {
+      "id": "wed-25-o0",
+      "day": "Wednesday 25 Nov",
+      "date": "2026-11-25",
+      "start": "06:00",
+      "end": "06:45",
+      "kind": "ib",
+      "subject": "Maths AA",
+      "topic": "AHL 1.13 — Modulus–argument (polar) form"
+    },
+    {
+      "id": "wed-25-o1",
+      "day": "Wednesday 25 Nov",
+      "date": "2026-11-25",
+      "start": "16:30",
+      "end": "17:15",
+      "kind": "ib",
+      "subject": "Maths AA",
+      "topic": "AHL 1.14 — Complex conjugate roots; De Moivre’s theorem"
+    },
+    {
+      "id": "thu-26-o0",
+      "day": "Thursday 26 Nov",
+      "date": "2026-11-26",
+      "start": "06:00",
+      "end": "06:45",
+      "kind": "ib",
+      "subject": "Maths AA",
+      "topic": "AHL 1.16 — Systems of linear equations (≤3); matrices / row reduction"
+    },
+    {
+      "id": "thu-26-o1",
+      "day": "Thursday 26 Nov",
+      "date": "2026-11-26",
+      "start": "16:30",
+      "end": "17:15",
+      "kind": "free"
+    },
+    {
+      "id": "thu-26-o2",
+      "day": "Thursday 26 Nov",
+      "date": "2026-11-26",
+      "start": "17:35",
+      "end": "18:20",
+      "kind": "free"
+    },
+    {
+      "id": "thu-26-o3",
+      "day": "Thursday 26 Nov",
+      "date": "2026-11-26",
+      "start": "18:40",
+      "end": "19:25",
+      "kind": "free"
+    },
+    {
+      "id": "fri-27-o0",
+      "day": "Friday 27 Nov",
+      "date": "2026-11-27",
+      "start": "06:00",
+      "end": "06:45",
+      "kind": "free"
+    },
+    {
+      "id": "fri-27-o1",
+      "day": "Friday 27 Nov",
+      "date": "2026-11-27",
+      "start": "16:30",
+      "end": "17:15",
+      "kind": "free"
+    },
+    {
+      "id": "fri-27-o2",
+      "day": "Friday 27 Nov",
+      "date": "2026-11-27",
+      "start": "17:35",
+      "end": "18:20",
+      "kind": "free"
+    },
+    {
+      "id": "fri-27-o3",
+      "day": "Friday 27 Nov",
+      "date": "2026-11-27",
+      "start": "18:40",
+      "end": "19:25",
+      "kind": "free"
+    },
+    {
+      "id": "sat-28-o0",
+      "day": "Saturday 28 Nov",
+      "date": "2026-11-28",
+      "start": "06:00",
+      "end": "06:45",
+      "kind": "free"
+    },
+    {
+      "id": "sat-28-o1",
+      "day": "Saturday 28 Nov",
+      "date": "2026-11-28",
+      "start": "09:00",
+      "end": "09:45",
+      "kind": "free"
+    },
+    {
+      "id": "sat-28-o2",
+      "day": "Saturday 28 Nov",
+      "date": "2026-11-28",
+      "start": "11:45",
+      "end": "12:30",
+      "kind": "free"
+    },
+    {
+      "id": "sat-28-o3",
+      "day": "Saturday 28 Nov",
+      "date": "2026-11-28",
+      "start": "13:00",
+      "end": "13:45",
+      "kind": "free"
+    },
+    {
+      "id": "sat-28-o4",
+      "day": "Saturday 28 Nov",
+      "date": "2026-11-28",
+      "start": "14:10",
+      "end": "14:55",
+      "kind": "free"
+    },
+    {
+      "id": "sat-28-o5",
+      "day": "Saturday 28 Nov",
+      "date": "2026-11-28",
+      "start": "15:20",
+      "end": "16:05",
+      "kind": "free"
+    },
+    {
+      "id": "sat-28-o6",
+      "day": "Saturday 28 Nov",
+      "date": "2026-11-28",
+      "start": "16:30",
+      "end": "17:15",
+      "kind": "free"
+    },
+    {
+      "id": "sat-28-o7",
+      "day": "Saturday 28 Nov",
+      "date": "2026-11-28",
+      "start": "17:35",
+      "end": "18:20",
+      "kind": "free"
+    },
+    {
+      "id": "sat-28-o8",
+      "day": "Saturday 28 Nov",
+      "date": "2026-11-28",
+      "start": "18:40",
+      "end": "19:25",
+      "kind": "free"
+    },
+    {
+      "id": "sat-28-o9",
+      "day": "Saturday 28 Nov",
+      "date": "2026-11-28",
+      "start": "20:10",
+      "end": "20:55",
+      "kind": "free"
+    },
+    {
+      "id": "sat-28-o10",
+      "day": "Saturday 28 Nov",
+      "date": "2026-11-28",
+      "start": "21:15",
+      "end": "22:00",
+      "kind": "free"
+    },
+    {
+      "id": "sun-29-o0",
+      "day": "Sunday 29 Nov",
+      "date": "2026-11-29",
+      "start": "06:00",
+      "end": "06:45",
+      "kind": "free"
+    },
+    {
+      "id": "sun-29-o1",
+      "day": "Sunday 29 Nov",
+      "date": "2026-11-29",
+      "start": "09:00",
+      "end": "09:45",
+      "kind": "free"
+    },
+    {
+      "id": "sun-29-o2",
+      "day": "Sunday 29 Nov",
+      "date": "2026-11-29",
+      "start": "10:00",
+      "end": "10:45",
+      "kind": "free"
+    },
+    {
+      "id": "sun-29-o3",
+      "day": "Sunday 29 Nov",
+      "date": "2026-11-29",
+      "start": "11:45",
+      "end": "12:30",
+      "kind": "free"
+    },
+    {
+      "id": "sun-29-o4",
+      "day": "Sunday 29 Nov",
+      "date": "2026-11-29",
+      "start": "13:00",
+      "end": "13:45",
+      "kind": "free"
+    },
+    {
+      "id": "sun-29-o5",
+      "day": "Sunday 29 Nov",
+      "date": "2026-11-29",
+      "start": "14:10",
+      "end": "14:55",
+      "kind": "free"
+    },
+    {
+      "id": "sun-29-o6",
+      "day": "Sunday 29 Nov",
+      "date": "2026-11-29",
+      "start": "15:20",
+      "end": "16:05",
+      "kind": "free"
+    },
+    {
+      "id": "sun-29-o7",
+      "day": "Sunday 29 Nov",
+      "date": "2026-11-29",
+      "start": "16:30",
+      "end": "17:15",
+      "kind": "free"
+    },
+    {
+      "id": "sun-29-o8",
+      "day": "Sunday 29 Nov",
+      "date": "2026-11-29",
+      "start": "17:35",
+      "end": "18:20",
+      "kind": "free"
+    },
+    {
+      "id": "sun-29-o9",
+      "day": "Sunday 29 Nov",
+      "date": "2026-11-29",
+      "start": "18:40",
+      "end": "19:25",
+      "kind": "free"
+    },
+    {
+      "id": "sun-29-o10",
+      "day": "Sunday 29 Nov",
+      "date": "2026-11-29",
+      "start": "20:10",
+      "end": "20:55",
+      "kind": "free"
+    },
+    {
+      "id": "sun-29-o11",
+      "day": "Sunday 29 Nov",
+      "date": "2026-11-29",
+      "start": "21:15",
+      "end": "22:00",
+      "kind": "free"
+    }
+  ]
+}

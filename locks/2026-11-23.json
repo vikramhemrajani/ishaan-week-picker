@@ -2,7 +2,7 @@
   "weekStart": "2026-11-23",
   "weekEnd": "2026-11-29",
   "timezone": "Asia/Hong_Kong",
-  "fetchedAt": "2026-11-15T16:35:05+08:00",
+  "fetchedAt": "2026-11-22T16:39:12+08:00",
   "sources": [
     "General Timetable (Google Calendar)",
     "Study calendar (SAT classes)"
@@ -31,8 +31,8 @@
       "id": "1qi7d2qa054eptvti4oblif9ed_20261123T113000Z",
       "title": "Physics Ms Ghosh",
       "date": "2026-11-23",
-      "start": "19:30",
-      "end": "20:30",
+      "start": "20:30",
+      "end": "21:30",
       "minutes": 60,
       "satTutor": false,
       "source": "General Timetable",
@@ -53,6 +53,19 @@
       "sourceTitle": "School (collapsed periods)"
     },
     {
+      "kind": "sat_class",
+      "id": "llro9j3gpn65r3g6drnoeh3jgk",
+      "title": "SAT class · Pulki (60 Mins Class)",
+      "date": "2026-11-24",
+      "start": "16:30",
+      "end": "17:30",
+      "minutes": 60,
+      "satTutor": true,
+      "source": "Study",
+      "sourceTitle": "60 Mins Class - Ishaan",
+      "day": "Tue"
+    },
+    {
       "kind": "tutor",
       "id": "0mrltjdg7oo82i5e85gg8jk866_20261124T120000Z",
       "title": "English Tutor",
@@ -71,8 +84,8 @@
       "date": "2026-11-25",
       "day": "Wed",
       "start": "08:00",
-      "end": "15:00",
-      "minutes": 420,
+      "end": "11:55",
+      "minutes": 235,
       "kind": "school",
       "satTutor": false,
       "source": "General Timetable",

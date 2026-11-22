@@ -2,7 +2,7 @@
   "weekStart": "2026-11-16",
   "weekEnd": "2026-11-22",
   "timezone": "Asia/Hong_Kong",
-  "fetchedAt": "2026-11-15T16:35:05+08:00",
+  "fetchedAt": "2026-11-22T16:39:12+08:00",
   "sources": [
     "General Timetable (Google Calendar)",
     "Study calendar (SAT classes)"
@@ -93,15 +93,15 @@
     },
     {
       "kind": "sat_class",
-      "id": "f3kqddsi5l5g1vsvt23aemidcc",
-      "title": "SAT class · Pulki (60 Mins Class)",
+      "id": "9k3k408mo9sqmoptthmg6njap0",
+      "title": "Zuperscore SAT Math — Pulki Chugh",
       "date": "2026-11-18",
       "start": "16:30",
       "end": "17:30",
       "minutes": 60,
       "satTutor": true,
-      "source": "Study",
-      "sourceTitle": "60 Mins Class - Ishaan",
+      "source": "General Timetable",
+      "sourceTitle": "Zuperscore SAT Math — Pulki Chugh",
       "day": "Wed"
     },
     {
@@ -148,8 +148,8 @@
       "id": "1fj25qa2gkhn6u1jgq89saah41_20261119T120000Z",
       "title": "Math Tutor",
       "date": "2026-11-19",
-      "start": "20:00",
-      "end": "21:00",
+      "start": "20:15",
+      "end": "21:15",
       "minutes": 60,
       "satTutor": false,
       "source": "General Timetable",
