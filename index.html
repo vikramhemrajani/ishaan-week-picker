@@ -452,6 +452,12 @@
   }
   .btn-sync:hover:not(:disabled) { background: #0d9488; }
   .btn-sync:disabled { box-shadow: none; }
+  .btn-save {
+    background: #134e4a;
+    color: #fff;
+    box-shadow: 0 6px 14px -8px rgba(19,78,74,0.7);
+  }
+  .btn-save:hover:not(:disabled) { background: #115e59; }
   .toast.warn { background: #fef3c7; color: #92400e; }
   .sync-box {
     display: none;
@@ -852,6 +858,12 @@
     color: #475569;
   }
   .shared-plan strong { color: #064e3b; }
+  .shared-plan.warn {
+    background: #fffbeb;
+    border-color: #fcd34d;
+    color: #92400e;
+  }
+  .shared-plan.warn strong { color: #92400e; }
   .btn-shared {
     background: #ecfdf5;
     color: #047857;
@@ -1492,27 +1504,30 @@
       <div>
         <p class="actions-label">Main</p>
         <div class="actions-row">
+          <button type="button" class="btn-save" id="btnSaveFamily"
+            title="Save this week’s picks and topic progress to the family plan. Other browsers load it automatically."
+            aria-describedby="actionsHelpMain">Save family plan</button>
           <button type="button" class="btn-sync" id="btnSync"
-            title="Write this week’s picks to General Timetable and update the shared plan and topic progress every browser can load."
+            title="Save the family plan, and write General Timetable drafts when calendar sync is set up."
             aria-describedby="actionsHelpMain">Send to calendar</button>
           <button type="button" class="btn-fill-due" id="btnFillDue"
             title="Put Due topics into empty Free slots. Keeps IB/SAT/Light already set. Stays within 12h IB and leaves room for 3h SAT.">Fill free slots from Due</button>
         </div>
-        <p class="actions-help" id="actionsHelpMain">Send to calendar writes General Timetable drafts and updates the shared plan and topic progress.</p>
+        <p class="actions-help" id="actionsHelpMain">Save family plan stores this week for every browser. Send to calendar also writes General Timetable drafts when calendar sync is set up.</p>
       </div>
       <div>
         <p class="actions-label">Also</p>
         <div class="actions-row">
           <button type="button" class="btn-shared" id="btnLoadShared"
-            title="Replace this browser’s picks with the published shared plan for this week.">Load shared plan</button>
+            title="Replace this browser’s picks with the family plan for this week.">Load shared plan</button>
           <button type="button" class="btn-secondary" id="btnCopy"
             title="Copy a plain-text summary of this week’s picks (handy for notes or WhatsApp).">Copy plan text</button>
           <button type="button" class="btn-secondary" id="btnPrint"
             title="Open the print dialog — choose Save as PDF if you want a file.">Print or PDF</button>
           <button type="button" class="btn-danger" id="btnReset"
-            title="Clear only this browser’s picks for this week. Does not change the shared plan until you Send to calendar.">Clear my picks</button>
+            title="Clear picks for this week. If this device has the family code, the family plan is updated too.">Clear my picks</button>
           <button type="button" class="btn-key" id="btnChangeFamilyKey"
-            title="Set or replace the family sync key stored in this browser.">Family key…</button>
+            title="Set or replace the family code stored in this browser. It is not written into the page.">Family code…</button>
         </div>
       </div>
     </div>
@@ -1561,7 +1576,7 @@
         <div class="howto-body">
         Verified syllabus rows only (no invented curriculum).
         Tap a status to cycle <em>Not started → Seen in class → Reviewed once → Exam-ready</em>.
-        Progress saves on this device and is published with <strong>Send to calendar</strong>, or with <strong>Save topic progress</strong> if you only want to update coverage. A second device loads the newer hosted file without overwriting later edits you have made here.
+        Progress saves on this device and on the family plan once this browser has the family code, or when you press <strong>Save topic progress</strong>. Another browser loads that progress on its own. Later edits on this device are not overwritten by an older copy.
         Picking a matching IB topic in the Week tab auto-bumps it to at least <em>Reviewed once</em>. <strong>Due this week</strong> uses spaced revisits (Seen 3d · Reviewed 7d · Exam-ready 21d). Music coverage is still deferred pending Ishaan.
         </div>
       </details>
@@ -1576,7 +1591,7 @@
         </div>
         <div class="topics-actions">
           <button type="button" class="primary" id="btnSyncProgress"
-            title="Publish topic progress so every browser can load it. Does not rewrite calendar drafts.">Save topic progress</button>
+            title="Save topic progress to the family plan so every browser can load it. Does not rewrite calendar drafts.">Save topic progress</button>
           <button type="button" class="secondary" id="btnCopyProgress"
             title="Copy a fallback payload of topic progress (only needed if Save cannot write yet).">Copy topic progress</button>
           <button type="button" class="danger" id="btnResetProgress"
@@ -1605,7 +1620,7 @@
   </div>
 
   <footer>
-    Ishaan · IB Tracker · Week + Topics · shared plan at ishaan-week-picker.deed.page · works offline
+    Ishaan · IB Tracker · Week + Topics · family plan shared across browsers · works offline
   </footer>
 </div>
 
@@ -1624,6 +1639,10 @@ const PROGRESS_KEY = "ishaan-ib-progress-v1";
 // SYNC_API_URL is filled in at deploy time by apps-script/deploy.sh.
 // Leave empty until the Apps Script web app is deployed. Never put secrets here.
 const SYNC_API_URL = "";
+// STORE_API_URL is the public family-plan store. store/deploy.sh fills it in
+// after the Cloudflare Worker is deployed. It is not a secret. Leave it empty
+// until then. The family code is entered in the browser and is never written here.
+const STORE_API_URL = "";
 const FAMILY_KEY_STORAGE = "ishaan-family-sync-key";
 const LAST_SYNC_STORAGE = "ishaan-last-sync-v1";
 const STATUS_ENUM = (TOPICS_DATA.meta && TOPICS_DATA.meta.statusEnum) || ["Not started","Seen in class","Reviewed once","Exam-ready"];
@@ -1669,6 +1688,8 @@ function saveProgress(opts) {
   opts = opts || {};
   if (!opts.preserveTimestamp) progressState.updatedAt = new Date().toISOString();
   try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(progressState)); } catch (e) { /* ignore */ }
+  if (opts.remote) return;
+  scheduleFamilyProgressSave();
 }
 
 function getTopicStatus(id) {
@@ -1912,7 +1933,8 @@ function renderTopicsPanel() {
   window.__topicsDirty = false;
 }
 
-function switchTab(which) {
+function switchTab(which, opts) {
+  opts = opts || {};
   const isWeek = which === "week";
   const weekBtn = document.getElementById("tab-week");
   const topicsBtn = document.getElementById("tab-topics");
@@ -1933,13 +1955,14 @@ function switchTab(which) {
         "Use the week navigator to plan ahead. Topics tab tracks syllabus coverage (verified rows only).";
     } else {
       lead.innerHTML = "<strong>Topic tracker</strong> — traffic-light overview and coverage map across verified IB topics. " +
-        "Progress lives on this device and is published with <strong>Send to calendar</strong> or <strong>Save topic progress</strong>.";
+        "Progress is stored on this device and on the family plan. <strong>Save topic progress</strong> publishes it for every browser.";
     }
   }
   if (!isWeek) {
     renderTopicsPanel();
     mergeHostedProgress({ quiet: true });
   }
+  if (opts.keepHash) return;
   try {
     if (isWeek) history.replaceState(null, "", "#week=" + (CONFIG && CONFIG.weekStart ? CONFIG.weekStart : PUBLISHED_CONFIG.weekStart));
     else history.replaceState(null, "", "#topics");
@@ -2038,18 +2061,327 @@ function initState() {
   } catch (e) { /* ignore */ }
 }
 
-function persistState() {
+function persistState(opts) {
+  opts = opts || {};
   try { localStorage.setItem(getStorageKey(), JSON.stringify(state)); } catch (e) { /* ignore */ }
+  if (opts.remote) {
+    writeWeekMeta({
+      dirty: false,
+      updatedAt: opts.updatedAt || null,
+      revision: opts.revision != null ? opts.revision : null,
+      source: opts.source || "remote"
+    });
+    return;
+  }
+  const prev = readWeekMeta();
+  writeWeekMeta({
+    dirty: true,
+    updatedAt: new Date().toISOString(),
+    revision: prev.revision != null ? prev.revision : null,
+    source: "this-device"
+  });
+  scheduleFamilyPlanSave();
 }
 
 
-/* ===== Shared plan (cross-browser) =====
- * Source of truth on the static host: choices/YYYY-MM-DD.json (+ audit/choices-log.jsonl).
- * Send to calendar writes both hosts via the Apps Script sync service.
+/* ===== Family plan (cross-browser) =====
+ * Source of truth: the family plan store (STORE_API_URL).
+ * choices/YYYY-MM-DD.json remains the hosted seed used when the store has
+ * nothing for that week yet. The browser cannot write that static file.
  */
 const SHARED_CHOICES_DIR = "choices/";
 const SHARED_AUDIT_URL = "audit/choices-log.jsonl";
-let sharedPlanMeta = { weekStart: null, available: false, updatedAt: null, lastAudit: null, loading: false };
+let sharedPlanMeta = { weekStart: null, available: false, updatedAt: null, lastAudit: null, loading: false, fromStore: false };
+let planSaveTimer = null;
+let progressSaveTimer = null;
+let familyPollTimer = null;
+let sessionDeclinedFamilyCode = false;
+let familyKeyPromise = null;
+let familyRemoteNewer = false;
+let familyStoreNote = "";
+let progressRevision = null;
+let progressSaveQueued = false;
+let familyLoadToken = 0;
+const PROGRESS_REV_KEY = "ishaan-progress-revision";
+
+function isStoreConfigured() {
+  return !!(STORE_API_URL && String(STORE_API_URL).trim() && !/REPLACE_|PLACEHOLDER|YOUR_/i.test(STORE_API_URL));
+}
+
+function storeEndpoint(path) {
+  return String(STORE_API_URL || "").replace(/\/+$/, "") + path;
+}
+
+function weekMetaKey() {
+  return "ishaan-week-meta-" + CONFIG.weekStart;
+}
+
+function readWeekMeta() {
+  try {
+    const raw = localStorage.getItem(weekMetaKey());
+    if (!raw) return { exists: false, dirty: false, updatedAt: null, revision: null, source: null };
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object") {
+      return { exists: false, dirty: false, updatedAt: null, revision: null, source: null };
+    }
+    return {
+      exists: true,
+      dirty: !!parsed.dirty,
+      updatedAt: parsed.updatedAt || null,
+      revision: typeof parsed.revision === "number" ? parsed.revision : null,
+      source: parsed.source || null
+    };
+  } catch (e) {
+    return { exists: false, dirty: false, updatedAt: null, revision: null, source: null };
+  }
+}
+
+function writeWeekMeta(meta) {
+  try {
+    localStorage.setItem(weekMetaKey(), JSON.stringify({
+      dirty: !!meta.dirty,
+      updatedAt: meta.updatedAt || null,
+      revision: meta.revision != null ? meta.revision : null,
+      source: meta.source || null
+    }));
+  } catch (e) { /* ignore */ }
+}
+
+function readProgressRevision() {
+  if (typeof progressRevision === "number") return progressRevision;
+  try {
+    const n = Number(localStorage.getItem(PROGRESS_REV_KEY));
+    return Number.isFinite(n) && n > 0 ? n : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function writeProgressRevision(rev) {
+  progressRevision = typeof rev === "number" ? rev : null;
+  try {
+    if (progressRevision == null) localStorage.removeItem(PROGRESS_REV_KEY);
+    else localStorage.setItem(PROGRESS_REV_KEY, String(progressRevision));
+  } catch (e) { /* ignore */ }
+}
+
+async function storeFetch(path, opts) {
+  opts = opts || {};
+  const headers = { Accept: "application/json" };
+  if (opts.body != null) headers["Content-Type"] = "application/json";
+  if (opts.auth) headers["X-Family-Code"] = opts.auth;
+  if (opts.revision != null) headers["If-Match"] = String(opts.revision);
+  const res = await fetch(storeEndpoint(path), {
+    method: opts.method || "GET",
+    headers,
+    body: opts.body != null ? JSON.stringify(opts.body) : undefined,
+    cache: "no-store"
+  });
+  let data = null;
+  try { data = await res.json(); } catch (e) { data = null; }
+  return { ok: res.ok, status: res.status, data };
+}
+
+function unwrapStoreDoc(data) {
+  if (!data || data.ok === false || !data.document) return null;
+  return {
+    revision: typeof data.revision === "number" ? data.revision : null,
+    updatedAt: data.savedAt || (data.document && data.document.updatedAt) || null,
+    document: data.document
+  };
+}
+
+async function fetchStoreWeek(weekStart) {
+  if (!isStoreConfigured()) return { state: "unconfigured" };
+  try {
+    const res = await storeFetch("/v1/weeks/" + weekStart);
+    if (res.status === 404) return { state: "missing" };
+    if (!res.ok) return { state: "error", status: res.status };
+    const doc = unwrapStoreDoc(res.data);
+    if (!doc) return { state: "missing" };
+    return { state: "ok", store: doc };
+  } catch (e) {
+    return { state: "error" };
+  }
+}
+
+async function fetchStoreProgress() {
+  if (!isStoreConfigured()) return { state: "unconfigured" };
+  try {
+    const res = await storeFetch("/v1/progress");
+    if (res.status === 404) return { state: "missing" };
+    if (!res.ok) return { state: "error", status: res.status };
+    const doc = unwrapStoreDoc(res.data);
+    if (!doc) return { state: "missing" };
+    return { state: "ok", store: doc };
+  } catch (e) {
+    return { state: "error" };
+  }
+}
+
+function storeErrorMessage(res) {
+  if (!res) return "The family plan store did not respond.";
+  if (res.status === 401) return "Family code was not accepted.";
+  if (res.status === 409) return "The family plan changed on another device.";
+  if (res.status === 403) return "This site is not allowed to write the family plan.";
+  if (res.status === 503) return "The family plan store is not ready for writes yet.";
+  if (res.data && res.data.message) return String(res.data.message);
+  return "The family plan store returned an error (" + res.status + ").";
+}
+
+function scheduleFamilyPlanSave() {
+  const weekStart = CONFIG.weekStart;
+  if (!isStoreConfigured()) {
+    updateSharedPlanChrome();
+    return;
+  }
+  clearTimeout(planSaveTimer);
+  planSaveTimer = setTimeout(() => { void flushFamilyPlanAutosave(weekStart); }, 800);
+  updateSharedPlanChrome();
+}
+
+function scheduleFamilyProgressSave() {
+  if (!isStoreConfigured()) return;
+  progressSaveQueued = true;
+  clearTimeout(progressSaveTimer);
+  progressSaveTimer = setTimeout(() => { void flushFamilyProgressAutosave(); }, 800);
+}
+
+async function flushFamilyPlanAutosave(weekStart) {
+  if (CONFIG.weekStart !== weekStart) return;
+  const meta = readWeekMeta();
+  if (!meta.dirty || familyRemoteNewer) return;
+  if (!storedFamilyKey()) {
+    if (sessionDeclinedFamilyCode) {
+      familyStoreNote = "This device has not joined the family plan yet. Use Family code…, then Save family plan.";
+      updateSharedPlanChrome();
+      return;
+    }
+    const key = await ensureFamilyKey();
+    if (!key) {
+      sessionDeclinedFamilyCode = true;
+      familyStoreNote = "Enter the family code once to save this plan for every browser.";
+      updateSharedPlanChrome();
+      return;
+    }
+  }
+  await saveFamilyPlan({ prompt: false, source: "Save family plan", overwrite: false });
+}
+
+async function flushFamilyProgressAutosave() {
+  if (!progressSaveQueued) return;
+  if (!storedFamilyKey()) {
+    if (sessionDeclinedFamilyCode) return;
+    const key = await ensureFamilyKey();
+    if (!key) {
+      sessionDeclinedFamilyCode = true;
+      return;
+    }
+  }
+  await saveFamilyProgress({ prompt: false, overwrite: false });
+}
+
+async function saveFamilyPlan(opts) {
+  opts = opts || {};
+  if (!isStoreConfigured()) return { ok: false, reason: "unconfigured" };
+  clearTimeout(planSaveTimer);
+  let key = storedFamilyKey();
+  if (!key && opts.prompt) key = await ensureFamilyKey();
+  if (!key) return { ok: false, reason: "cancelled" };
+  if (opts.prompt && familyRemoteNewer) {
+    const go = confirm("The family plan changed on another device. Save this device’s picks and replace it?");
+    if (!go) return { ok: false, reason: "cancelled" };
+  }
+  const bundle = buildPublishBundle(opts.source || "Save family plan");
+  const meta = readWeekMeta();
+  const sendRevision = (opts.overwrite || opts.prompt) ? null : meta.revision;
+  let res;
+  try {
+    res = await storeFetch("/v1/weeks/" + CONFIG.weekStart, {
+      method: "PUT",
+      body: bundle.sharedDoc,
+      auth: key,
+      revision: sendRevision
+    });
+  } catch (e) {
+    familyStoreNote = "Could not reach the family plan store. Picks are still on this device.";
+    updateSharedPlanChrome();
+    return { ok: false, reason: "network", message: familyStoreNote };
+  }
+  if (res.status === 401) {
+    try { localStorage.removeItem(FAMILY_KEY_STORAGE); } catch (e) { /* ignore */ }
+    familyStoreNote = "Family code was not accepted. Enter it again with Family code…";
+    updateSharedPlanChrome();
+    return { ok: false, reason: "rejected", message: familyStoreNote };
+  }
+  if (res.status === 409) {
+    familyRemoteNewer = true;
+    familyStoreNote = "The family plan changed on another device. Load shared plan, or Save family plan to replace it.";
+    updateSharedPlanChrome();
+    return { ok: false, reason: "conflict", message: familyStoreNote, remote: res.data };
+  }
+  if (!res.ok || !res.data || res.data.ok !== true) {
+    familyStoreNote = storeErrorMessage(res);
+    updateSharedPlanChrome();
+    return { ok: false, reason: "http", message: familyStoreNote, status: res.status };
+  }
+  familyRemoteNewer = false;
+  familyStoreNote = "";
+  writeWeekMeta({
+    dirty: false,
+    updatedAt: res.data.savedAt,
+    revision: res.data.revision,
+    source: "store"
+  });
+  sharedPlanMeta.available = true;
+  sharedPlanMeta.weekStart = CONFIG.weekStart;
+  sharedPlanMeta.updatedAt = res.data.savedAt;
+  sharedPlanMeta.fromStore = true;
+  sharedPlanMeta.loading = false;
+  updateSharedPlanChrome();
+  return { ok: true, savedAt: res.data.savedAt, revision: res.data.revision };
+}
+
+async function saveFamilyProgress(opts) {
+  opts = opts || {};
+  if (!isStoreConfigured()) return { ok: false, reason: "unconfigured" };
+  clearTimeout(progressSaveTimer);
+  let key = storedFamilyKey();
+  if (!key && opts.prompt) key = await ensureFamilyKey();
+  if (!key) return { ok: false, reason: "cancelled" };
+  const body = {
+    version: progressState.version || 1,
+    updatedAt: progressState.updatedAt || new Date().toISOString(),
+    statusEnum: STATUS_ENUM,
+    byTopicId: progressState.byTopicId
+  };
+  const knownRev = readProgressRevision();
+  const sendRevision = (opts.overwrite || opts.prompt) ? null : knownRev;
+  let res;
+  try {
+    res = await storeFetch("/v1/progress", {
+      method: "PUT",
+      body,
+      auth: key,
+      revision: sendRevision
+    });
+  } catch (e) {
+    return { ok: false, reason: "network", message: "Could not reach the family plan store." };
+  }
+  if (res.status === 401) {
+    try { localStorage.removeItem(FAMILY_KEY_STORAGE); } catch (e) { /* ignore */ }
+    return { ok: false, reason: "rejected", message: "Family code was not accepted." };
+  }
+  if (res.status === 409) {
+    return { ok: false, reason: "conflict", message: "Topic progress changed on another device. Open the Topics tab again to load it." };
+  }
+  if (!res.ok || !res.data || res.data.ok !== true) {
+    return { ok: false, reason: "http", message: storeErrorMessage(res) };
+  }
+  progressSaveQueued = false;
+  writeProgressRevision(res.data.revision);
+  return { ok: true, savedAt: res.data.savedAt, revision: res.data.revision };
+}
 
 function sharedChoicesUrl(weekStart) {
   return SHARED_CHOICES_DIR + weekStart + ".json";
@@ -2087,9 +2419,16 @@ function extractChoicesList(payload) {
   return [];
 }
 
-function applySharedChoices(payload, { persist = true } = {}) {
+function applySharedChoices(payload, opts) {
+  opts = opts || {};
+  const persist = opts.persist !== false;
   const list = extractChoicesList(payload);
   if (!list.length) return false;
+  if (opts.replace) {
+    const defaults = cloneDefaults();
+    Object.keys(state).forEach(k => delete state[k]);
+    Object.assign(state, defaults);
+  }
   const map = choicesArrayToStateMap(list);
   let applied = 0;
   Object.keys(state).forEach(id => {
@@ -2098,7 +2437,18 @@ function applySharedChoices(payload, { persist = true } = {}) {
       applied++;
     }
   });
-  if (persist) persistState();
+  if (persist) {
+    if (opts.remote) {
+      persistState({
+        remote: true,
+        updatedAt: opts.remote.updatedAt,
+        revision: opts.remote.revision,
+        source: opts.remote.source
+      });
+    } else {
+      persistState();
+    }
+  }
   return applied > 0;
 }
 
@@ -2109,7 +2459,8 @@ function isStateBlank() {
 }
 
 function localStorageHasKey() {
-  try { return localStorage.getItem(getStorageKey()) != null; } catch (e) { return false; }
+  try { return localStorage.getItem(getStorageKey()) != null; }
+  catch (e) { return false; }
 }
 
 function hourSnapshot() {
@@ -2183,101 +2534,217 @@ function updateSharedPlanChrome() {
   const ws = CONFIG.weekStart;
   if (sharedPlanMeta.loading) {
     el.className = "shared-plan missing";
-    el.textContent = "Checking shared plan…";
+    el.textContent = "Checking the family plan…";
     if (btn) btn.disabled = true;
     return;
   }
-  if (!sharedPlanMeta.available || sharedPlanMeta.weekStart !== ws) {
+  const meta = readWeekMeta();
+  if (familyRemoteNewer) {
+    el.className = "shared-plan warn";
+    el.innerHTML = "A newer family plan is available for <strong>" + escapeHtml(ws) +
+      "</strong>. <strong>Load shared plan</strong> replaces the picks on this device. <strong>Save family plan</strong> publishes the picks on this device instead.";
+    if (btn) btn.disabled = !sharedPlanMeta.available;
+    return;
+  }
+  if (!isStoreConfigured()) {
     el.className = "shared-plan missing";
-    el.innerHTML = "No shared plan published for <strong>" + escapeHtml(ws) +
-      "</strong> yet. After you <strong>Send to calendar</strong>, <code>choices/" +
-      escapeHtml(ws) + ".json</code> is updated so every browser sees the same picks.";
-    if (btn) btn.disabled = true;
+    const seed = sharedPlanMeta.available
+      ? " This week still has a hosted seed from <strong>" + escapeHtml(formatHktStamp(sharedPlanMeta.updatedAt)) + "</strong>."
+      : " Picks stay on this device.";
+    el.innerHTML = "The family plan store is not set up on this copy of the page yet, so a save here is not visible on other browsers." +
+      seed + " Setup is in <code>store/README.md</code>.";
+    if (btn) btn.disabled = !sharedPlanMeta.available;
     return;
   }
-  el.className = "shared-plan";
-  const when = formatHktStamp(sharedPlanMeta.updatedAt || (sharedPlanMeta.lastAudit && sharedPlanMeta.lastAudit.ts));
-  const hours = sharedPlanMeta.lastAudit && sharedPlanMeta.lastAudit.hours
-    ? sharedPlanMeta.lastAudit.hours
-    : null;
-  const hourBit = hours
-    ? ` · IB ${hours.ib}h · SAT ${hours.sat}h · Free ${hours.free}h · Light ${hours.light}h`
-    : "";
-  const src = sharedPlanMeta.lastAudit && sharedPlanMeta.lastAudit.source
-    ? ` · via ${escapeHtml(String(sharedPlanMeta.lastAudit.source))}`
-    : "";
-  el.innerHTML = "Shared plan for <strong>" + escapeHtml(ws) + "</strong> last published <strong>" +
-    escapeHtml(when) + "</strong>" + escapeHtml(hourBit) + src +
-    ". This browser keeps local edits until you <strong>Send to calendar</strong> or tap <strong>Load shared plan</strong>.";
-  if (btn) btn.disabled = false;
+  if (meta.dirty) {
+    el.className = "shared-plan warn";
+    const extra = familyStoreNote
+      ? " " + escapeHtml(familyStoreNote)
+      : " They save automatically once this device has the family code.";
+    el.innerHTML = "Picks on this device are not on the family plan yet." + extra;
+    if (btn) btn.disabled = !sharedPlanMeta.available;
+    return;
+  }
+  if (familyStoreNote) {
+    el.className = "shared-plan warn";
+    el.textContent = familyStoreNote;
+    if (btn) btn.disabled = !sharedPlanMeta.available;
+    return;
+  }
+  if (sharedPlanMeta.available && sharedPlanMeta.fromStore) {
+    el.className = "shared-plan";
+    el.innerHTML = "Family plan for <strong>" + escapeHtml(ws) + "</strong> saved <strong>" +
+      escapeHtml(formatHktStamp(sharedPlanMeta.updatedAt)) +
+      "</strong>. Other browsers load it automatically.";
+    if (btn) btn.disabled = false;
+    return;
+  }
+  if (sharedPlanMeta.available) {
+    el.className = "shared-plan";
+    el.innerHTML = "No family-plan save for <strong>" + escapeHtml(ws) +
+      "</strong> yet. Showing the hosted seed from <strong>" + escapeHtml(formatHktStamp(sharedPlanMeta.updatedAt)) +
+      "</strong>. <strong>Save family plan</strong> stores changes for every browser.";
+    if (btn) btn.disabled = false;
+    return;
+  }
+  el.className = "shared-plan missing";
+  el.innerHTML = "No family plan for <strong>" + escapeHtml(ws) +
+    "</strong> yet. <strong>Save family plan</strong> stores this week so every browser can load it.";
+  if (btn) btn.disabled = true;
+}
+
+function localChoiceSnapshot() {
+  try { return buildChoicesJson(false); }
+  catch (e) { return []; }
 }
 
 async function refreshSharedPlanMeta() {
-  const ws = CONFIG.weekStart;
-  sharedPlanMeta = { weekStart: ws, available: false, updatedAt: null, lastAudit: null, loading: true };
-  updateSharedPlanChrome();
-  const [payload, audit] = await Promise.all([
-    fetchSharedChoices(ws),
-    fetchLatestAuditForWeek(ws)
-  ]);
-  sharedPlanMeta.loading = false;
-  sharedPlanMeta.lastAudit = audit;
-  if (payload) {
-    sharedPlanMeta.available = true;
-    sharedPlanMeta.updatedAt = payload.updatedAt || (audit && audit.ts) || null;
-    if (!sharedPlanMeta.updatedAt && audit) sharedPlanMeta.updatedAt = audit.ts;
-  } else {
-    sharedPlanMeta.available = false;
-    sharedPlanMeta.updatedAt = audit && audit.ts || null;
-  }
-  updateSharedPlanChrome();
-  return payload;
+  return loadSharedPlan({ quiet: true });
 }
 
-async function loadSharedPlan({ force = false, quiet = false } = {}) {
+async function loadSharedPlan({ force = false, quiet = false, fromPoll = false } = {}) {
   const ws = CONFIG.weekStart;
-  const payload = await fetchSharedChoices(ws);
-  const audit = await fetchLatestAuditForWeek(ws);
+  const token = ++familyLoadToken;
+  sharedPlanMeta.loading = true;
   sharedPlanMeta.weekStart = ws;
-  sharedPlanMeta.lastAudit = audit;
+  updateSharedPlanChrome();
+  const [storeResult, fileDoc] = await Promise.all([
+    fetchStoreWeek(ws),
+    fetchSharedChoices(ws)
+  ]);
+  if (token !== familyLoadToken || CONFIG.weekStart !== ws) return false;
+
+  const meta = readWeekMeta();
+  const localChoices = localChoiceSnapshot();
+  const store = storeResult.state === "ok" ? storeResult.store : null;
+  const helpers = window.IshaanFamilyStore;
   sharedPlanMeta.loading = false;
-  if (!payload) {
-    sharedPlanMeta.available = false;
+  sharedPlanMeta.weekStart = ws;
+
+  if (!helpers || typeof helpers.chooseSharedSource !== "function" || typeof helpers.plansEquivalent !== "function") {
+    sharedPlanMeta.available = !!fileDoc;
+    sharedPlanMeta.updatedAt = fileDoc && fileDoc.updatedAt || null;
+    sharedPlanMeta.fromStore = false;
+    if (fileDoc && (force || !localStorageHasKey() || isStateBlank())) {
+      const ok = applySharedChoices(fileDoc, {
+        persist: true,
+        replace: true,
+        remote: { updatedAt: fileDoc.updatedAt || null, revision: null, source: "file" }
+      });
+      if (ok) render();
+      updateSharedPlanChrome();
+      return ok;
+    }
     updateSharedPlanChrome();
-    if (force && !quiet) showToast("No shared plan for this week yet.", true);
     return false;
   }
-  sharedPlanMeta.available = true;
-  sharedPlanMeta.updatedAt = payload.updatedAt || (audit && audit.ts) || null;
-  const hadLocal = localStorageHasKey();
-  const blank = isStateBlank();
-  if (!force) {
-    if (hadLocal && !blank) {
-      updateSharedPlanChrome();
-      return false; // keep local edits
+
+  const decision = helpers.chooseSharedSource({
+    force,
+    local: {
+      present: localStorageHasKey(),
+      blank: isStateBlank(),
+      dirty: meta.dirty === true,
+      hasMeta: meta.exists === true,
+      matchesFile: !!(fileDoc && helpers.plansEquivalent(localChoices, fileDoc.choices || [])),
+      matchesStore: !!(store && helpers.plansEquivalent(localChoices, (store.document && store.document.choices) || [])),
+      updatedAt: meta.updatedAt,
+      revision: meta.revision
+    },
+    store,
+    file: fileDoc
+  });
+
+  familyRemoteNewer = !!decision.remoteNewer;
+  if (store) {
+    sharedPlanMeta.available = true;
+    sharedPlanMeta.updatedAt = store.updatedAt;
+    sharedPlanMeta.fromStore = decision.source === "store" || decision.reason === "matches-store" || decision.adopt;
+  } else if (fileDoc) {
+    sharedPlanMeta.available = true;
+    sharedPlanMeta.updatedAt = fileDoc.updatedAt || null;
+    sharedPlanMeta.fromStore = false;
+  } else {
+    sharedPlanMeta.available = false;
+    sharedPlanMeta.updatedAt = null;
+    sharedPlanMeta.fromStore = false;
+  }
+  if (storeResult.state === "error") {
+    familyStoreNote = "Could not reach the family plan store. Showing the copy on this device.";
+  } else if (!decision.remoteNewer && storeResult.state !== "error") {
+    if (familyStoreNote && familyStoreNote.indexOf("Could not reach") === 0) familyStoreNote = "";
+  }
+
+  if (decision.adopt && store) {
+    writeWeekMeta({
+      dirty: false,
+      updatedAt: store.updatedAt,
+      revision: store.revision,
+      source: "store"
+    });
+    sharedPlanMeta.fromStore = true;
+  }
+
+  let applied = false;
+  if (decision.source !== "local" && decision.plan) {
+    applied = applySharedChoices(decision.plan, {
+      persist: true,
+      replace: true,
+      remote: {
+        updatedAt: decision.updatedAt,
+        revision: decision.revision,
+        source: decision.source
+      }
+    });
+    if (applied) {
+      render();
+      updateConflictUI();
+      if (fromPoll) showToast("Family plan updated from another device.");
+      else if (!quiet) showToast(force ? "Loaded the family plan (replaced picks on this device)." : "Loaded the family plan for this week.");
+    } else if (force && !quiet) {
+      showToast("The family plan had no matching slots.", true);
     }
-    // missing key OR blank local → seed from shared
+  } else if (decision.shouldUpload && isStoreConfigured() && storeResult.state !== "error") {
+    if (storedFamilyKey()) void saveFamilyPlan({ prompt: false, source: "Save family plan", overwrite: true });
+    else if (!familyStoreNote) {
+      familyStoreNote = "This device has a week plan that is not on the family plan yet. Save family plan once — other browsers will then load it.";
+    }
+  } else if (meta.dirty && !familyRemoteNewer && storedFamilyKey() && isStoreConfigured()) {
+    scheduleFamilyPlanSave();
   }
-  const ok = applySharedChoices(payload, { persist: true });
+
   updateSharedPlanChrome();
-  if (ok) {
-    render();
-    if (!quiet) showToast(force ? "Loaded shared plan (replaced local picks)." : "Loaded shared plan for this week.");
-  } else if (force && !quiet) {
-    showToast("Shared plan had no matching slots.", true);
+  if (!applied && force && !quiet && decision.source === "local") {
+    showToast("No family plan for this week yet.", true);
   }
-  return ok;
+  return applied;
 }
 
-function buildPublishBundle() {
+function startFamilyPolling() {
+  if (familyPollTimer || !isStoreConfigured()) return;
+  const tick = () => {
+    if (document.hidden) return;
+    void loadSharedPlan({ quiet: true, fromPoll: true });
+    void mergeHostedProgress({ quiet: true });
+  };
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) tick();
+  });
+  window.addEventListener("focus", tick);
+  familyPollTimer = setInterval(tick, 20000);
+}
+
+function buildPublishBundle(source) {
   const rowsAll = buildChoicesJson(false);
   const hours = hourSnapshot();
   const counts = countKinds();
   const updatedAt = new Date().toISOString();
+  const label = source || "Save family plan";
   const sharedDoc = {
     weekStart: CONFIG.weekStart,
+    weekLabel: CONFIG.weekLabel,
     updatedAt,
-    source: "Send to calendar",
+    source: label,
     timezone: "Asia/Hong_Kong",
     totals: hours,
     counts,
@@ -2287,11 +2754,11 @@ function buildPublishBundle() {
   const auditEntry = {
     ts: updatedAt,
     weekStart: CONFIG.weekStart,
-    source: "Send to calendar",
+    source: label,
     counts,
     hours,
     slotCount: rowsAll.length,
-    note: "Send to calendar — write choices/" + CONFIG.weekStart + ".json and append this audit line"
+    note: label + " — family plan store, with choices/" + CONFIG.weekStart + ".json only if the calendar sync service is also configured"
   };
   return { sharedDoc, auditEntry };
 }
@@ -2951,7 +3418,7 @@ function buildSyncPayload() {
   lines.push("SHARED_PLAN_JSON:" + JSON.stringify(bundle.sharedDoc));
   lines.push("AUDIT_ENTRY_JSON:" + JSON.stringify(bundle.auditEntry));
   lines.push("PROGRESS_JSON:" + JSON.stringify(progressState));
-  lines.push("PUBLISH_HINT: Fallback only — Send to calendar should write the calendar and hosts itself. If you are pasting this, write choices/" + CONFIG.weekStart + ".json from SHARED_PLAN_JSON, append AUDIT_ENTRY_JSON to audit/choices-log.jsonl, write progress.json, update GitHub Pages and republish deed, and resync General Timetable DRAFTs for this week only.");
+  lines.push("PUBLISH_HINT: Fallback only. The family plan store is how other browsers load this week. Paste this only if that store could not be reached, or to write General Timetable drafts by hand: write choices/" + CONFIG.weekStart + ".json from SHARED_PLAN_JSON, append AUDIT_ENTRY_JSON to audit/choices-log.jsonl, write progress.json, update GitHub Pages and republish deed, and resync General Timetable DRAFTs for this week only.");
   return lines.join("\n");
 }
 
@@ -3060,9 +3527,9 @@ function bindFallbackCopy(payload) {
 
 function showUnconfiguredSync(payload, target) {
   const html =
-    "<strong>Send cannot write yet</strong> — the sync service URL has not been configured on this page. " +
-    "The plan was not written to General Timetable or the hosted shared plan. " +
-    "You can copy a fallback payload to be applied later." +
+    "<strong>Nothing could be written yet</strong> — the family plan store is not configured on this page" +
+    (isSyncApiConfigured() ? "" : ", and calendar sync is not configured either") +
+    ". Other browsers will not see this save. You can copy a fallback payload to be applied later." +
     fallbackCopyButton(payload) +
     "<pre style='white-space:pre-wrap;font-size:0.75rem;margin:8px 0 0'>" + escapeHtml(payload) + "</pre>";
   if (target === "progress") {
@@ -3072,14 +3539,14 @@ function showUnconfiguredSync(payload, target) {
     showSyncBox(html, "err");
   }
   bindFallbackCopy(payload);
-  showToast("Send cannot write yet — sync URL is not configured.", true);
+  showToast("Nothing was shared — the family plan store is not set up on this page yet.", true);
 }
 
 function promptFamilyKey({ replace = false } = {}) {
   return new Promise((resolve) => {
     const message = replace
-      ? "Replace the family sync code stored in this browser:"
-      : "Enter the family sync code for this device. It stays in this browser only.";
+      ? "Replace the family code stored in this browser:"
+      : "Enter the family code for this device. It stays in this browser only and is used to save the shared plan.";
     const entered = window.prompt(message, replace ? "" : storedFamilyKey());
     if (entered === null) {
       resolve(null);
@@ -3099,8 +3566,14 @@ async function ensureFamilyKey({ replace = false } = {}) {
   if (!replace) {
     const existing = storedFamilyKey();
     if (existing) return existing;
+    if (familyKeyPromise) return familyKeyPromise;
   }
-  return promptFamilyKey({ replace });
+  const pending = promptFamilyKey({ replace });
+  if (!replace) {
+    familyKeyPromise = pending.finally(() => { familyKeyPromise = null; });
+    return familyKeyPromise;
+  }
+  return pending;
 }
 
 function isSyncHost(origin) {
@@ -3230,20 +3703,88 @@ function resultLooksFullySynced(result, action) {
   return !!(result.syncedAt && calOk && pubOk);
 }
 
+function showFamilySaved(action, savedAt, progressNote, payloadText) {
+  const when = formatSyncedAt(savedAt);
+  const calendarNote = action === "syncWeek"
+    ? "<br/>General Timetable drafts were not written — calendar sync is a separate setup. The payload below is only for those drafts, not for sharing the plan."
+    : "";
+  const extra = progressNote ? "<br/>" + escapeHtml(progressNote) : "";
+  const body = "<strong>Saved to the family plan at " + escapeHtml(when) + "</strong> — other browsers load this without a pasted payload." +
+    calendarNote + extra;
+  if (action === "writeProgress") {
+    const box = document.getElementById("progressSyncBox");
+    if (box) { box.innerHTML = body; box.classList.add("show", "ok"); box.classList.remove("err"); }
+  } else {
+    const withFallback = action === "syncWeek" ? body + fallbackCopyButton(payloadText) : body;
+    showSyncBox(withFallback, "ok");
+    if (action === "syncWeek") bindFallbackCopy(payloadText);
+  }
+  showToast("Saved to the family plan.");
+  rememberLastSync({
+    weekStart: CONFIG.weekStart,
+    syncedAt: savedAt || new Date().toISOString(),
+    action: "family-store"
+  });
+}
+
 async function runHostedSync(action) {
+  const target = action === "writeProgress" ? "progress" : "week";
   const payloadText = action === "writeProgress" ? buildProgressPayload() : buildSyncPayload();
-  if (!isSyncApiConfigured()) {
-    showUnconfiguredSync(payloadText, action === "writeProgress" ? "progress" : "week");
+  const source = action === "writeProgress" ? "Save topic progress" : "Send to calendar";
+  sessionDeclinedFamilyCode = false;
+
+  const planSaved = action === "writeProgress"
+    ? { ok: true, skipped: true }
+    : await saveFamilyPlan({ prompt: true, source, overwrite: true });
+  if (planSaved.reason === "cancelled") {
+    showToast("Send cancelled — a family code is needed to write.", true);
     return false;
   }
-  const key = await ensureFamilyKey();
+  if (isStoreConfigured() && action !== "writeProgress" && !planSaved.ok) {
+    showSyncFailure(new Error(planSaved.message || "The family plan was not saved."), payloadText, target);
+    return false;
+  }
+
+  const progressSaved = await saveFamilyProgress({
+    prompt: action === "writeProgress",
+    overwrite: true
+  });
+  if (progressSaved.reason === "cancelled") {
+    showToast("Save cancelled — a family code is needed to write.", true);
+    return false;
+  }
+  if (isStoreConfigured() && action === "writeProgress" && !progressSaved.ok) {
+    showSyncFailure(new Error(progressSaved.message || "Topic progress was not saved."), payloadText, "progress");
+    return false;
+  }
+
+  const storeOk = action === "writeProgress" ? progressSaved.ok : planSaved.ok;
+  const savedAt = action === "writeProgress" ? progressSaved.savedAt : (planSaved.savedAt || progressSaved.savedAt);
+  const progressNote = (action !== "writeProgress" && isStoreConfigured() && !progressSaved.ok && progressSaved.message)
+    ? progressSaved.message
+    : "";
+
+  if (!isSyncApiConfigured()) {
+    if (storeOk) {
+      showFamilySaved(action, savedAt, progressNote, payloadText);
+      return true;
+    }
+    showUnconfiguredSync(payloadText, target);
+    return false;
+  }
+
+  const key = storedFamilyKey() || await ensureFamilyKey();
   if (!key) {
-    showToast("Send cancelled — a family key is needed to write.", true);
+    if (storeOk) {
+      showFamilySaved(action, savedAt, "Calendar sync was skipped because the family code was not confirmed.", payloadText);
+      return true;
+    }
+    showToast("Send cancelled — a family code is needed to write.", true);
     return false;
   }
   const pending = action === "writeProgress"
-    ? "Publishing topic progress…"
-    : "Writing General Timetable drafts and publishing the shared plan…";
+    ? "Family plan saved. Publishing topic progress to the hosted file…"
+    : "Family plan saved. Writing General Timetable drafts…";
   if (action === "writeProgress") {
     const box = document.getElementById("progressSyncBox");
     if (box) { box.innerHTML = pending; box.classList.add("show"); box.classList.remove("ok", "err"); }
@@ -3257,12 +3798,20 @@ async function runHostedSync(action) {
       : buildSyncRequest(key, "syncWeek");
     result = await postViaSyncPopup(body);
   } catch (err) {
-    showSyncFailure(err, payloadText, action === "writeProgress" ? "progress" : "week");
+    if (storeOk) {
+      showSyncFailure(new Error("The family plan is saved, but calendar sync failed. " + ((err && err.message) || err)), payloadText, target);
+      return false;
+    }
+    showSyncFailure(err, payloadText, target);
     return false;
   }
   if (!resultLooksFullySynced(result, action)) {
     const msg = (result && result.error) || "The sync service did not confirm both the calendar write and the publish.";
-    showSyncFailure(new Error(msg), payloadText, action === "writeProgress" ? "progress" : "week");
+    if (storeOk) {
+      showSyncFailure(new Error("The family plan is saved, but calendar sync did not finish. " + msg), payloadText, target);
+      return false;
+    }
+    showSyncFailure(new Error(msg), payloadText, target);
     return false;
   }
   showSyncedStatus(result, action);
@@ -3271,6 +3820,35 @@ async function runHostedSync(action) {
   }
   return true;
 }
+
+document.getElementById("btnSaveFamily")?.addEventListener("click", async () => {
+  sessionDeclinedFamilyCode = false;
+  const plan = await saveFamilyPlan({ prompt: true, source: "Save family plan", overwrite: true });
+  if (plan.reason === "cancelled") {
+    showToast("Save cancelled — a family code is needed to write.", true);
+    return;
+  }
+  if (!plan.ok && plan.reason === "unconfigured") {
+    showToast("The family plan store is not set up on this page yet.", true);
+    showUnconfiguredSync(buildSyncPayload(), "week");
+    return;
+  }
+  if (!plan.ok) {
+    showToast(plan.message || "Could not save the family plan.", true);
+    return;
+  }
+  const progress = await saveFamilyProgress({ prompt: false, overwrite: true });
+  const note = progress.ok ? "" : (progress.message || "");
+  showFamilySaved("week", plan.savedAt, note ? note : "Topic progress was saved too.", buildSyncPayload());
+  if (progress.ok) {
+    const box = document.getElementById("progressSyncBox");
+    if (box) {
+      box.innerHTML = "<strong>Saved to the family plan at " + escapeHtml(formatSyncedAt(progress.savedAt || plan.savedAt)) + "</strong> — topic progress is included.";
+      box.classList.add("show", "ok");
+      box.classList.remove("err");
+    }
+  }
+});
 
 document.getElementById("btnSync").addEventListener("click", async () => {
   const warns = targetWarning();
@@ -3289,12 +3867,17 @@ document.getElementById("btnSync").addEventListener("click", async () => {
 
 document.getElementById("btnChangeFamilyKey")?.addEventListener("click", async () => {
   const key = await ensureFamilyKey({ replace: true });
-  showToast(key ? "Family key saved on this device." : "Family key unchanged.", !key);
+  showToast(key ? "Family code saved on this device." : "Family code unchanged.", !key);
+  if (key) {
+    sessionDeclinedFamilyCode = false;
+    void saveFamilyPlan({ prompt: false, source: "Save family plan", overwrite: false });
+    void saveFamilyProgress({ prompt: false, overwrite: false });
+  }
 });
 
 
 document.getElementById("btnReset").addEventListener("click", () => {
-  if (!confirm("Clear your picks for this week? Open slots go back to Free. Shared plan is unchanged until you Send to calendar.")) return;
+  if (!confirm("Clear your picks for this week? Open slots go back to Free. If this device has the family code, the family plan is updated too.")) return;
   const defaults = cloneDefaults();
   Object.keys(state).forEach(k => delete state[k]);
   Object.assign(state, defaults);
@@ -3306,7 +3889,7 @@ document.getElementById("btnReset").addEventListener("click", () => {
 });
 
 document.getElementById("btnLoadShared").addEventListener("click", async () => {
-  if (!confirm("Replace this browser’s picks with the published shared plan for " + CONFIG.weekStart + "?")) return;
+  if (!confirm("Replace this browser’s picks with the family plan for " + CONFIG.weekStart + "?")) return;
   await loadSharedPlan({ force: true });
 });
 
@@ -4318,29 +4901,53 @@ async function fetchHostedProgress() {
 }
 
 async function mergeHostedProgress({ quiet = true } = {}) {
-  const hosted = await fetchHostedProgress();
-  if (!hosted) return false;
-  const result = mergeProgressDocuments(progressState, hosted);
-  if (!result.changed) return false;
-  progressState = result.state;
-  saveProgress({ preserveTimestamp: true });
-  if (document.getElementById("panel-topics")?.classList.contains("active")) renderTopicsPanel();
-  if (!quiet) showToast("Loaded newer topic progress from the hosted plan.");
-  return true;
+  const [storeResult, fileDoc] = await Promise.all([
+    fetchStoreProgress(),
+    fetchHostedProgress()
+  ]);
+  let changed = false;
+  if (fileDoc) {
+    const fileMerge = mergeProgressDocuments(progressState, fileDoc);
+    if (fileMerge.changed) {
+      progressState = fileMerge.state;
+      changed = true;
+    }
+  }
+  if (storeResult.state === "ok" && storeResult.store && storeResult.store.document) {
+    const hosted = storeResult.store.document;
+    if (storeResult.store.updatedAt && !hosted.updatedAt) hosted.updatedAt = storeResult.store.updatedAt;
+    const storeMerge = mergeProgressDocuments(progressState, hosted);
+    if (storeMerge.changed) {
+      progressState = storeMerge.state;
+      changed = true;
+    }
+    writeProgressRevision(storeResult.store.revision);
+  }
+  if (changed) {
+    saveProgress({ preserveTimestamp: true, remote: true });
+    if (document.getElementById("panel-topics")?.classList.contains("active")) renderTopicsPanel();
+    if (!quiet) showToast("Loaded newer topic progress from the family plan.");
+  }
+  if ((storeResult.state === "ok" || storeResult.state === "missing") && storedFamilyKey() && hasLocalProgressEdits(progressState)) {
+    const storeTime = storeResult.state === "ok" ? progressTs(storeResult.store.updatedAt) : 0;
+    if (progressTs(progressState.updatedAt) > storeTime) scheduleFamilyProgressSave();
+  }
+  return changed;
 }
 
 wireWeekNav();
-(async function bootWeek() {
+window.startIshaanApp = async function () {
+  if (window.__ishaanStarted) return;
+  window.__ishaanStarted = true;
+  loadProgress();
+  progressRevision = readProgressRevision();
   const fromHash = weekStartFromHash();
   const initial = fromHash || defaultWeekStart();
   await applyWeekConfig(buildWeekConfig(initial));
-  const last = lastSyncForWeek(CONFIG.weekStart);
-  if (last && last.syncedAt) {
-    showSyncBox("<strong>Last synced at " + escapeHtml(formatSyncedAt(last.syncedAt)) + "</strong> on this device.", "ok");
-  }
-})();
-loadProgress();
-mergeHostedProgress({ quiet: true });
+  await mergeHostedProgress({ quiet: true });
+  startFamilyPolling();
+};
+
 
 document.getElementById("tab-week").addEventListener("click", () => switchTab("week"));
 document.getElementById("tab-topics").addEventListener("click", () => switchTab("topics"));
@@ -4375,8 +4982,10 @@ document.getElementById("btnResetProgress").addEventListener("click", () => {
 
 (function bootTabs() {
   const h = (location.hash || "").replace(/^#/, "");
-  if (h === "topics" || h.startsWith("topics")) switchTab("topics");
-  else switchTab("week");
+  // Do not rewrite #week= here. CONFIG is still the baked skeleton until
+  // startIshaanApp runs, and replacing the hash would drop the week in the URL.
+  if (h === "topics" || h.startsWith("topics")) switchTab("topics", { keepHash: true });
+  else switchTab("week", { keepHash: true });
 })();
 
 window.WEEK_SLOT_CONFIG = CONFIG;
@@ -4398,6 +5007,23 @@ window.fillOneFreeFromDue = fillOneFreeFromDue;
 window.MILESTONES = MILESTONES;
 window.REVISIT_DAYS = REVISIT_DAYS;
 
+</script>
+<script type="module">
+  import { chooseSharedSource, plansEquivalent } from "./js/family-store.js";
+  window.IshaanFamilyStore = { chooseSharedSource, plansEquivalent };
+  if (typeof window.startIshaanApp === "function") window.startIshaanApp();
+</script>
+<script>
+  setTimeout(function () {
+    if (window.__ishaanStarted) return;
+    window.IshaanFamilyStore = window.IshaanFamilyStore || {
+      chooseSharedSource: function () {
+        return { source: "local", plan: null, reason: "module-missing", remoteNewer: false, shouldUpload: false, adopt: false, revision: null, updatedAt: null };
+      },
+      plansEquivalent: function () { return false; }
+    };
+    if (typeof window.startIshaanApp === "function") window.startIshaanApp();
+  }, 1500);
 </script>
 </body>
 </html>

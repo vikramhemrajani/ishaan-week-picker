@@ -31,6 +31,7 @@ var KNOWN_PUBLIC_FILES = [
   'SYNC.md',
   'topics.json',
   'progress.json',
+  'js/family-store.js',
   'audit/choices-log.jsonl',
   'choices/2026-11-09.json',
   'choices/2026-11-16.json',

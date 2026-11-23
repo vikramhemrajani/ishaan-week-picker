@@ -1,9 +1,21 @@
-# Sync — Ishaan week picker → calendar + shared plan
+# Sync — Ishaan week picker → family plan + calendar
 
 Live: https://ishaan-week-picker.deed.page/  
 GitHub Pages (kept in sync): https://vikramhemrajani.github.io/ishaan-week-picker/
 
-**Send to calendar** writes this week’s non-Free picks to **General Timetable** as DRAFT events, and publishes the shared week plan plus topic progress to **both** hosts. A second browser can then load the same plan and coverage.
+## Family plan store (how another browser sees a save)
+
+The static hosts cannot accept a write from the browser, so `choices/*.json` on deed.page stayed a Sunday seed while Ishaan’s finished week lived only in that browser’s localStorage. Pasting `SYNC_WEEK` was the only way to move it.
+
+The family plan store is a Cloudflare Worker (`store/`). **Save family plan**, and ordinary edits once the family code is saved on the device, `PUT` the week and topic progress there immediately. A second browser `GET`s the same week on load, on focus, and about every 20 seconds. Empty localStorage and a hard refresh still load the latest save. The family code is the Worker secret `FAMILY_SYNC_KEY`. It is typed once per browser and is not in the JavaScript.
+
+`choices/YYYY-MM-DD.json` and `progress.json` remain the seed the page uses when the store has no document yet, or when the store cannot be reached. They are no longer the only shared copy.
+
+Vikram’s one-time setup, secret names, and the deed.page republish command are in `store/README.md`. Until `STORE_API_URL` in `index.html` is the deployed worker URL and both hosts are republished, the page says so and does not pretend a save was shared.
+
+## Calendar drafts
+
+**Send to calendar** still saves the family plan first. It writes this week’s non-Free picks to **General Timetable** as DRAFT events only when the Apps Script web app is configured. That part is optional for sharing the plan.
 
 The public page never holds the family sync key, a deed token, or a GitHub token. Ishaan enters the family key once; it stays in that browser as `localStorage['ishaan-family-sync-key']`. Writes go through a Google Apps Script web app (execute as Vikram, access Anyone) via a small `script.google.com` popup and `postMessage`. See `apps-script/README.md`.
 
@@ -41,14 +53,14 @@ The backend receives:
 
 ### Browser behaviour
 
-- On load: if this week’s `localStorage` is missing or all Free → auto-load `choices/<weekStart>.json`.
-- Local edits stay until Send to calendar (which republishes) or **Load shared plan**.
-- Status strip shows last shared publish time from the file / audit log.
+- On load, and about every 20 seconds while the tab is open, the page reads the family plan store for this week. That copy wins over `choices/<weekStart>.json` and over a localStorage copy of the old seed.
+- If the store has nothing yet, a missing or blank local week still loads `choices/<weekStart>.json`.
+- A private edit on this device is kept. It is saved automatically once the family code is stored here, unless another device has a newer revision — then the status line asks you to **Load shared plan** or **Save family plan**.
 - Default landing (no `#week=` hash), in Asia/Hong_Kong: if today is Sunday, open next Monday’s week (the week being planned); otherwise open the week containing today. The hash still wins. The **This week** button goes to that planning week. The jump-week list is ± weeks around it, not a baked 9–15 Nov skeleton.
 
 ### Topic progress across devices
 
-Progress is stored locally as `ishaan-ib-progress-v1`. On boot and when you open the Topics tab, the page fetches hosted `progress.json` and merges it in: a second device sees the latest coverage, and newer local edits (compared by `updatedAt` / per-topic `lastTouched`) are never overwritten by an older hosted file.
+Progress is stored locally as `ishaan-ib-progress-v1` and on the family plan store at `PUT /v1/progress`. On boot and when you open the Topics tab, the page merges the store and hosted `progress.json`. A newer per-topic `lastTouched` wins, so a later edit on this device is not overwritten by an older copy. **Save topic progress** writes the store immediately.
 
 ### Fallback payload (only if the button cannot write)
 
