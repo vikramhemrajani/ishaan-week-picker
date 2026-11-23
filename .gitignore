@@ -14,3 +14,10 @@ family-sync-key
 apps-script/.clasp.json.bak
 scripts/raw/
 locks/_raw/
+
+# Cloudflare local state — never commit
+.wrangler/
+**/.wrangler/
+.dev.vars
+**/.dev.vars
+node_modules/
