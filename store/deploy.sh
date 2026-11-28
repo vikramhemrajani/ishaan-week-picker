@@ -63,8 +63,29 @@ PY
 fi
 
 log "Setting Worker secret FAMILY_SYNC_KEY (value is not printed)…"
-# stdin only — the code must not appear on the process command line.
-"${WRANGLER[@]}" secret put FAMILY_SYNC_KEY < "$FAMILY_KEY_FILE"
+# Same normalisation as the worker and Apps Script: drop spaces and line breaks.
+# stdin only — the code must not appear on the process command line or in logs.
+SECRET_TMP="$(mktemp)"
+chmod 600 "$SECRET_TMP"
+if ! python3 - "$FAMILY_KEY_FILE" "$SECRET_TMP" << 'PY'
+import pathlib, sys
+src, dst = sys.argv[1:]
+raw = pathlib.Path(src).read_text(encoding="utf-8")
+for ch in ("\ufeff", "\u200b", "\u200c", "\u200d"):
+    raw = raw.replace(ch, "")
+code = "".join(raw.split())
+if not code:
+    sys.exit(1)
+path = pathlib.Path(dst)
+path.write_text(code)
+path.chmod(0o600)
+PY
+then
+  rm -f "$SECRET_TMP"
+  die "Family code file had no code after removing spaces and line breaks."
+fi
+"${WRANGLER[@]}" secret put FAMILY_SYNC_KEY < "$SECRET_TMP"
+rm -f "$SECRET_TMP"
 
 log "Deploying the worker…"
 set +e

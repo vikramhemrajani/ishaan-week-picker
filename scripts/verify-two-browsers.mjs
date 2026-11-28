@@ -133,6 +133,32 @@ try {
   const afterReload = await pageB.$eval(".slot.choosable .badge", (el) => el.textContent.trim());
   if (afterReload !== afterA) fail("Hard reload on the second browser lost the saved plan (" + afterReload + " vs " + afterA + ").");
 
+  // A device with no stored code must be able to enter it once, including when
+  // a note is pasted around the code, and the other browser must see that save.
+  await pageA.evaluate(() => localStorage.removeItem("ishaan-family-sync-key"));
+  await pageA.evaluate(() => document.querySelector(".slot.choosable").click());
+  await pageA.waitForSelector("#familyCodeDialog:not([hidden])", { timeout: 5000 });
+  const pasted = "Ignore this line\n" + CODE + "\n";
+  await pageA.$eval("#familyCodeInput", (el, value) => { el.value = value; }, pasted);
+  await pageA.click("#familyCodeSubmit");
+  await pageA.waitForFunction(() => {
+    const el = document.getElementById("sharedPlanStatus");
+    return el && /Other browsers load it automatically/.test(el.textContent);
+  }, { timeout: 10000 });
+  const dialogLeft = await pageA.$eval("#familyCodeInput", (el) => el.value);
+  if (dialogLeft) fail("The family code was left in the page after saving.");
+  const leakedAfter = await pageA.evaluate((code) => document.documentElement.innerHTML.includes(code), CODE);
+  if (leakedAfter) fail("The family code appeared in the page HTML after the dialog.");
+  const afterDialogA = await pageA.$eval(".slot.choosable .badge", (el) => el.textContent.trim());
+  if (afterDialogA === afterA) fail("The second edit did not change the slot.");
+  await pageB.reload({ waitUntil: "networkidle0", timeout: 20000 });
+  await pageB.waitForFunction(() => {
+    const el = document.getElementById("sharedPlanStatus");
+    return el && /Other browsers load it automatically/.test(el.textContent);
+  }, { timeout: 10000 });
+  const afterDialogB = await pageB.$eval(".slot.choosable .badge", (el) => el.textContent.trim());
+  if (afterDialogB !== afterDialogA) fail("Second browser showed " + afterDialogB + " after the dialog save, expected " + afterDialogA + ".");
+
   await pageA.click("#tab-topics");
   await pageA.waitForSelector("#btnSyncProgress", { timeout: 5000 });
   const topicsVisible = await pageA.$eval("#panel-topics", (el) => el.classList.contains("active"));

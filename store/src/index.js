@@ -24,6 +24,15 @@ export function isMonday(iso) {
   return dt.getUTCDay() === 1;
 }
 
+/**
+ * The Apps Script property is stored with all whitespace removed. Wrangler
+ * keeps a code that was wrapped or saved with a trailing line break. Compare
+ * both sides with the same rules, and do not treat that as a different code.
+ */
+export function canonicalFamilyCode(value) {
+  return String(value || "").replace(/[\u200B-\u200D\uFEFF]/g, "").replace(/\s+/g, "");
+}
+
 /** Constant-time compare. Length is mixed in so a mismatch still walks both strings. */
 export function keysEqual(a, b) {
   const sa = String(a || "");
@@ -193,11 +202,11 @@ async function readRecord(kv, key) {
 }
 
 function familyCode(request) {
-  return String(request.headers.get("X-Family-Code") || "").trim();
+  return canonicalFamilyCode(request.headers.get("X-Family-Code"));
 }
 
 function requireKey(request, env) {
-  const expected = String((env && env.FAMILY_SYNC_KEY) || "");
+  const expected = canonicalFamilyCode(env && env.FAMILY_SYNC_KEY);
   if (!expected) {
     return { ok: false, status: 503, error: "store_not_configured", message: "The family plan store has no write code yet." };
   }
@@ -250,7 +259,7 @@ export async function handleRequest(request, env) {
     return json({
       ok: true,
       service: "ishaan-week-picker-store",
-      writes: !!String((env && env.FAMILY_SYNC_KEY) || "")
+      writes: !!canonicalFamilyCode(env && env.FAMILY_SYNC_KEY)
     }, 200, origin, env);
   }
 

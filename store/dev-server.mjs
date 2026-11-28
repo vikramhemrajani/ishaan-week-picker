@@ -83,10 +83,13 @@ const server = http.createServer(async (req, res) => {
     let data = fs.readFileSync(file);
     if (url.pathname === "/" || url.pathname === "/index.html") {
       const origin = `http://127.0.0.1:${port}`;
-      const html = data.toString("utf8").replace(
-        'const STORE_API_URL = "";',
-        `const STORE_API_URL = ${JSON.stringify(origin)};`
+      let html = data.toString("utf8").replace(
+        /const STORE_API_URL = (["'])[^"']*\1/,
+        `const STORE_API_URL = ${JSON.stringify(origin)}`
       );
+      if (!html.includes(`const STORE_API_URL = ${JSON.stringify(origin)}`)) {
+        throw new Error("Dev server could not point STORE_API_URL at the local store.");
+      }
       data = Buffer.from(html);
     }
     const ext = path.extname(file);

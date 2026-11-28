@@ -7,7 +7,7 @@ GitHub Pages (kept in sync): https://vikramhemrajani.github.io/ishaan-week-picke
 
 The static hosts cannot accept a write from the browser, so `choices/*.json` on deed.page stayed a Sunday seed while Ishaan’s finished week lived only in that browser’s localStorage. Pasting `SYNC_WEEK` was the only way to move it.
 
-The family plan store is a Cloudflare Worker (`store/`). **Save family plan**, and ordinary edits once the family code is saved on the device, `PUT` the week and topic progress there immediately. A second browser `GET`s the same week on load, on focus, and about every 20 seconds. Empty localStorage and a hard refresh still load the latest save. The family code is the Worker secret `FAMILY_SYNC_KEY`. It is typed once per browser and is not in the JavaScript.
+The family plan store is a Cloudflare Worker (`store/`). **Save family plan**, and ordinary edits once the family code is saved on the device, `PUT` the week and topic progress there immediately. A second browser `GET`s the same week on load, on focus, and about every 20 seconds. Empty localStorage and a hard refresh still load the latest save. The family code is the Worker secret `FAMILY_SYNC_KEY`. It is entered once per browser in the box on the page and is not in the JavaScript. A rejected code is not requested again on every edit.
 
 `choices/YYYY-MM-DD.json` and `progress.json` remain the seed the page uses when the store has no document yet, or when the store cannot be reached. They are no longer the only shared copy.
 

@@ -1,8 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { chooseSharedSource, plansEquivalent } from "../js/family-store.js";
-import { handleRequest, isMonday, keysEqual } from "../store/src/index.js";
+import { chooseSharedSource, familyCodeCandidates, plansEquivalent } from "../js/family-store.js";
+import { canonicalFamilyCode, handleRequest, isMonday, keysEqual } from "../store/src/index.js";
 
 const ORIGIN = "https://ishaan-week-picker.deed.page";
 const CODE = "test-family-code";
@@ -69,6 +69,37 @@ test("family code compare does not treat a prefix as a match", () => {
   assert.equal(keysEqual("abc", "abd"), false);
   assert.equal(keysEqual("abc", "abcd"), false);
   assert.equal(keysEqual("", "abc"), false);
+});
+
+test("a wrapped family code matches the same code the browser stores", () => {
+  assert.equal(canonicalFamilyCode("ab\ncd \n"), "abcd");
+  assert.equal(canonicalFamilyCode("\uFEFFabcd"), "abcd");
+  assert.deepEqual(familyCodeCandidates("note above\nab cd\n"), ["abcd", "noteabove", "noteaboveabcd"]);
+  assert.deepEqual(familyCodeCandidates("abcd"), ["abcd"]);
+});
+
+test("whitespace around the worker secret does not reject the stored code", async () => {
+  const env = envWith(memoryKv(), "ab\ncd\n");
+  const saved = await call(env, "/v1/weeks/" + WEEK, {
+    method: "PUT",
+    code: "abcd",
+    body: plan([])
+  });
+  assert.equal(saved.status, 200);
+  assert.equal(saved.text.includes("abcd"), false);
+  const wrappedHeader = await call(env, "/v1/weeks/" + WEEK, {
+    method: "PUT",
+    code: "ab cd",
+    body: plan([{ id: "mon-23-o0", day: "Monday", date: "2026-11-23", start: "06:00", end: "06:45", kind: "free" }])
+  });
+  assert.equal(wrappedHeader.status, 200);
+  const prefix = await call(env, "/v1/weeks/" + WEEK, {
+    method: "PUT",
+    code: "abc",
+    body: plan([])
+  });
+  assert.equal(prefix.status, 401);
+  assert.equal(prefix.text.includes("abcd"), false);
 });
 
 test("a visitor cannot overwrite the plan, and a second browser can read a save", async () => {

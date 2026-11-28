@@ -672,7 +672,7 @@
     .notice { background: #fffbeb; border-color: #f59e0b; color: #78350f; }
     .notice strong { color: #000; }
     .card { box-shadow: none; border: 1px solid #e2e8f0; break-inside: avoid; }
-    .actions, .toast, .sync-box, .howto, .slot-meta, .view-toggle, .free-due-suggest { display: none !important; }
+    .actions, .toast, .sync-box, .howto, .slot-meta, .view-toggle, .free-due-suggest, .family-code-dialog { display: none !important; }
     footer { color: #64748b; }
     .day { break-inside: avoid; }
   }
@@ -864,6 +864,39 @@
     color: #92400e;
   }
   .shared-plan.warn strong { color: #92400e; }
+  .family-code-dialog {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 16px;
+    background: rgba(15, 23, 42, 0.45);
+  }
+  .family-code-dialog[hidden] { display: none; }
+  .family-code-card {
+    width: min(440px, 100%);
+    margin-bottom: 8vh;
+    padding: 16px;
+    border-radius: 14px;
+    background: #fff;
+    color: #0f172a;
+    box-shadow: 0 18px 50px -24px rgba(15, 23, 42, 0.8);
+  }
+  .family-code-card h2 { margin: 0 0 6px; font-size: 1.05rem; }
+  .family-code-card p { margin: 0 0 10px; color: #475569; font-size: 0.88rem; line-height: 1.4; }
+  .family-code-card textarea {
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 72px;
+    border-radius: 10px;
+    border: 1px solid #cbd5e1;
+    padding: 8px 10px;
+    font: 0.95rem/1.4 ui-sans-serif, system-ui, sans-serif;
+    resize: vertical;
+  }
+  .family-code-actions { display: flex; gap: 8px; margin-top: 10px; }
   .btn-shared {
     background: #ecfdf5;
     color: #047857;
@@ -1537,6 +1570,18 @@
     <div class="due-suggest" id="dueSuggest" role="status" aria-live="polite"></div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <div class="sync-box" id="syncBox" role="status" aria-live="polite"></div>
+    <div class="family-code-dialog" id="familyCodeDialog" hidden>
+      <form class="family-code-card" id="familyCodeForm">
+        <h2 id="familyCodeTitle">Family code</h2>
+        <p id="familyCodeHelp">Enter the family code once for this device. It stays in this browser and is used to save the shared plan. It is not written into the page.</p>
+        <label for="familyCodeInput" class="sr-only">Family code</label>
+        <textarea id="familyCodeInput" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" rows="3"></textarea>
+        <div class="family-code-actions">
+          <button type="submit" class="btn-save" id="familyCodeSubmit">Save on this device</button>
+          <button type="button" class="btn-secondary" id="familyCodeCancel">Not now</button>
+        </div>
+      </form>
+    </div>
 
     </div><!-- /week-rail -->
 
@@ -2247,47 +2292,123 @@ function scheduleFamilyProgressSave() {
   progressSaveTimer = setTimeout(() => { void flushFamilyProgressAutosave(); }, 800);
 }
 
-async function flushFamilyPlanAutosave(weekStart) {
-  if (CONFIG.weekStart !== weekStart) return;
+function autosaveStillWanted(weekStart) {
+  if (CONFIG.weekStart !== weekStart) return false;
   const meta = readWeekMeta();
-  if (!meta.dirty || familyRemoteNewer) return;
-  if (!storedFamilyKey()) {
-    if (sessionDeclinedFamilyCode) {
-      familyStoreNote = "This device has not joined the family plan yet. Use Family code…, then Save family plan.";
+  return !!(meta.dirty && !familyRemoteNewer);
+}
+
+async function flushFamilyPlanAutosave(weekStart) {
+  if (!autosaveStillWanted(weekStart)) return;
+  let candidates = null;
+  const stored = storedFamilyKey();
+  if (stored) candidates = [stored];
+  else if (sessionDeclinedFamilyCode) {
+    familyStoreNote = "This device has not joined the family plan yet. Use Family code…, then Save family plan.";
+    updateSharedPlanChrome();
+    return;
+  } else {
+    const entered = await ensureFamilyKey();
+    if (!autosaveStillWanted(weekStart)) return;
+    if (!entered) {
+      sessionDeclinedFamilyCode = true;
+      familyStoreNote = "Enter the family code once to save this plan for every browser.";
       updateSharedPlanChrome();
       return;
     }
-    const key = await ensureFamilyKey();
-    if (!key) {
+    candidates = familyCodeCandidates(entered);
+    if (!candidates.length) {
       sessionDeclinedFamilyCode = true;
       familyStoreNote = "Enter the family code once to save this plan for every browser.";
       updateSharedPlanChrome();
       return;
     }
   }
-  await saveFamilyPlan({ prompt: false, source: "Save family plan", overwrite: false });
+  await saveFamilyPlan({ prompt: false, candidates, source: "Save family plan", overwrite: false });
 }
 
 async function flushFamilyProgressAutosave() {
   if (!progressSaveQueued) return;
-  if (!storedFamilyKey()) {
-    if (sessionDeclinedFamilyCode) return;
-    const key = await ensureFamilyKey();
-    if (!key) {
+  let candidates = null;
+  const stored = storedFamilyKey();
+  if (stored) candidates = [stored];
+  else if (sessionDeclinedFamilyCode) return;
+  else {
+    const entered = await ensureFamilyKey();
+    if (!entered) {
+      sessionDeclinedFamilyCode = true;
+      return;
+    }
+    candidates = familyCodeCandidates(entered);
+    if (!candidates.length) {
       sessionDeclinedFamilyCode = true;
       return;
     }
   }
-  await saveFamilyProgress({ prompt: false, overwrite: false });
+  await saveFamilyProgress({ prompt: false, candidates, overwrite: false });
+}
+
+function familyCodeCandidates(entered) {
+  const api = window.IshaanFamilyStore;
+  if (api && typeof api.familyCodeCandidates === "function") return api.familyCodeCandidates(entered);
+  const text = String(entered || "").replace(/[\u200B-\u200D\uFEFF]/g, "");
+  const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+  const seen = new Set();
+  const out = [];
+  const push = (value) => {
+    const code = String(value || "").replace(/\s+/g, "");
+    if (!code || seen.has(code)) return;
+    seen.add(code);
+    out.push(code);
+  };
+  if (lines.length) push(lines[lines.length - 1]);
+  for (let i = lines.length - 1; i >= 0; i--) push(lines[i]);
+  if (lines.length > 1) push(lines.join(""));
+  return out.slice(0, 8);
+}
+
+async function resolveFamilyCode(opts) {
+  opts = opts || {};
+  let candidates = (opts.candidates || []).filter(Boolean);
+  if (!candidates.length) {
+    const stored = storedFamilyKey();
+    if (stored) candidates = [stored];
+  }
+  if (!candidates.length && opts.prompt) {
+    const entered = await ensureFamilyKey({ replace: !!opts.replace });
+    if (!entered) return { ok: false, reason: "cancelled" };
+    candidates = familyCodeCandidates(entered);
+  }
+  if (!candidates.length) return { ok: false, reason: "cancelled" };
+  return { ok: true, candidates: candidates.slice(0, 8) };
+}
+
+async function withFamilyCode(opts, attempt) {
+  const resolved = await resolveFamilyCode(opts);
+  if (!resolved.ok) return resolved;
+  let last = null;
+  for (const key of resolved.candidates) {
+    let res;
+    try {
+      res = await attempt(key);
+    } catch (e) {
+      return { ok: false, reason: "network" };
+    }
+    last = res;
+    if (!res || res.status !== 401) {
+      persistFamilyKey(key);
+      return { ok: true, res, key };
+    }
+  }
+  try { localStorage.removeItem(FAMILY_KEY_STORAGE); } catch (e) { /* ignore */ }
+  sessionDeclinedFamilyCode = true;
+  return { ok: false, reason: "rejected", res: last, key: resolved.candidates[0] };
 }
 
 async function saveFamilyPlan(opts) {
   opts = opts || {};
   if (!isStoreConfigured()) return { ok: false, reason: "unconfigured" };
   clearTimeout(planSaveTimer);
-  let key = storedFamilyKey();
-  if (!key && opts.prompt) key = await ensureFamilyKey();
-  if (!key) return { ok: false, reason: "cancelled" };
   if (opts.prompt && familyRemoteNewer) {
     const go = confirm("The family plan changed on another device. Save this device’s picks and replace it?");
     if (!go) return { ok: false, reason: "cancelled" };
@@ -2295,35 +2416,34 @@ async function saveFamilyPlan(opts) {
   const bundle = buildPublishBundle(opts.source || "Save family plan");
   const meta = readWeekMeta();
   const sendRevision = (opts.overwrite || opts.prompt) ? null : meta.revision;
-  let res;
-  try {
-    res = await storeFetch("/v1/weeks/" + CONFIG.weekStart, {
-      method: "PUT",
-      body: bundle.sharedDoc,
-      auth: key,
-      revision: sendRevision
-    });
-  } catch (e) {
+  const auth = await withFamilyCode(opts, (key) => storeFetch("/v1/weeks/" + CONFIG.weekStart, {
+    method: "PUT",
+    body: bundle.sharedDoc,
+    auth: key,
+    revision: sendRevision
+  }));
+  if (!auth.ok && auth.reason === "cancelled") return { ok: false, reason: "cancelled" };
+  if (!auth.ok && auth.reason === "network") {
     familyStoreNote = "Could not reach the family plan store. Picks are still on this device.";
     updateSharedPlanChrome();
     return { ok: false, reason: "network", message: familyStoreNote };
   }
-  if (res.status === 401) {
-    try { localStorage.removeItem(FAMILY_KEY_STORAGE); } catch (e) { /* ignore */ }
+  const res = auth.res;
+  if (!auth.ok && auth.reason === "rejected") {
     familyStoreNote = "Family code was not accepted. Enter it again with Family code…";
     updateSharedPlanChrome();
-    return { ok: false, reason: "rejected", message: familyStoreNote };
+    return { ok: false, reason: "rejected", message: familyStoreNote, key: auth.key || null };
   }
-  if (res.status === 409) {
+  if (res && res.status === 409) {
     familyRemoteNewer = true;
     familyStoreNote = "The family plan changed on another device. Load shared plan, or Save family plan to replace it.";
     updateSharedPlanChrome();
     return { ok: false, reason: "conflict", message: familyStoreNote, remote: res.data };
   }
-  if (!res.ok || !res.data || res.data.ok !== true) {
+  if (!res || !res.ok || !res.data || res.data.ok !== true) {
     familyStoreNote = storeErrorMessage(res);
     updateSharedPlanChrome();
-    return { ok: false, reason: "http", message: familyStoreNote, status: res.status };
+    return { ok: false, reason: "http", message: familyStoreNote, status: res && res.status, key: auth.key || null };
   }
   familyRemoteNewer = false;
   familyStoreNote = "";
@@ -2339,16 +2459,13 @@ async function saveFamilyPlan(opts) {
   sharedPlanMeta.fromStore = true;
   sharedPlanMeta.loading = false;
   updateSharedPlanChrome();
-  return { ok: true, savedAt: res.data.savedAt, revision: res.data.revision };
+  return { ok: true, savedAt: res.data.savedAt, revision: res.data.revision, key: auth.key || null };
 }
 
 async function saveFamilyProgress(opts) {
   opts = opts || {};
   if (!isStoreConfigured()) return { ok: false, reason: "unconfigured" };
   clearTimeout(progressSaveTimer);
-  let key = storedFamilyKey();
-  if (!key && opts.prompt) key = await ensureFamilyKey();
-  if (!key) return { ok: false, reason: "cancelled" };
   const body = {
     version: progressState.version || 1,
     updatedAt: progressState.updatedAt || new Date().toISOString(),
@@ -2357,19 +2474,18 @@ async function saveFamilyProgress(opts) {
   };
   const knownRev = readProgressRevision();
   const sendRevision = (opts.overwrite || opts.prompt) ? null : knownRev;
-  let res;
-  try {
-    res = await storeFetch("/v1/progress", {
-      method: "PUT",
-      body,
-      auth: key,
-      revision: sendRevision
-    });
-  } catch (e) {
+  const auth = await withFamilyCode(opts, (key) => storeFetch("/v1/progress", {
+    method: "PUT",
+    body,
+    auth: key,
+    revision: sendRevision
+  }));
+  if (!auth.ok && auth.reason === "cancelled") return { ok: false, reason: "cancelled" };
+  if (!auth.ok && auth.reason === "network") {
     return { ok: false, reason: "network", message: "Could not reach the family plan store." };
   }
-  if (res.status === 401) {
-    try { localStorage.removeItem(FAMILY_KEY_STORAGE); } catch (e) { /* ignore */ }
+  const res = auth.res;
+  if (!auth.ok && auth.reason === "rejected") {
     return { ok: false, reason: "rejected", message: "Family code was not accepted." };
   }
   if (res.status === 409) {
@@ -2560,7 +2676,9 @@ function updateSharedPlanChrome() {
     el.className = "shared-plan warn";
     const extra = familyStoreNote
       ? " " + escapeHtml(familyStoreNote)
-      : " They save automatically once this device has the family code.";
+      : storedFamilyKey()
+        ? " Saving this week for every browser…"
+        : " Enter the family code once so other browsers can load it.";
     el.innerHTML = "Picks on this device are not on the family plan yet." + extra;
     if (btn) btn.disabled = !sharedPlanMeta.available;
     return;
@@ -3487,12 +3605,17 @@ function isSyncApiConfigured() {
 }
 
 function storedFamilyKey() {
-  try { return (localStorage.getItem(FAMILY_KEY_STORAGE) || "").trim(); }
-  catch (e) { return ""; }
+  try {
+    const candidates = familyCodeCandidates(localStorage.getItem(FAMILY_KEY_STORAGE) || "");
+    return candidates[0] || "";
+  } catch (e) { return ""; }
 }
 
 function persistFamilyKey(key) {
-  try { localStorage.setItem(FAMILY_KEY_STORAGE, String(key || "").trim()); }
+  const candidates = familyCodeCandidates(key);
+  const code = candidates[0] || "";
+  if (!code) return;
+  try { localStorage.setItem(FAMILY_KEY_STORAGE, code); }
   catch (e) { /* ignore */ }
 }
 
@@ -3543,22 +3666,48 @@ function showUnconfiguredSync(payload, target) {
 }
 
 function promptFamilyKey({ replace = false } = {}) {
+  const dialog = document.getElementById("familyCodeDialog");
+  const form = document.getElementById("familyCodeForm");
+  const input = document.getElementById("familyCodeInput");
+  const cancelBtn = document.getElementById("familyCodeCancel");
+  const title = document.getElementById("familyCodeTitle");
+  if (!dialog || !form || !input || !cancelBtn) {
+    return new Promise((resolve) => {
+      const entered = window.prompt(
+        replace
+          ? "Replace the family code stored in this browser:"
+          : "Enter the family code for this device. It stays in this browser only and is used to save the shared plan.",
+        ""
+      );
+      resolve(entered);
+    });
+  }
   return new Promise((resolve) => {
-    const message = replace
-      ? "Replace the family code stored in this browser:"
-      : "Enter the family code for this device. It stays in this browser only and is used to save the shared plan.";
-    const entered = window.prompt(message, replace ? "" : storedFamilyKey());
-    if (entered === null) {
-      resolve(null);
-      return;
-    }
-    const key = entered.trim();
-    if (!key) {
-      resolve(null);
-      return;
-    }
-    persistFamilyKey(key);
-    resolve(key);
+    if (title) title.textContent = replace ? "Replace family code" : "Family code";
+    input.value = "";
+    dialog.hidden = false;
+    const finish = (value) => {
+      dialog.hidden = true;
+      input.value = "";
+      form.removeEventListener("submit", onSubmit);
+      cancelBtn.removeEventListener("click", onCancel);
+      dialog.removeEventListener("click", onBackdrop);
+      document.removeEventListener("keydown", onKey);
+      resolve(value);
+    };
+    const onSubmit = (event) => {
+      event.preventDefault();
+      const value = input.value;
+      finish(String(value || "").trim() ? value : null);
+    };
+    const onCancel = () => finish(null);
+    const onBackdrop = (event) => { if (event.target === dialog) onCancel(); };
+    const onKey = (event) => { if (event.key === "Escape") onCancel(); };
+    form.addEventListener("submit", onSubmit);
+    cancelBtn.addEventListener("click", onCancel);
+    dialog.addEventListener("click", onBackdrop);
+    document.addEventListener("keydown", onKey);
+    setTimeout(() => input.focus(), 0);
   });
 }
 
@@ -3740,16 +3889,13 @@ async function runHostedSync(action) {
     showToast("Send cancelled — a family code is needed to write.", true);
     return false;
   }
-  if (isStoreConfigured() && action !== "writeProgress" && !planSaved.ok) {
-    showSyncFailure(new Error(planSaved.message || "The family plan was not saved."), payloadText, target);
-    return false;
-  }
 
   const progressSaved = await saveFamilyProgress({
     prompt: action === "writeProgress",
-    overwrite: true
+    overwrite: true,
+    candidates: planSaved.ok && planSaved.key ? [planSaved.key] : undefined
   });
-  if (progressSaved.reason === "cancelled") {
+  if (progressSaved.reason === "cancelled" && action === "writeProgress") {
     showToast("Save cancelled — a family code is needed to write.", true);
     return false;
   }
@@ -3769,11 +3915,15 @@ async function runHostedSync(action) {
       showFamilySaved(action, savedAt, progressNote, payloadText);
       return true;
     }
+    if (isStoreConfigured()) {
+      showSyncFailure(new Error((planSaved && planSaved.message) || (progressSaved && progressSaved.message) || "The family plan was not saved."), payloadText, target);
+      return false;
+    }
     showUnconfiguredSync(payloadText, target);
     return false;
   }
 
-  const key = storedFamilyKey() || await ensureFamilyKey();
+  const key = storedFamilyKey() || (planSaved && planSaved.key) || await ensureFamilyKey();
   if (!key) {
     if (storeOk) {
       showFamilySaved(action, savedAt, "Calendar sync was skipped because the family code was not confirmed.", payloadText);
@@ -3782,9 +3932,11 @@ async function runHostedSync(action) {
     showToast("Send cancelled — a family code is needed to write.", true);
     return false;
   }
-  const pending = action === "writeProgress"
-    ? "Family plan saved. Publishing topic progress to the hosted file…"
-    : "Family plan saved. Writing General Timetable drafts…";
+  const pending = !storeOk
+    ? "Writing General Timetable drafts…"
+    : action === "writeProgress"
+      ? "Family plan saved. Publishing topic progress to the hosted file…"
+      : "Family plan saved. Writing General Timetable drafts…";
   if (action === "writeProgress") {
     const box = document.getElementById("progressSyncBox");
     if (box) { box.innerHTML = pending; box.classList.add("show"); box.classList.remove("ok", "err"); }
@@ -3812,6 +3964,10 @@ async function runHostedSync(action) {
       return false;
     }
     showSyncFailure(new Error(msg), payloadText, target);
+    return false;
+  }
+  if (!storeOk && isStoreConfigured() && action !== "writeProgress") {
+    showSyncFailure(new Error("General Timetable drafts were written, but the family plan was not saved. " + (planSaved.message || "")), payloadText, target);
     return false;
   }
   showSyncedStatus(result, action);
@@ -3866,13 +4022,24 @@ document.getElementById("btnSync").addEventListener("click", async () => {
 });
 
 document.getElementById("btnChangeFamilyKey")?.addEventListener("click", async () => {
-  const key = await ensureFamilyKey({ replace: true });
-  showToast(key ? "Family code saved on this device." : "Family code unchanged.", !key);
-  if (key) {
-    sessionDeclinedFamilyCode = false;
-    void saveFamilyPlan({ prompt: false, source: "Save family plan", overwrite: false });
-    void saveFamilyProgress({ prompt: false, overwrite: false });
+  sessionDeclinedFamilyCode = false;
+  const entered = await ensureFamilyKey({ replace: true });
+  if (!entered) {
+    showToast("Family code unchanged.", true);
+    return;
   }
+  const plan = await saveFamilyPlan({
+    prompt: false,
+    candidates: familyCodeCandidates(entered),
+    source: "Save family plan",
+    overwrite: false
+  });
+  if (!plan.ok) {
+    showToast(plan.message || "Family code was not accepted.", true);
+    return;
+  }
+  showToast("Family code saved on this device.");
+  void saveFamilyProgress({ prompt: false, overwrite: false });
 });
 
 
@@ -5009,8 +5176,8 @@ window.REVISIT_DAYS = REVISIT_DAYS;
 
 </script>
 <script type="module">
-  import { chooseSharedSource, plansEquivalent } from "./js/family-store.js";
-  window.IshaanFamilyStore = { chooseSharedSource, plansEquivalent };
+  import { chooseSharedSource, familyCodeCandidates, plansEquivalent } from "./js/family-store.js";
+  window.IshaanFamilyStore = { chooseSharedSource, familyCodeCandidates, plansEquivalent };
   if (typeof window.startIshaanApp === "function") window.startIshaanApp();
 </script>
 <script>

@@ -65,7 +65,7 @@ GitHub Pages copy: https://vikramhemrajani.github.io/ishaan-week-picker/
    The publish must include `index.html` and `js/family-store.js`. The script refuses to continue if `index.html` is missing from the file map. It sends `If-Match` when deed.page reports a current version.
 
 8. Hard-refresh https://ishaan-week-picker.deed.page/ on each browser.
-9. On Ishaan’s device and on Dad’s desktop, press **Family code…** and enter the code once. It is stored only in that browser, as `localStorage['ishaan-family-sync-key']`.
+9. On Ishaan’s device and on Dad’s desktop, press **Family code…** and enter the code once in the box on the page. It is stored only in that browser, as `localStorage['ishaan-family-sync-key']`. Spaces and line breaks around the code are ignored. A rejected code is not asked for again on every edit; use **Family code…** to try again.
 
 After that, editing the week saves to the store (about a second after the change, or immediately with **Save family plan**). Another browser, including one with empty localStorage or a hard refresh, loads that save when it opens the same week. An open browser also checks every 20 seconds and when the tab is focused.
 
@@ -107,7 +107,7 @@ Calendar drafts are not part of this store. **Send to calendar** still saves the
 
 ## If a write is refused
 
-- `401` — the family code does not match `FAMILY_SYNC_KEY`. Enter it again with **Family code…**. The page forgets a rejected code.
+- `401` — the family code does not match `FAMILY_SYNC_KEY`. The page forgets the rejected code and does not ask again on every edit. Enter it again with **Family code…**.
 - `503` — the Worker secret was not set. Re-run `./deploy.sh`.
 - `409` — the other device saved first. **Load shared plan**, or **Save family plan** to replace it on purpose.
 - The status line says the store URL is missing — `STORE_API_URL` is still empty. Finish the deploy and republish both hosts.
