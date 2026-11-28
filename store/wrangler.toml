@@ -1,8 +1,7 @@
 # Cloudflare Worker that stores the family week plan and topic progress.
 # The id below is not a secret. store/deploy.sh replaces the placeholder
 # after `wrangler kv namespace create PLANS`.
-# FAMILY_SYNC_KEY is a Worker secret, never a var in this file:
-#   npx wrangler secret put FAMILY_SYNC_KEY
+# Week writes do not use a client secret.
 name = "ishaan-week-picker-store"
 main = "src/index.js"
 compatibility_date = "2026-11-23"

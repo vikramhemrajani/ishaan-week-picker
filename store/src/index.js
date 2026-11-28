@@ -1,9 +1,10 @@
 /**
  * Family plan store for the Ishaan week picker.
  *
- * Reads are public (the plan is already on a public site).
- * Writes require the FAMILY_SYNC_KEY Worker secret, sent by the browser as
- * the X-Family-Code header. That secret is never embedded in the page.
+ * Reads and writes are public. Vikram chose this on 28 Nov 2026 after being
+ * told that anyone who can reach this address can overwrite a week.
+ * Allowed browser origins are still checked so a random website cannot
+ * write from the visitor's browser. No client secret is required.
  */
 
 const DEFAULT_ORIGINS = [
@@ -22,20 +23,6 @@ export function isMonday(iso) {
   const dt = new Date(Date.UTC(y, m - 1, d));
   if (dt.getUTCFullYear() !== y || dt.getUTCMonth() !== m - 1 || dt.getUTCDate() !== d) return false;
   return dt.getUTCDay() === 1;
-}
-
-/** Constant-time compare. Length is mixed in so a mismatch still walks both strings. */
-export function keysEqual(a, b) {
-  const sa = String(a || "");
-  const sb = String(b || "");
-  const n = Math.max(sa.length, sb.length);
-  let diff = sa.length ^ sb.length;
-  for (let i = 0; i < n; i++) {
-    const ca = i < sa.length ? sa.charCodeAt(i) : 0;
-    const cb = i < sb.length ? sb.charCodeAt(i) : 0;
-    diff |= ca ^ cb;
-  }
-  return diff === 0;
 }
 
 export function nowHktIso(date = new Date()) {
@@ -192,22 +179,6 @@ async function readRecord(kv, key) {
   }
 }
 
-function familyCode(request) {
-  return String(request.headers.get("X-Family-Code") || "").trim();
-}
-
-function requireKey(request, env) {
-  const expected = String((env && env.FAMILY_SYNC_KEY) || "");
-  if (!expected) {
-    return { ok: false, status: 503, error: "store_not_configured", message: "The family plan store has no write code yet." };
-  }
-  const got = familyCode(request);
-  if (!got || !keysEqual(expected, got)) {
-    return { ok: false, status: 401, error: "family_code_rejected", message: "Family code was not accepted." };
-  }
-  return { ok: true };
-}
-
 async function readBody(request) {
   const length = Number(request.headers.get("content-length") || "0");
   if (length > MAX_BODY) {
@@ -250,7 +221,7 @@ export async function handleRequest(request, env) {
     return json({
       ok: true,
       service: "ishaan-week-picker-store",
-      writes: !!String((env && env.FAMILY_SYNC_KEY) || "")
+      writes: true
     }, 200, origin, env);
   }
 
@@ -314,10 +285,6 @@ async function putSanitised(request, env, kvKey, document, weekStart) {
   const origin = request.headers.get("Origin");
   if (origin && !originAllowed(origin, env)) {
     return json({ ok: false, error: "origin_not_allowed", message: "This site cannot write the family plan." }, 403, origin, env);
-  }
-  const auth = requireKey(request, env);
-  if (!auth.ok) {
-    return json({ ok: false, error: auth.error, message: auth.message }, auth.status, origin, env);
   }
   const savedAt = nowHktIso();
   document.updatedAt = savedAt;

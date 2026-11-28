@@ -13,7 +13,6 @@ import { pathToFileURL } from "node:url";
 
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
 const PORT = process.env.PORT || "8766";
-const CODE = "browser-test-family-code";
 const CHROME = process.env.CHROME_PATH || "/usr/local/bin/google-chrome";
 
 const puppeteerPath = process.env.PUPPETEER_CORE
@@ -22,7 +21,7 @@ const puppeteer = (await import(pathToFileURL(puppeteerPath).href)).default;
 
 const server = spawn(process.execPath, ["store/dev-server.mjs"], {
   cwd: root,
-  env: { ...process.env, PORT, FAMILY_SYNC_KEY: CODE },
+  env: { ...process.env, PORT },
   stdio: ["ignore", "pipe", "pipe"]
 });
 let serverLog = "";
@@ -72,25 +71,29 @@ try {
     const el = document.getElementById("weekNavLabel");
     return el && /23 Nov/.test(el.textContent) && /29 Nov/.test(el.textContent);
   }, { timeout: 10000 });
-  const leaked = await pageA.evaluate((code) => document.documentElement.innerHTML.includes(code), CODE);
-  if (leaked) fail("The family code appeared in the page HTML.");
+  const asksForCode = await pageA.evaluate(() => /family code/i.test(document.body.innerText));
+  if (asksForCode) fail("The page still asks for a family code.");
 
-  await pageA.evaluate((code) => localStorage.setItem("ishaan-family-sync-key", code), CODE);
-  await pageA.reload({ waitUntil: "networkidle0", timeout: 20000 });
   await pageA.waitForFunction(() => {
     const el = document.getElementById("sharedPlanStatus");
     return el && el.textContent && !/Checking/.test(el.textContent);
   }, { timeout: 10000 });
 
-  const blocked = await pageA.evaluate(async () => {
-    const res = await fetch("/v1/weeks/2026-11-23", {
+  const openWrite = await pageA.evaluate(async () => {
+    const res = await fetch("/v1/weeks/2026-12-07", {
       method: "PUT",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ weekStart: "2026-11-23", choices: [] })
+      body: JSON.stringify({
+        weekStart: "2026-12-07",
+        choices: [{ id: "probe", day: "Monday", date: "2026-12-07", start: "06:00", end: "06:45", kind: "light" }]
+      })
     });
-    return res.status;
+    const data = await res.json();
+    return { status: res.status, ok: data && data.ok };
   });
-  if (blocked !== 401) fail("A write without the family code returned " + blocked + ", expected 401.");
+  if (openWrite.status !== 200 || openWrite.ok !== true) {
+    fail("A write with no client secret returned " + openWrite.status + ".");
+  }
 
   const before = await pageA.$eval(".slot.choosable .badge", (el) => el.textContent.trim());
   if (before !== "IB") fail("Expected the hosted seed’s first open slot to be IB, got " + before + ".");
@@ -132,6 +135,9 @@ try {
   }, { timeout: 10000 });
   const afterReload = await pageB.$eval(".slot.choosable .badge", (el) => el.textContent.trim());
   if (afterReload !== afterA) fail("Hard reload on the second browser lost the saved plan (" + afterReload + " vs " + afterA + ").");
+
+  const stillAsking = await pageA.evaluate(() => /family code/i.test(document.body.innerText));
+  if (stillAsking) fail("The page asked for a family code after the save.");
 
   await pageA.click("#tab-topics");
   await pageA.waitForSelector("#btnSyncProgress", { timeout: 5000 });

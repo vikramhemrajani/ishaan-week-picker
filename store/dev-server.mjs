@@ -2,10 +2,9 @@
  * Local family-plan store for development and verification.
  * Serves this repo and the Worker on one origin. Not used in production.
  *
- *   FAMILY_SYNC_KEY='a-local-code' node store/dev-server.mjs
+ *   node store/dev-server.mjs
  *
- * The family code is read from the environment only. It is not written into
- * index.html. Open http://127.0.0.1:8765/
+ * Writes need no client secret. Open http://127.0.0.1:8765/
  */
 import http from "node:http";
 import fs from "node:fs";
@@ -14,7 +13,6 @@ import { handleRequest } from "./src/index.js";
 
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
 const port = Number(process.env.PORT || 8765);
-const familyCode = String(process.env.FAMILY_SYNC_KEY || "");
 
 function memoryKv() {
   const map = new Map();
@@ -28,7 +26,7 @@ function memoryKv() {
   };
 }
 
-const env = { PLANS: memoryKv(), FAMILY_SYNC_KEY: familyCode };
+const env = { PLANS: memoryKv() };
 
 const types = {
   ".html": "text/html; charset=utf-8",
@@ -83,10 +81,13 @@ const server = http.createServer(async (req, res) => {
     let data = fs.readFileSync(file);
     if (url.pathname === "/" || url.pathname === "/index.html") {
       const origin = `http://127.0.0.1:${port}`;
-      const html = data.toString("utf8").replace(
-        'const STORE_API_URL = "";',
-        `const STORE_API_URL = ${JSON.stringify(origin)};`
+      let html = data.toString("utf8").replace(
+        /const STORE_API_URL = (["'])[^"']*\1/,
+        `const STORE_API_URL = ${JSON.stringify(origin)}`
       );
+      if (!html.includes(`const STORE_API_URL = ${JSON.stringify(origin)}`)) {
+        throw new Error("Dev server could not point STORE_API_URL at the local store.");
+      }
       data = Buffer.from(html);
     }
     const ext = path.extname(file);
@@ -103,5 +104,4 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(port, "127.0.0.1", () => {
   console.log(`Ishaan week picker dev store at http://127.0.0.1:${port}/`);
-  if (!familyCode) console.log("FAMILY_SYNC_KEY is empty — writes will be refused.");
 });
