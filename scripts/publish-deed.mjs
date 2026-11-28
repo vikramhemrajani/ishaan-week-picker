@@ -184,4 +184,4 @@ const result = await deed(
 
 const published = result.version || result.current_version || version || "ok";
 console.log("Published " + Object.keys(fileMap).length + " files to " + LIVE + " (version " + published + ").");
-console.log("Hard-refresh the live site. The family code was not part of this publish.");
+console.log("Hard-refresh the live site.");

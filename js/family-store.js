@@ -24,29 +24,6 @@ export function plansEquivalent(a, b) {
   return choiceSignature(a) === choiceSignature(b);
 }
 
-/**
- * Possible family codes from one entry. Spaces, line breaks and zero-width
- * characters are removed. The last line is tried first, then any earlier
- * line, then the lines joined, so a note pasted around the code is not
- * stored as the code. Nothing here is a secret.
- */
-export function familyCodeCandidates(entered) {
-  const text = String(entered || "").replace(/[\u200B-\u200D\uFEFF]/g, "");
-  const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
-  const seen = new Set();
-  const out = [];
-  const push = (value) => {
-    const code = String(value || "").replace(/\s+/g, "");
-    if (!code || seen.has(code)) return;
-    seen.add(code);
-    out.push(code);
-  };
-  if (lines.length) push(lines[lines.length - 1]);
-  for (let i = lines.length - 1; i >= 0; i--) push(lines[i]);
-  if (lines.length > 1) push(lines.join(""));
-  return out.slice(0, 8);
-}
-
 function takeStore(store, reason) {
   return {
     source: "store",

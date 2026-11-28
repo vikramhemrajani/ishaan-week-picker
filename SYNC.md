@@ -7,7 +7,7 @@ GitHub Pages (kept in sync): https://vikramhemrajani.github.io/ishaan-week-picke
 
 The static hosts cannot accept a write from the browser, so `choices/*.json` on deed.page stayed a Sunday seed while Ishaan’s finished week lived only in that browser’s localStorage. Pasting `SYNC_WEEK` was the only way to move it.
 
-The family plan store is a Cloudflare Worker (`store/`). **Save family plan**, and ordinary edits once the family code is saved on the device, `PUT` the week and topic progress there immediately. A second browser `GET`s the same week on load, on focus, and about every 20 seconds. Empty localStorage and a hard refresh still load the latest save. The family code is the Worker secret `FAMILY_SYNC_KEY`. It is entered once per browser in the box on the page and is not in the JavaScript. A rejected code is not requested again on every edit.
+The family plan store is a Cloudflare Worker (`store/`). **Save family plan**, and ordinary edits, `PUT` the week and topic progress there immediately. No code is asked for. A second browser `GET`s the same week on load, on focus, and about every 20 seconds. Empty localStorage and a hard refresh still load the latest save. Writes are open on purpose: anyone who can reach the worker address can overwrite a week. Browser writes are still limited to the family sites by the `Origin` check.
 
 `choices/YYYY-MM-DD.json` and `progress.json` remain the seed the page uses when the store has no document yet, or when the store cannot be reached. They are no longer the only shared copy.
 
@@ -15,9 +15,9 @@ Vikram’s one-time setup, secret names, and the deed.page republish command are
 
 ## Calendar drafts
 
-**Send to calendar** still saves the family plan first. It writes this week’s non-Free picks to **General Timetable** as DRAFT events only when the Apps Script web app is configured. That part is optional for sharing the plan.
+**Send to calendar** still saves the family plan first, with no code. It writes this week’s non-Free picks to **General Timetable** as DRAFT events only when the Apps Script web app is configured. That service still checks its own server property. The page no longer collects or sends a client secret, so that popup will not be authorised until Apps Script is updated separately. Sharing the plan does not depend on it.
 
-The public page never holds the family sync key, a deed token, or a GitHub token. Ishaan enters the family key once; it stays in that browser as `localStorage['ishaan-family-sync-key']`. Writes go through a Google Apps Script web app (execute as Vikram, access Anyone) via a small `script.google.com` popup and `postMessage`. See `apps-script/README.md`.
+The public page never holds a deed token or a GitHub token, and it does not collect or store a client secret. Calendar drafts, when `SYNC_API_URL` is set, still go through a Google Apps Script web app (execute as Vikram, access Anyone) via a small `script.google.com` popup and `postMessage`. That service still checks its own server property. See `apps-script/README.md`.
 
 Until that web-app URL is written into `SYNC_API_URL` (by `apps-script/deploy.sh` after `clasp login`), the button tells you honestly that it cannot write yet and offers a copyable fallback payload. Do not treat that fallback as a successful sync.
 
@@ -55,7 +55,7 @@ The backend receives:
 
 - On load, and about every 20 seconds while the tab is open, the page reads the family plan store for this week. That copy wins over `choices/<weekStart>.json` and over a localStorage copy of the old seed.
 - If the store has nothing yet, a missing or blank local week still loads `choices/<weekStart>.json`.
-- A private edit on this device is kept. It is saved automatically once the family code is stored here, unless another device has a newer revision — then the status line asks you to **Load shared plan** or **Save family plan**.
+- A private edit on this device is kept and saved automatically, unless another device has a newer revision — then the status line asks you to **Load shared plan** or **Save family plan**.
 - Default landing (no `#week=` hash), in Asia/Hong_Kong: if today is Sunday, open next Monday’s week (the week being planned); otherwise open the week containing today. The hash still wins. The **This week** button goes to that planning week. The jump-week list is ± weeks around it, not a baked 9–15 Nov skeleton.
 
 ### Topic progress across devices

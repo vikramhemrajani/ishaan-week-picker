@@ -1,11 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { chooseSharedSource, familyCodeCandidates, plansEquivalent } from "../js/family-store.js";
-import { canonicalFamilyCode, handleRequest, isMonday, keysEqual } from "../store/src/index.js";
+import { chooseSharedSource, plansEquivalent } from "../js/family-store.js";
+import { handleRequest, isMonday } from "../store/src/index.js";
 
 const ORIGIN = "https://ishaan-week-picker.deed.page";
-const CODE = "test-family-code";
 const WEEK = "2026-11-23";
 
 function memoryKv() {
@@ -20,14 +19,13 @@ function memoryKv() {
   };
 }
 
-function envWith(kv, code = CODE) {
-  return { PLANS: kv, FAMILY_SYNC_KEY: code };
+function envWith(kv) {
+  return { PLANS: kv };
 }
 
-async function call(env, path, { method = "GET", body, code, origin = ORIGIN, ifMatch } = {}) {
+async function call(env, path, { method = "GET", body, origin = ORIGIN, ifMatch } = {}) {
   const headers = new Headers();
   if (origin) headers.set("Origin", origin);
-  if (code) headers.set("X-Family-Code", code);
   if (ifMatch != null) headers.set("If-Match", String(ifMatch));
   if (body != null) headers.set("content-type", "application/json");
   const res = await handleRequest(new Request("https://store.example" + path, {
@@ -64,45 +62,7 @@ test("Monday check accepts the live week and rejects the next day", () => {
   assert.equal(isMonday("not-a-date"), false);
 });
 
-test("family code compare does not treat a prefix as a match", () => {
-  assert.equal(keysEqual("abc", "abc"), true);
-  assert.equal(keysEqual("abc", "abd"), false);
-  assert.equal(keysEqual("abc", "abcd"), false);
-  assert.equal(keysEqual("", "abc"), false);
-});
-
-test("a wrapped family code matches the same code the browser stores", () => {
-  assert.equal(canonicalFamilyCode("ab\ncd \n"), "abcd");
-  assert.equal(canonicalFamilyCode("\uFEFFabcd"), "abcd");
-  assert.deepEqual(familyCodeCandidates("note above\nab cd\n"), ["abcd", "noteabove", "noteaboveabcd"]);
-  assert.deepEqual(familyCodeCandidates("abcd"), ["abcd"]);
-});
-
-test("whitespace around the worker secret does not reject the stored code", async () => {
-  const env = envWith(memoryKv(), "ab\ncd\n");
-  const saved = await call(env, "/v1/weeks/" + WEEK, {
-    method: "PUT",
-    code: "abcd",
-    body: plan([])
-  });
-  assert.equal(saved.status, 200);
-  assert.equal(saved.text.includes("abcd"), false);
-  const wrappedHeader = await call(env, "/v1/weeks/" + WEEK, {
-    method: "PUT",
-    code: "ab cd",
-    body: plan([{ id: "mon-23-o0", day: "Monday", date: "2026-11-23", start: "06:00", end: "06:45", kind: "free" }])
-  });
-  assert.equal(wrappedHeader.status, 200);
-  const prefix = await call(env, "/v1/weeks/" + WEEK, {
-    method: "PUT",
-    code: "abc",
-    body: plan([])
-  });
-  assert.equal(prefix.status, 401);
-  assert.equal(prefix.text.includes("abcd"), false);
-});
-
-test("a visitor cannot overwrite the plan, and a second browser can read a save", async () => {
+test("a week can be saved with no client secret, and another browser can read it", async () => {
   const env = envWith(memoryKv());
   const choices = [{
     id: "mon-23-o0",
@@ -115,33 +75,7 @@ test("a visitor cannot overwrite the plan, and a second browser can read a save"
     topic: "A.2 Forces and momentum (SL)"
   }];
 
-  const blocked = await call(env, "/v1/weeks/" + WEEK, { method: "PUT", body: plan(choices) });
-  assert.equal(blocked.status, 401);
-  assert.equal(blocked.text.includes(CODE), false);
-  const stillEmpty = await call(env, "/v1/weeks/" + WEEK, { code: null });
-  assert.equal(stillEmpty.status, 404);
-
-  const wrong = await call(env, "/v1/weeks/" + WEEK, {
-    method: "PUT",
-    code: "someone-else",
-    body: plan(choices)
-  });
-  assert.equal(wrong.status, 401);
-  assert.equal(wrong.text.includes("someone-else"), false);
-
-  const evil = await call(env, "/v1/weeks/" + WEEK, {
-    method: "PUT",
-    code: CODE,
-    origin: "https://evil.example",
-    body: plan(choices)
-  });
-  assert.equal(evil.status, 403);
-
-  const saved = await call(env, "/v1/weeks/" + WEEK, {
-    method: "PUT",
-    code: CODE,
-    body: plan(choices)
-  });
+  const saved = await call(env, "/v1/weeks/" + WEEK, { method: "PUT", body: plan(choices) });
   assert.equal(saved.status, 200);
   assert.equal(saved.data.ok, true);
   assert.equal(saved.data.revision, 1);
@@ -153,16 +87,21 @@ test("a visitor cannot overwrite the plan, and a second browser can read a save"
   assert.equal(otherBrowser.data.document.secret, undefined);
   assert.equal(otherBrowser.headers.get("access-control-allow-origin"), ORIGIN);
 
+  const evil = await call(env, "/v1/weeks/" + WEEK, {
+    method: "PUT",
+    origin: "https://evil.example",
+    body: plan(choices)
+  });
+  assert.equal(evil.status, 403);
+
   const clash = await call(env, "/v1/weeks/" + WEEK, {
     method: "PUT",
-    code: CODE,
     ifMatch: 1,
     body: plan([{ ...choices[0], topic: "stale write" }])
   });
   assert.equal(clash.status, 200);
   const lost = await call(env, "/v1/weeks/" + WEEK, {
     method: "PUT",
-    code: CODE,
     ifMatch: 1,
     body: plan([{ ...choices[0], topic: "should lose" }])
   });
@@ -172,19 +111,18 @@ test("a visitor cannot overwrite the plan, and a second browser can read a save"
   assert.equal(after.data.revision, 2);
 });
 
-test("writes stay closed when the family code secret is missing", async () => {
-  const env = envWith(memoryKv(), "");
+test("writes stay open when no worker secret is set", async () => {
+  const env = envWith(memoryKv());
   const res = await call(env, "/v1/weeks/" + WEEK, {
     method: "PUT",
-    code: CODE,
     body: plan([])
   });
-  assert.equal(res.status, 503);
+  assert.equal(res.status, 200);
   const health = await call(env, "/v1/health");
-  assert.equal(health.data.writes, false);
+  assert.equal(health.data.writes, true);
 });
 
-test("topic progress is shared without a second paste", async () => {
+test("topic progress is shared without a pasted payload", async () => {
   const env = envWith(memoryKv());
   const body = {
     version: 1,
@@ -196,11 +134,10 @@ test("topic progress is shared without a second paste", async () => {
       }
     }
   };
-  const put = await call(env, "/v1/progress", { method: "PUT", code: CODE, body });
+  const put = await call(env, "/v1/progress", { method: "PUT", body });
   assert.equal(put.status, 200);
   const got = await call(env, "/v1/progress");
   assert.equal(got.data.document.byTopicId["physics__a-2__3566f6a136"].status, "Reviewed once");
-  assert.equal(got.text.includes(CODE), false);
 });
 
 test("preflight allows the family sites and refuses a random site", async () => {
@@ -208,7 +145,7 @@ test("preflight allows the family sites and refuses a random site", async () => 
   const ok = await call(env, "/v1/weeks/" + WEEK, { method: "OPTIONS" });
   assert.equal(ok.status, 204);
   assert.equal(ok.headers.get("access-control-allow-origin"), ORIGIN);
-  assert.match(ok.headers.get("access-control-allow-headers"), /X-Family-Code/);
+  assert.match(ok.headers.get("access-control-allow-headers"), /Content-Type/);
   const pages = await call(env, "/v1/health", { origin: "https://vikramhemrajani.github.io" });
   assert.equal(pages.headers.get("access-control-allow-origin"), "https://vikramhemrajani.github.io");
   const no = await call(env, "/v1/weeks/" + WEEK, { method: "OPTIONS", origin: "https://evil.example" });
@@ -253,7 +190,6 @@ test("Dad's browser replaces the Sunday seed when Ishaan has saved a later plan"
 
   const saved = await call(env, "/v1/weeks/" + WEEK, {
     method: "PUT",
-    code: CODE,
     body: plan(ishaanChoices, { totals: { ib: 6, sat: 0.8, free: 22, light: 0 } })
   });
   assert.equal(saved.status, 200);
